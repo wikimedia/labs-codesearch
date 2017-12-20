@@ -70,8 +70,19 @@ def index(backend):
     )
     title = '<title>MediaWiki code search</title>'
 
+    footer = """
+<p style="text-align: center;">
+<a href="https://www.mediawiki.org/wiki/codesearch">MediaWiki code search</a>
+is powered by <a href="https://github.com/etsy/hound">hound</a>.
+<br />
+<a href="https://phabricator.wikimedia.org/diffusion/LCSH/">Source code</a>
+is available under the terms of the GPL v3 or any later version.
+</p>
+"""
+
     def mangle(text):
         text = text.replace('<body>', '<body>' + header)
+        text = text.replace('</body>', footer + '</body>')
         text = text.replace('<title>Hound</title>', title)
         return text
     return proxy(backend, mangle=mangle)
