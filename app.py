@@ -92,7 +92,7 @@ def proxy(backend, path='', mangle=False):
     if mangle:
         text = mangle(r.text)
     else:
-        text = r.text
+        text = r.content
     return Response(
         text,
         r.status_code,
