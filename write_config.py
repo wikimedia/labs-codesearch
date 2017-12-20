@@ -20,15 +20,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import json
 import requests
 
+# One hour
+POLL = 60 * 60 * 1000
 BASE = {
     'max-concurrent-indexers': 2,
     'dbpath': 'data',
-    'repos': {
-        'MediaWiki core': {
-            'url': 'https://gerrit.wikimedia.org/r/mediawiki/core'
-        }
-    }
+    'repos': {}
 }
+
+
+def repo_info(gerrit_name):
+    return {
+        'url': 'https://gerrit.wikimedia.org/r/' + gerrit_name,
+        'url-pattern': {
+            'base-url': 'https://phabricator.wikimedia.org/' +
+                        'r/p/%s;browse/master/{path}' % gerrit_name
+        },
+        'ms-between-poll': POLL,
+    }
+
+
+BASE['repos']['MediaWiki core'] = repo_info('mediawiki/core')
 
 
 r = requests.get(
@@ -44,14 +56,14 @@ r.raise_for_status()
 
 data = r.json()
 for ext in data['query']['extdistrepos']['extensions']:
-    BASE['repos']['Extension:%s' % ext] = {
-        'url': 'https://gerrit.wikimedia.org/r/mediawiki/extensions/%s' % ext
-    }
+    BASE['repos']['Extension:%s' % ext] = repo_info(
+        'mediawiki/extensions/%s' % ext
+    )
 
 for skin in data['query']['extdistrepos']['skins']:
-    BASE['repos']['Skin:%s' % skin] = {
-        'url': 'https://gerrit.wikimedia.org/r/mediawiki/skins/%s' % skin
-    }
+    BASE['repos']['Skin:%s' % skin] = repo_info(
+        'mediawiki/skins/%s' % skin
+    )
 
 with open('config.json', 'w') as f:
     json.dump(BASE, f, indent='\t')
