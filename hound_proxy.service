@@ -9,7 +9,7 @@ Group=www-data
 RuntimeDirectory=gunicorn
 WorkingDirectory=/srv/codesearch
 ExecStart=/usr/bin/gunicorn3 --pid /run/gunicorn/pid   \
-          -w 4 -b 127.0.0.1:3002 app:app
+          -w 4 -b 0.0.0.0:3002 app:app
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
