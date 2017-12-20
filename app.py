@@ -32,13 +32,19 @@ BACKENDS = {
 }
 
 
-def index_url(backend):
-    return url_for('index', backend=backend)
+def index_url(target, text, current):
+    if target == current:
+        return '<b>%s</b>' % text
+    else:
+        return '<a href="%s">%s</a>' % (
+            url_for('index', backend=target),
+            text
+        )
 
 
 @app.route('/')
 def homepage():
-    return redirect(index_url('search'))
+    return redirect(url_for('index', backend='search'))
 
 
 @app.route('/<backend>/')
@@ -49,18 +55,18 @@ def index(backend):
 <div style="text-align: center;">
 <h2>MediaWiki code search</h2>
 
-<a href="{search}">Everything</a> ·
-<a href="{core}">MediaWiki core</a> ·
-<a href="{ext}">Extensions</a> ·
-<a href="{skins}">Skins</a> ·
-<a href="{things}">Extensions & Skins</a>
+{search} ·
+{core} ·
+{ext} ·
+{skins} ·
+{things}
 </div>
 """.format(
-        search=index_url('search'),
-        core=index_url('core'),
-        ext=index_url('extensions'),
-        skins=index_url('skins'),
-        things=index_url('things')
+        search=index_url('search', 'Everything', backend),
+        core=index_url('core', 'MediaWiki core', backend),
+        ext=index_url('extensions', 'Extensions', backend),
+        skins=index_url('skins', 'Skins', backend),
+        things=index_url('things', 'Extensions & skins', backend)
     )
     title = '<title>MediaWiki code search</title>'
 
