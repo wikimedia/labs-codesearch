@@ -17,16 +17,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import functools
 import json
+import os
 import requests
 
 # One hour
 POLL = 60 * 60 * 1000
-BASE = {
-    'max-concurrent-indexers': 2,
-    'dbpath': 'data',
-    'repos': {}
-}
+
+
+@functools.lru_cache()
+def get_extdist_repos():
+    r = requests.get(
+        'https://www.mediawiki.org/w/api.php',
+        params={
+            "action": "query",
+            "format": "json",
+            'formatversion': 2,
+            "list": "extdistrepos"
+        }
+    )
+    r.raise_for_status()
+
+    return r.json()
 
 
 def repo_info(gerrit_name):
@@ -40,30 +53,41 @@ def repo_info(gerrit_name):
     }
 
 
-BASE['repos']['MediaWiki core'] = repo_info('mediawiki/core')
-
-
-r = requests.get(
-    'https://www.mediawiki.org/w/api.php',
-    params={
-        "action": "query",
-        "format": "json",
-        'formatversion': 2,
-        "list": "extdistrepos"
+def make_conf(directory, core=True, exts=True, skins=True):
+    conf = {
+        'max-concurrent-indexers': 2,
+        'dbpath': 'data',
+        'repos': {}
     }
-)
-r.raise_for_status()
 
-data = r.json()
-for ext in data['query']['extdistrepos']['extensions']:
-    BASE['repos']['Extension:%s' % ext] = repo_info(
-        'mediawiki/extensions/%s' % ext
-    )
+    if core:
+        conf['repos']['MediaWiki core'] = repo_info('mediawiki/core')
 
-for skin in data['query']['extdistrepos']['skins']:
-    BASE['repos']['Skin:%s' % skin] = repo_info(
-        'mediawiki/skins/%s' % skin
-    )
+    data = get_extdist_repos()
+    if exts:
+        for ext in data['query']['extdistrepos']['extensions']:
+            conf['repos']['Extension:%s' % ext] = repo_info(
+                'mediawiki/extensions/%s' % ext
+            )
 
-with open('config.json', 'w') as f:
-    json.dump(BASE, f, indent='\t')
+    if skins:
+        for skin in data['query']['extdistrepos']['skins']:
+            conf['repos']['Skin:%s' % skin] = repo_info(
+                'mediawiki/skins/%s' % skin
+            )
+
+    if not os.path.isdir(directory):
+        os.mkdir(directory)
+    with open(os.path.join(directory, 'config.json'), 'w') as f:
+        json.dump(conf, f, indent='\t')
+
+
+def main():
+    make_conf('search')
+    make_conf('extensions', core=False, skins=False)
+    make_conf('skins', core=False, exts=False)
+    make_conf('things', core=False)
+
+
+if __name__ == '__main__':
+    main()
