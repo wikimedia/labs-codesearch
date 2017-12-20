@@ -1,5 +1,31 @@
-MediaWiki code search!
+MediaWiki code search! (powered by hound)
 
-Documentation coming.
+We use etsy's hound as the backend for codesearch. The search functionality
+is great, but the UI is a bit lacking, so we work around it a bit.
 
-hound_proxy.service should be copied to /etc/systemd/system/
+== Setup ==
+
+ sudo apt install docker-engine python3 gunicorn3 python3-flask \
+   python3-requests
+
+ git clone https://gerrit.wikimedia.org/r/labs/codesearch /srv/codesearch
+ cd /srv/codesearch
+ ./write_config.py
+ sudo ./start.sh
+ sudo cp hound_proxy.service /etc/systemd/system/
+ sudo systemctl start hound_proxy
+
+If that works, then curl http://localhost:3002/ should work, and you can point
+a web proxy to that port.
+
+== Constraints ==
+We don't want to modify or fork hound. Really we just want to use the upstream
+docker images without modification. So we use a flask application to proxy
+requests to hound, and inject our HTML during that process.
+
+== License ==
+Hound is (C) 2014, Etsy, Inc. under the terms of the MIT license, see
+<https://github.com/etsy/hound/blob/master/LICENSE> for details.
+
+codesearch is (C) 2017, Kunal Mehta under the terms of the GPL, v3 or any
+later version. See COPYING for details.
