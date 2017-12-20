@@ -84,6 +84,7 @@ def make_conf(directory, core=True, exts=True, skins=True):
 
 def main():
     make_conf('search')
+    make_conf('core', exts=False, skins=False)
     make_conf('extensions', core=False, skins=False)
     make_conf('skins', core=False, exts=False)
     make_conf('things', core=False)

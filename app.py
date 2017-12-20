@@ -28,22 +28,46 @@ BACKENDS = {
     'extensions': 6081,
     'skins': 6082,
     'things': 6083,
+    'core': 6084,
 }
+
+
+def index_url(backend):
+    return url_for('index', backend=backend)
 
 
 @app.route('/')
 def homepage():
-    return redirect(url_for('index', backend='search'))
+    return redirect(index_url('search'))
 
 
 @app.route('/<backend>/')
 def index(backend):
     if backend not in BACKENDS:
         return 'invalid backend'
+    header = """
+<div style="text-align: center;">
+<h2>MediaWiki code search</h2>
+
+<a href="{search}">Everything</a> ·
+<a href="{core}">MediaWiki core</a> ·
+<a href="{ext}">Extensions</a> ·
+<a href="{skins}">Skins</a> ·
+<a href="{things}">Extensions & Skins</a>
+</div>
+""".format(
+        search=index_url('search'),
+        core=index_url('core'),
+        ext=index_url('extensions'),
+        skins=index_url('skins'),
+        things=index_url('things')
+    )
+    title = '<title>MediaWiki code search</title>'
 
     def mangle(text):
-        header = '<h2 style="text-align: center;">MediaWiki code search</h2>'
-        return text.replace('<body>', '<body>' + header)
+        text = text.replace('<body>', '<body>' + header)
+        text = text.replace('<title>Hound</title>', title)
+        return text
     return proxy(backend, mangle=mangle)
 
 
