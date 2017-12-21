@@ -11,8 +11,8 @@ is great, but the UI is a bit lacking, so we work around it a bit.
  git clone https://gerrit.wikimedia.org/r/labs/codesearch /srv/codesearch
  cd /srv/codesearch
  ./write_config.py
+ sudo cp *.service /etc/systemd/system/
  sudo ./start.sh
- sudo cp hound_proxy.service /etc/systemd/system/
  sudo systemctl start hound_proxy
 
 If that works, then curl http://localhost:3002/ should work, and you can point
