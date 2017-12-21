@@ -8,7 +8,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill hound-things
 ExecStartPre=/usr/bin/docker rm hound-things
 ExecStartPre=/usr/bin/docker pull etsy/hound
-ExecStart=/usr/bin/docker run -p 6083:6080 --name hound-things -v /srv/codesearch/hound-things:/data etsy/hound
+ExecStart=/usr/bin/docker run -p 6083:6080 --name hound-things -v /srv/hound/hound-things:/data etsy/hound
 ExecStop=/usr/bin/docker stop hound-things
 
 [Install]

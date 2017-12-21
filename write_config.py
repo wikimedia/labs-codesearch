@@ -24,6 +24,7 @@ import requests
 
 # One hour
 POLL = 60 * 60 * 1000
+DATA = '/srv/hound'
 
 
 @functools.lru_cache()
@@ -76,6 +77,7 @@ def make_conf(directory, core=True, exts=True, skins=True):
                 'mediawiki/skins/%s' % skin
             )
 
+    directory = os.path.join(DATA, directory)
     if not os.path.isdir(directory):
         os.mkdir(directory)
     with open(os.path.join(directory, 'config.json'), 'w') as f:
