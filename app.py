@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from flask import Flask, Response, request, redirect, url_for
 
 import requests
+import traceback
 
 app = Flask(__name__)
 
@@ -93,10 +94,20 @@ def proxy(backend, path='', mangle=False):
     if backend not in BACKENDS:
         return 'invalid backend'
     port = BACKENDS[backend]
-    r = requests.get(
-        'http://localhost:%s/%s' % (port, path),
-        params=request.args
-    )
+    try:
+        r = requests.get(
+            'http://localhost:%s/%s' % (port, path),
+            params=request.args
+        )
+    except requests.exceptions.ConnectionError as e:
+        resp = """
+Unable to contact hound. Please retry in a few minutes.
+If this error continues, please report it in Phabricator
+with the following information:
+
+"""
+        resp += traceback.format_exc()
+        return Response(resp, 503, mimetype='text/plain')
     excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
     headers = [(name, value) for (name, value) in r.raw.headers.items()
                if name.lower() not in excluded_headers]
