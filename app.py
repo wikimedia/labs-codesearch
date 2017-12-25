@@ -17,8 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Flask, Response, request, redirect, url_for
+from flask import Flask, Response, request, redirect, url_for, send_from_directory
 
+import os
 import requests
 import traceback
 
@@ -31,6 +32,15 @@ BACKENDS = {
     'things': 6083,
     'core': 6084,
 }
+
+
+@app.route('/favicon.ico')
+def favicon():
+    # http://flask.pocoo.org/docs/0.12/patterns/favicon/
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'favicon.ico',
+        mimetype='image/vnd.microsoft.icon')
 
 
 def index_url(target, text, current):
