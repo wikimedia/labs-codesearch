@@ -17,7 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from flask import Flask, Response, request, redirect, url_for, send_from_directory
+from flask import Flask, Response, request, redirect, url_for, \
+    send_from_directory
 
 import os
 import requests
@@ -118,7 +119,9 @@ with the following information:
 """
         resp += traceback.format_exc()
         return Response(resp, 503, mimetype='text/plain')
-    excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+    excluded_headers = [
+        'content-encoding', 'content-length', 'transfer-encoding', 'connection'
+    ]
     headers = [(name, value) for (name, value) in r.raw.headers.items()
                if name.lower() not in excluded_headers]
     if mangle:
