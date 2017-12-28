@@ -18,9 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from flask import Flask, Response, request, redirect, url_for, \
-    send_from_directory
+    send_from_directory, render_template
 
 import os
+import re
 import requests
 import traceback
 
@@ -33,6 +34,15 @@ BACKENDS = {
     'things': 6083,
     'core': 6084,
 }
+DESCRIPTIONS = {
+    'search': 'Everything',
+    'core': 'MediaWiki core',
+    'extensions': 'Extensions',
+    'skins': 'Skins',
+    'things': 'Extensions & skins',
+}
+
+LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
 
 
 @app.route('/favicon.ico')
@@ -44,7 +54,8 @@ def favicon():
         mimetype='image/vnd.microsoft.icon')
 
 
-def index_url(target, text, current):
+def index_url(target, current):
+    text = DESCRIPTIONS[target]
     if target == current:
         return '<b>%s</b>' % text
     else:
@@ -74,11 +85,11 @@ def index(backend):
 {things}
 </div>
 """.format(
-        search=index_url('search', 'Everything', backend),
-        core=index_url('core', 'MediaWiki core', backend),
-        ext=index_url('extensions', 'Extensions', backend),
-        skins=index_url('skins', 'Skins', backend),
-        things=index_url('things', 'Extensions & skins', backend)
+        search=index_url('search', backend),
+        core=index_url('core', backend),
+        ext=index_url('extensions', backend),
+        skins=index_url('skins', backend),
+        things=index_url('things', backend)
     )
     title = '<title>MediaWiki code search</title>'
 
@@ -92,12 +103,27 @@ is available under the terms of the GPL v3 or any later version.
 </p>
 """
 
+    opensearch_link = """
+<link rel="search" href="%s"
+      type="application/opensearchdescription+xml"
+      title="MediaWiki code search" />
+""" % url_for('opensearch', backend=backend, description=DESCRIPTIONS[backend])
+
     def mangle(text):
         text = text.replace('<body>', '<body>' + header)
         text = text.replace('</body>', footer + '</body>')
         text = text.replace('<title>Hound</title>', title)
+        text = LINK_OPENSEARCH.sub(opensearch_link, text)
         return text
     return proxy(backend, mangle=mangle)
+
+
+@app.route('/<backend>/open_search.xml')
+def opensearch(backend):
+    if backend not in BACKENDS:
+        return 'invalid backend'
+    temp = render_template('open_search.xml', backend=backend)
+    return Response(temp, content_type='text/xml')
 
 
 @app.route('/<backend>/<path:path>')
