@@ -107,7 +107,7 @@ is available under the terms of the GPL v3 or any later version.
 <link rel="search" href="%s"
       type="application/opensearchdescription+xml"
       title="MediaWiki code search" />
-""" % url_for('opensearch', backend=backend, description=DESCRIPTIONS[backend])
+""" % url_for('opensearch', backend=backend)
 
     def mangle(text):
         text = text.replace('<body>', '<body>' + header)
@@ -122,7 +122,8 @@ is available under the terms of the GPL v3 or any later version.
 def opensearch(backend):
     if backend not in BACKENDS:
         return 'invalid backend'
-    temp = render_template('open_search.xml', backend=backend)
+    temp = render_template('open_search.xml', backend=backend,
+                           description=DESCRIPTIONS[backend])
     return Response(temp, content_type='text/xml')
 
 
