@@ -45,6 +45,13 @@ DESCRIPTIONS = {
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
 
 
+@app.before_request
+def redirect_to_https():
+    if request.headers.get('X-Forwarded-Proto') == 'http':
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, 302)
+
+
 @app.route('/favicon.ico')
 def favicon():
     # http://flask.pocoo.org/docs/0.12/patterns/favicon/
