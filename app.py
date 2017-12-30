@@ -52,6 +52,13 @@ def redirect_to_https():
         return redirect(url, 302)
 
 
+@app.after_request
+def set_hsts(response):
+    if not app.debug:
+        response.headers['Strict-Transport-Security'] = 'max-age=86400'
+
+    return response
+
 @app.route('/favicon.ico')
 def favicon():
     # http://flask.pocoo.org/docs/0.12/patterns/favicon/
