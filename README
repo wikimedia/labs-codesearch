@@ -13,10 +13,12 @@ is great, but the UI is a bit lacking, so we work around it a bit.
  ./write_config.py
  sudo cp *.service /etc/systemd/system/
  sudo ./start.sh
- sudo systemctl start hound_proxy
 
 If that works, then curl http://localhost:3002/ should work, and you can point
 a web proxy to that port.
+
+Once you're happy with what is running, you should run `sudo ./enable.sh` so
+that the services will automatically restart upon boot.
 
 == Constraints ==
 We don't want to modify or fork hound. Really we just want to use the upstream
