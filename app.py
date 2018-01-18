@@ -198,7 +198,10 @@ def proxy(backend, path='', mangle=False):
         )
     except requests.exceptions.ConnectionError as e:
         resp = """
-Unable to contact hound. Please retry in a few minutes.
+Unable to contact hound. If <https://codesearch.wmflabs.org/_health>
+says "starting up", please wait a few minutes for the initial indexing
+to complete.
+
 If this error continues, please report it in Phabricator
 with the following information:
 
