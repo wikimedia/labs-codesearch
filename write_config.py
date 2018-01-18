@@ -55,7 +55,7 @@ def repo_info(gerrit_name):
     }
 
 
-def make_conf(directory, core=True, exts=True, skins=True):
+def make_conf(directory, core=True, exts=True, skins=True, ooui=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -64,6 +64,9 @@ def make_conf(directory, core=True, exts=True, skins=True):
 
     if core:
         conf['repos']['MediaWiki core'] = repo_info('mediawiki/core')
+
+    if ooui:
+        conf['repos']['OOUI'] = repo_info('oojs/ui')
 
     data = get_extdist_repos()
     if exts:
@@ -86,11 +89,12 @@ def make_conf(directory, core=True, exts=True, skins=True):
 
 
 def main():
-    make_conf('hound-search')
+    make_conf('hound-search', ooui=True)
     make_conf('hound-core', exts=False, skins=False)
     make_conf('hound-extensions', core=False, skins=False)
     make_conf('hound-skins', core=False, exts=False)
     make_conf('hound-things', core=False)
+    make_conf('hound-ooui', core=False, exts=False, skins=False, ooui=True)
 
 
 if __name__ == '__main__':

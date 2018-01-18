@@ -33,6 +33,7 @@ BACKENDS = {
     'skins': 6082,
     'things': 6083,
     'core': 6084,
+    'ooui': 6085,
 }
 DESCRIPTIONS = {
     'search': 'Everything',
@@ -40,6 +41,7 @@ DESCRIPTIONS = {
     'extensions': 'Extensions',
     'skins': 'Skins',
     'things': 'Extensions & skins',
+    'ooui': 'OOUI',
 }
 
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
@@ -97,13 +99,15 @@ def index(backend):
 {ext} ·
 {skins} ·
 {things}
+{ooui}
 </div>
 """.format(
         search=index_url('search', backend),
         core=index_url('core', backend),
         ext=index_url('extensions', backend),
         skins=index_url('skins', backend),
-        things=index_url('things', backend)
+        things=index_url('things', backend),
+        ooui=index_url('ooui', backend)
     )
     title = '<title>MediaWiki code search</title>'
 
