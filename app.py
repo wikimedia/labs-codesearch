@@ -120,7 +120,7 @@ def health():
                 else:
                     # No webservice, but hound is running, so it's probably
                     # just starting up still
-                    status['backend'] = 'starting up'
+                    status[backend] = 'starting up'
             except subprocess.CalledProcessError:
                 status[backend] = 'unknown'
 

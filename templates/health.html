@@ -8,7 +8,8 @@
 <h1>health check</h1>
 
 {% for backend in status %}
-<br /><a href="{{url_for('index', backend=backend)}}">{{backend}}</a> - {{status[backend]}}
+<a href="{{url_for('index', backend=backend)}}">{{backend}}</a> - {{status[backend]}}
+<br />
 {% endfor %}
 </body>
 </html>
