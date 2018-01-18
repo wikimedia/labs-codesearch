@@ -6,7 +6,7 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill hound-extensions
-ExecStartPre=-/usr/bin/docker rm hound-extensions
+ExecStartPre=-/usr/bin/docker rm -f hound-extensions
 ExecStartPre=/usr/bin/docker pull etsy/hound
 ExecStart=/usr/bin/docker run -p 6081:6080 --name hound-extensions -v /srv/hound/hound-extensions:/data etsy/hound
 ExecStop=/usr/bin/docker stop hound-extensions
