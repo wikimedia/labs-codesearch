@@ -23,6 +23,7 @@ from flask import Flask, Response, request, redirect, url_for, \
 import os
 import re
 import requests
+import subprocess
 import traceback
 
 app = Flask(__name__)
@@ -84,6 +85,46 @@ def index_url(target, current):
 @app.route('/')
 def homepage():
     return redirect(url_for('index', backend='search'))
+
+
+def parse_systemctl_show(output):
+    """
+    turn the output of `systemctl show` into
+    a dictionary
+    """
+    data = {}
+    for line in output.splitlines():
+        sp = line.split('=', 1)
+        data[sp[0]] = sp[1]
+
+    return data
+
+
+@app.route('/_health')
+def health():
+    status = {}
+    for backend, port in BACKENDS.items():
+        # First try to hit the hound backend, if it's up, we're good
+        try:
+            requests.get('http://localhost:%s/api/v1/search' % port)
+            status[backend] = 'up'
+        except requests.exceptions.ConnectionError:
+            # See whether the systemd unit is running
+            try:
+                show = subprocess.check_output(
+                    ['systemctl', 'show', 'hound-%s' % backend]
+                )
+                info = parse_systemctl_show(show.decode())
+                if info['MainPID'] == '0':
+                    status[backend] = 'down'
+                else:
+                    # No webservice, but hound is running, so it's probably
+                    # just starting up still
+                    status['backend'] = 'starting up'
+            except subprocess.CalledProcessError:
+                status[backend] = 'unknown'
+
+    return render_template('health.html', status=status)
 
 
 @app.route('/<backend>/')

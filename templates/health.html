@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediaWiki code search: health check</title>
+</head>
+<body>
+<h1>health check</h1>
+
+{% for backend in status %}
+<br /><a href="{{url_for('index', backend=backend)}}">{{backend}}</a> - {{status[backend]}}
+{% endfor %}
+</body>
+</html>
