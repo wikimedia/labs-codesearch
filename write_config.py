@@ -55,7 +55,7 @@ def repo_info(gerrit_name):
     }
 
 
-def make_conf(directory, core=True, exts=True, skins=True, ooui=False):
+def make_conf(directory, core=False, exts=False, skins=False, ooui=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -89,12 +89,12 @@ def make_conf(directory, core=True, exts=True, skins=True, ooui=False):
 
 
 def main():
-    make_conf('hound-search', ooui=True)
-    make_conf('hound-core', exts=False, skins=False)
-    make_conf('hound-extensions', core=False, skins=False)
-    make_conf('hound-skins', core=False, exts=False)
-    make_conf('hound-things', core=False)
-    make_conf('hound-ooui', core=False, exts=False, skins=False, ooui=True)
+    make_conf('hound-search', core=True, exts=True, skins=True, ooui=True)
+    make_conf('hound-core', core=True)
+    make_conf('hound-extensions', exts=True)
+    make_conf('hound-skins', skins=True)
+    make_conf('hound-things', exts=True, skins=True)
+    make_conf('hound-ooui', ooui=True)
 
 
 if __name__ == '__main__':
