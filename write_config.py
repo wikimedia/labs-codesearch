@@ -55,7 +55,8 @@ def repo_info(gerrit_name):
     }
 
 
-def make_conf(directory, core=False, exts=False, skins=False, ooui=False):
+def make_conf(directory, core=False, exts=False, skins=False, ooui=False,
+              operations=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -81,6 +82,15 @@ def make_conf(directory, core=False, exts=False, skins=False, ooui=False):
                 'mediawiki/skins/%s' % skin
             )
 
+    if operations:
+        conf['repos']['Wikimedia DNS'] = repo_info(
+            'operations/dns'
+        )
+        conf['repos']['Wikimedia MediaWiki config'] = repo_info(
+            'operations/mediawiki-config'
+        )
+        # TODO: Add puppet once non-master branches are supported
+
     directory = os.path.join(DATA, directory)
     if not os.path.isdir(directory):
         os.mkdir(directory)
@@ -89,12 +99,14 @@ def make_conf(directory, core=False, exts=False, skins=False, ooui=False):
 
 
 def main():
-    make_conf('hound-search', core=True, exts=True, skins=True, ooui=True)
+    make_conf('hound-search', core=True, exts=True, skins=True, ooui=True,
+              operations=True)
     make_conf('hound-core', core=True)
     make_conf('hound-extensions', exts=True)
     make_conf('hound-skins', skins=True)
     make_conf('hound-things', exts=True, skins=True)
     make_conf('hound-ooui', ooui=True)
+    make_conf('hound-operations', operations=True)
 
 
 if __name__ == '__main__':

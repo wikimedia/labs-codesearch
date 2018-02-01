@@ -6,4 +6,5 @@ systemctl start hound-extensions
 systemctl start hound-skins
 systemctl start hound-things
 systemctl start hound-ooui
+systemctl start hound-operations
 systemctl start hound_proxy

@@ -6,4 +6,5 @@ systemctl enable hound-extensions
 systemctl enable hound-skins
 systemctl enable hound-things
 systemctl enable hound-ooui
+systemctl enable hound-operations
 systemctl enable hound_proxy
