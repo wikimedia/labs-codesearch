@@ -64,6 +64,7 @@ def set_hsts(response):
 
     return response
 
+
 @app.route('/favicon.ico')
 def favicon():
     # http://flask.pocoo.org/docs/0.12/patterns/favicon/
