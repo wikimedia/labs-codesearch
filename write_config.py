@@ -47,9 +47,9 @@ def repo_info(gerrit_name):
     return {
         'url': 'https://gerrit.wikimedia.org/r/' + gerrit_name,
         'url-pattern': {
-            'base-url': 'https://phabricator.wikimedia.org/' +
-                        'r/p/%s;browse/master/{path}{anchor}' % gerrit_name,
-            'anchor': '${line}'
+            'base-url': 'https://gerrit.wikimedia.org/g/' +
+                        '%s/+/master/{path}{anchor}' % gerrit_name,
+            'anchor': '{line}'
         },
         'ms-between-poll': POLL,
     }
