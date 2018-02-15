@@ -49,7 +49,7 @@ def repo_info(gerrit_name):
         'url-pattern': {
             'base-url': 'https://gerrit.wikimedia.org/g/' +
                         '%s/+/master/{path}{anchor}' % gerrit_name,
-            'anchor': '{line}'
+            'anchor': '#{line}'
         },
         'ms-between-poll': POLL,
     }
