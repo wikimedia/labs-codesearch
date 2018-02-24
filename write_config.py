@@ -75,6 +75,9 @@ def make_conf(directory, core=False, exts=False, skins=False, ooui=False,
             conf['repos']['Extension:%s' % ext] = repo_info(
                 'mediawiki/extensions/%s' % ext
             )
+        conf['repos']['VisualEditor core'] = repo_info(
+            'VisualEditor/VisualEditor'
+        )
 
     if skins:
         for skin in data['query']['extdistrepos']['skins']:
