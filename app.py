@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Proxy requests to hound
-Copyright (C) 2017 Kunal Mehta <legoktm@member.fsf.org>
+Copyright (C) 2017-2018 Kunal Mehta <legoktm@member.fsf.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,17 +26,10 @@ import requests
 import subprocess
 import traceback
 
+from ports import PORTS
+
 app = Flask(__name__)
 
-BACKENDS = {
-    'search': 6080,  # all
-    'extensions': 6081,
-    'skins': 6082,
-    'things': 6083,
-    'core': 6084,
-    'ooui': 6085,
-    'operations': 6086,
-}
 DESCRIPTIONS = {
     'search': 'Everything',
     'core': 'MediaWiki core',
@@ -106,7 +99,7 @@ def parse_systemctl_show(output):
 @app.route('/_health')
 def health():
     status = {}
-    for backend, port in BACKENDS.items():
+    for backend, port in PORTS.items():
         # First try to hit the hound backend, if it's up, we're good
         try:
             requests.get('http://localhost:%s/api/v1/search' % port)
@@ -132,7 +125,7 @@ def health():
 
 @app.route('/<backend>/')
 def index(backend):
-    if backend not in BACKENDS:
+    if backend not in PORTS:
         return 'invalid backend'
     header = """
 <div style="text-align: center;">
@@ -184,7 +177,7 @@ is available under the terms of the GPL v3 or any later version.
 
 @app.route('/<backend>/open_search.xml')
 def opensearch(backend):
-    if backend not in BACKENDS:
+    if backend not in PORTS:
         return 'invalid backend'
     temp = render_template('open_search.xml', backend=backend,
                            description=DESCRIPTIONS[backend])
@@ -193,9 +186,9 @@ def opensearch(backend):
 
 @app.route('/<backend>/<path:path>')
 def proxy(backend, path='', mangle=False):
-    if backend not in BACKENDS:
+    if backend not in PORTS:
         return 'invalid backend'
-    port = BACKENDS[backend]
+    port = PORTS[backend]
     try:
         r = requests.get(
             'http://localhost:%s/%s' % (port, path),

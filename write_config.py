@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate a hound config.json file
-Copyright (C) 2017 Kunal Mehta <legoktm@member.fsf.org>
+Copyright (C) 2017-2018 Kunal Mehta <legoktm@member.fsf.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ import functools
 import json
 import os
 import requests
+
+from ports import PORTS
 
 # One hour
 POLL = 60 * 60 * 1000
@@ -55,7 +57,28 @@ def repo_info(gerrit_name):
     }
 
 
-def make_conf(directory, core=False, exts=False, skins=False, ooui=False,
+def generate_service(name):
+    # Leave whitespace at the top so it's easy to read, lstrip() at the bottom
+    return """
+[Unit]
+Description={name}
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill {name}
+ExecStartPre=-/usr/bin/docker rm -f {name}
+ExecStartPre=/usr/bin/docker pull etsy/hound
+ExecStart=/usr/bin/docker run -p {port}:6080 --name {name} -v /srv/hound/{name}:/data etsy/hound
+ExecStop=/usr/bin/docker stop {name}
+
+[Install]
+WantedBy=multi-user.target
+""".format(name='hound-' + name, port=PORTS[name]).lstrip()
+
+
+def make_conf(name, core=False, exts=False, skins=False, ooui=False,
               operations=False):
     conf = {
         'max-concurrent-indexers': 2,
@@ -94,22 +117,25 @@ def make_conf(directory, core=False, exts=False, skins=False, ooui=False,
         )
         # TODO: Add puppet once non-master branches are supported
 
-    directory = os.path.join(DATA, directory)
+    dirname = 'hound-' + name
+    directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
         os.mkdir(directory)
     with open(os.path.join(directory, 'config.json'), 'w') as f:
         json.dump(conf, f, indent='\t')
+    with open(os.path.join(os.path.dirname(__file__), dirname + '.service'), 'w') as f:
+        f.write(generate_service(name))
 
 
 def main():
-    make_conf('hound-search', core=True, exts=True, skins=True, ooui=True,
+    make_conf('search', core=True, exts=True, skins=True, ooui=True,
               operations=True)
-    make_conf('hound-core', core=True)
-    make_conf('hound-extensions', exts=True)
-    make_conf('hound-skins', skins=True)
-    make_conf('hound-things', exts=True, skins=True)
-    make_conf('hound-ooui', ooui=True)
-    make_conf('hound-operations', operations=True)
+    make_conf('core', core=True)
+    make_conf('extensions', exts=True)
+    make_conf('skins', skins=True)
+    make_conf('things', exts=True, skins=True)
+    make_conf('ooui', ooui=True)
+    make_conf('operations', operations=True)
 
 
 if __name__ == '__main__':
