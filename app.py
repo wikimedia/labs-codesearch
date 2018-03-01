@@ -38,6 +38,7 @@ DESCRIPTIONS = {
     'things': 'Extensions & skins',
     'ooui': 'OOUI',
     'operations': 'Wikimedia Operations',
+    'armchairgm': 'ArmchairGM',
 }
 
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)

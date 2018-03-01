@@ -45,6 +45,18 @@ def get_extdist_repos():
     return r.json()
 
 
+def phab_repo(callsign):
+    return {
+        'url': 'https://phabricator.wikimedia.org/diffusion/' + callsign,
+        'url-pattern': {
+            'base-url': 'https://phabricator.wikimedia.org/diffusion/'
+                        '%s/browse/master/{path}{anchor}' % callsign,
+            'anchor': '${line}'
+        },
+        'ms-between-poll': POLL,
+    }
+
+
 def repo_info(gerrit_name):
     return {
         'url': 'https://gerrit.wikimedia.org/r/' + gerrit_name,
@@ -79,7 +91,7 @@ WantedBy=multi-user.target
 
 
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
-              operations=False):
+              operations=False, armchairgm=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -117,6 +129,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         )
         # TODO: Add puppet once non-master branches are supported
 
+    if armchairgm:
+        conf['repos']['ArmchairGM'] = phab_repo('AMGM')
+
     dirname = 'hound-' + name
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -136,6 +151,7 @@ def main():
     make_conf('things', exts=True, skins=True)
     make_conf('ooui', ooui=True)
     make_conf('operations', operations=True)
+    make_conf('armchairgm', armchairgm=True)
 
 
 if __name__ == '__main__':

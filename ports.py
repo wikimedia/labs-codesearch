@@ -25,4 +25,5 @@ PORTS = {
     'core': 6084,
     'ooui': 6085,
     'operations': 6086,
+    'armchairgm': 6087,
 }
