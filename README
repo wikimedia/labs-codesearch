@@ -4,6 +4,23 @@ We use etsy's hound as the backend for codesearch. The search functionality
 is great, but the UI is a bit lacking, so we work around it a bit.
 
 == Setup ==
+This guide is based on setting up a new instance on the Wikimedia
+Cloud VPS infrastructure. Currently we use Debian Jessie medium
+sized images.
+
+After creating the instance, you should enable the `role::labs::lvm::srv`
+puppet class, which will create a separate partition for `/srv`. We then
+want to modify the filesystem so we get some more inodes per available
+storage. Note that you should disable puppet so it won't interfere.
+
+ sudo puppet agent --disable "messing with partitions"
+ sudo umount /srv
+ sudo mkfs.ext4 -T news /dev/mapper/vd-second--local--disk
+ sudo mount /srv
+ sudo puppet agent --enable
+
+Running `df -hi` should show an increase in available inodes. You can
+proceed with actually setting up codesearch now:
 
  sudo apt install docker-engine python3 gunicorn3 python3-flask \
    python3-requests
@@ -14,7 +31,7 @@ is great, but the UI is a bit lacking, so we work around it a bit.
  sudo cp *.service /etc/systemd/system/
  sudo MODE=start ./manage.sh
 
-If that works, then curl http://localhost:3002/ should work, and you can point
+If that works, then `curl http://localhost:3002/` should work, and you can point
 a web proxy to that port.
 
 Once you're happy with what is running, you should run
