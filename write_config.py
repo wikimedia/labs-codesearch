@@ -56,13 +56,8 @@ def mwstake_extensions():
     config.read_string(r.text)
     repos = []
     for section in config.sections():
-        # Swap the ssh clone to HTTPS, and drop .git suffix
-        url = config[section]['url'].replace(
-            'git@github.com:',
-            'https://github.com/'
-        )[:-4]
-        name = url.split('.com/', 1)[-1]
-        repos.append([name, url])
+        # Drop the ssh prefix and drop .git suffix
+        repos.append(config[section]['url'].replace('git@github.com:', '')[:-4])
 
     return repos
 
@@ -142,8 +137,8 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['VisualEditor core'] = repo_info(
             'VisualEditor/VisualEditor'
         )
-        for repo_name, url in mwstake_extensions():
-            conf['repos'][repo_name] = repo_info(url)
+        for repo_name in mwstake_extensions():
+            conf['repos'][repo_name] = gh_repo(repo_name)
 
     if skins:
         for skin in data['query']['extdistrepos']['skins']:
