@@ -39,6 +39,7 @@ DESCRIPTIONS = {
     'ooui': 'OOUI',
     'operations': 'Wikimedia Operations',
     'armchairgm': 'ArmchairGM',
+    'milkshake': 'Milkshake'
 }
 
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
@@ -139,6 +140,7 @@ def index(backend):
 {things}
 {ooui}
 {operations}
+{milkshake}
 </div>
 """.format(
         search=index_url('search', backend),
@@ -147,7 +149,8 @@ def index(backend):
         skins=index_url('skins', backend),
         things=index_url('things', backend),
         ooui=index_url('ooui', backend),
-        operations=index_url('operations', backend)
+        operations=index_url('operations', backend),
+        milkshake=index_url('milkshake', backend)
     )
     title = '<title>MediaWiki code search</title>'
 

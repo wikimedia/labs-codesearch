@@ -26,4 +26,5 @@ PORTS = {
     'ooui': 6085,
     'operations': 6086,
     'armchairgm': 6087,
+    'milkshake': 6088,
 }

@@ -69,6 +69,13 @@ def repo_info(gerrit_name):
     }
 
 
+def gh_repo(gh_name):
+    return {
+        'url': 'https://github.com/' + gh_name,
+        'ms-between-poll': POLL,
+    }
+
+
 def generate_service(name):
     # Leave whitespace at the top so it's easy to read, lstrip() at the bottom
     return """
@@ -91,7 +98,7 @@ WantedBy=multi-user.target
 
 
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
-              operations=False, armchairgm=False, twn=False):
+              operations=False, armchairgm=False, twn=False, milkshake=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -135,6 +142,12 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
     if twn:
         conf['repos']['translatewiki.net'] = repo_info('translatewiki')
 
+    if milkshake:
+        ms_repos = ['jquery.uls', 'jquery.ime', 'jquery.webfonts', 'jquery.i18n',
+                    'language-data']
+        for ms_repo in ms_repos:
+            conf['repos'][ms_repo] = gh_repo('wikimedia/' + ms_repo)
+
     dirname = 'hound-' + name
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -155,6 +168,7 @@ def main():
     make_conf('ooui', ooui=True)
     make_conf('operations', operations=True)
     make_conf('armchairgm', armchairgm=True)
+    make_conf('milkshake', milkshake=True)
 
 
 if __name__ == '__main__':
