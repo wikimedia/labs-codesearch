@@ -91,7 +91,7 @@ WantedBy=multi-user.target
 
 
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
-              operations=False, armchairgm=False):
+              operations=False, armchairgm=False, twn=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -132,6 +132,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
     if armchairgm:
         conf['repos']['ArmchairGM'] = phab_repo('AMGM')
 
+    if twn:
+        conf['repos']['translatewiki.net'] = repo_info('translatewiki')
+
     dirname = 'hound-' + name
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -144,7 +147,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
 
 def main():
     make_conf('search', core=True, exts=True, skins=True, ooui=True,
-              operations=True)
+              operations=True, twn=True)
     make_conf('core', core=True)
     make_conf('extensions', exts=True)
     make_conf('skins', skins=True)
