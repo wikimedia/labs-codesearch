@@ -142,8 +142,8 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['VisualEditor core'] = repo_info(
             'VisualEditor/VisualEditor'
         )
-        for name, repo in mwstake_extensions():
-            conf['repos'][name] = repo_info(repo)
+        for repo_name, url in mwstake_extensions():
+            conf['repos'][repo_name] = repo_info(url)
 
     if skins:
         for skin in data['query']['extdistrepos']['skins']:
