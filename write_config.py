@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+from configparser import ConfigParser
 import functools
 import json
 import os
@@ -43,6 +44,27 @@ def get_extdist_repos():
     r.raise_for_status()
 
     return r.json()
+
+
+@functools.lru_cache()
+def mwstake_extensions():
+    r = requests.get(
+        'https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules'
+    )
+    r.raise_for_status()
+    config = ConfigParser()
+    config.read_string(r.text)
+    repos = []
+    for section in config.sections():
+        # Swap the ssh clone to HTTPS, and drop .git suffix
+        url = config[section]['url'].replace(
+            'git@github.com:',
+            'https://github.com/'
+        )[:-4]
+        name = url.split('.com/', 1)[-1]
+        repos.append([name, url])
+
+    return repos
 
 
 def phab_repo(callsign):
@@ -120,6 +142,8 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['VisualEditor core'] = repo_info(
             'VisualEditor/VisualEditor'
         )
+        for name, repo in mwstake_extensions():
+            conf['repos'][name] = repo_info(repo)
 
     if skins:
         for skin in data['query']['extdistrepos']['skins']:
