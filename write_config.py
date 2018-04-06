@@ -57,7 +57,10 @@ def mwstake_extensions():
     repos = []
     for section in config.sections():
         # Drop the ssh prefix and drop .git suffix
-        repos.append(config[section]['url'].replace('git@github.com:', '')[:-4])
+        name = config[section]['url'].replace('git@github.com:', '')
+        if name.endswith('.git'):
+            name = name[:-4]
+        repos.append(name)
 
     return repos
 
