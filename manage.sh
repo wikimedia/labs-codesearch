@@ -14,4 +14,5 @@ systemctl $MODE hound-ooui
 systemctl $MODE hound-operations
 systemctl $MODE hound-armchairgm
 systemctl $MODE hound-milkshake
+systemctl $MODE hound-bundled
 systemctl $MODE hound_proxy

@@ -17,11 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import base64
 from configparser import ConfigParser
 import functools
 import json
 import os
 import requests
+import yaml
 
 from ports import PORTS
 
@@ -63,6 +65,20 @@ def mwstake_extensions():
         repos.append(name)
 
     return repos
+
+
+def _get_gerrit_file(gerrit_name, path):
+    url = 'https://gerrit.wikimedia.org/g/{}/+/master/{}?format=TEXT'.format(gerrit_name, path)
+    print('Fetching ' + url)
+    r = requests.get(url)
+    return base64.b64decode(r.text).decode()
+
+
+@functools.lru_cache()
+def bundled_repos():
+    config = yaml.safe_load(_get_gerrit_file(
+        'mediawiki/tools/release', 'make-release/settings.yaml'))
+    return ['mediawiki/' + name for name in config['bundles']['base']]
 
 
 def phab_repo(callsign):
@@ -118,7 +134,8 @@ WantedBy=multi-user.target
 
 
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
-              operations=False, armchairgm=False, twn=False, milkshake=False):
+              operations=False, armchairgm=False, twn=False, milkshake=False,
+              bundled=False, vendor=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -170,6 +187,13 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         for ms_repo in ms_repos:
             conf['repos'][ms_repo] = gh_repo('wikimedia/' + ms_repo)
 
+    if bundled:
+        for repo_name in bundled_repos():
+            conf['repos'][repo_name] = repo_info(repo_name)
+
+    if vendor:
+        conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
+
     dirname = 'hound-' + name
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -191,6 +215,7 @@ def main():
     make_conf('operations', operations=True)
     make_conf('armchairgm', armchairgm=True)
     make_conf('milkshake', milkshake=True)
+    make_conf('bundled', core=True, bundled=True, vendor=True)
 
 
 if __name__ == '__main__':

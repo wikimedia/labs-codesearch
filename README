@@ -23,7 +23,7 @@ Running `df -hi` should show an increase in available inodes. You can
 proceed with actually setting up codesearch now:
 
  sudo apt install docker-engine python3 gunicorn3 python3-flask \
-   python3-requests
+   python3-requests python3-yaml
 
  git clone https://gerrit.wikimedia.org/r/labs/codesearch /srv/codesearch
  cd /srv/codesearch

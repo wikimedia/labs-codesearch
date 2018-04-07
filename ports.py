@@ -27,4 +27,5 @@ PORTS = {
     'operations': 6086,
     'armchairgm': 6087,
     'milkshake': 6088,
+    'bundled': 6089,
 }
