@@ -41,6 +41,7 @@ DESCRIPTIONS = {
     'armchairgm': 'ArmchairGM',
     'milkshake': 'Milkshake',
     'bundled': 'MW tarball',
+    'deployed': 'Wikimedia deployed',
 }
 
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
@@ -140,6 +141,7 @@ def index(backend):
 {skins} ·
 {things}
 {bundled}
+{deployed}
 {ooui}
 {operations}
 {milkshake}
@@ -153,7 +155,8 @@ def index(backend):
         ooui=index_url('ooui', backend),
         operations=index_url('operations', backend),
         milkshake=index_url('milkshake', backend),
-        bundled=index_url('bundled', backend)
+        bundled=index_url('bundled', backend),
+        deployed=index_url('deployed', backend)
     )
     title = '<title>MediaWiki code search</title>'
 

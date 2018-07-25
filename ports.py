@@ -28,4 +28,5 @@ PORTS = {
     'armchairgm': 6087,
     'milkshake': 6088,
     'bundled': 6089,
+    'deployed': 6090,
 }

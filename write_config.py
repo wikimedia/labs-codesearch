@@ -81,6 +81,15 @@ def bundled_repos():
     return ['mediawiki/' + name for name in config['bundles']['base']]
 
 
+@functools.lru_cache()
+def wikimedia_deployed_repos():
+    conf = json.loads(_get_gerrit_file(
+        'mediawiki/tools/release', 'make-wmf-branch/config.json'))
+
+    # Intentionally ignore special_extensions because they're special
+    return ['mediawiki/' + name for name in conf['extensions']]
+
+
 def phab_repo(callsign):
     return {
         'url': 'https://phabricator.wikimedia.org/diffusion/' + callsign,
@@ -135,7 +144,7 @@ WantedBy=multi-user.target
 
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
-              bundled=False, vendor=False):
+              bundled=False, vendor=False, wikimedia=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -191,6 +200,10 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         for repo_name in bundled_repos():
             conf['repos'][repo_name] = repo_info(repo_name)
 
+    if wikimedia:
+        for repo_name in wikimedia_deployed_repos():
+            conf['repos'][repo_name] = repo_info(repo_name)
+
     if vendor:
         conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
 
@@ -216,6 +229,7 @@ def main():
     make_conf('armchairgm', armchairgm=True)
     make_conf('milkshake', milkshake=True)
     make_conf('bundled', core=True, bundled=True, vendor=True)
+    make_conf('deployed', core=True, wikimedia=True, vendor=True)
 
 
 if __name__ == '__main__':
