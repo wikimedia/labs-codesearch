@@ -140,10 +140,11 @@ def index(backend):
 {ext} ·
 {skins} ·
 {things}
-{bundled}
-{deployed}
-{ooui}
-{operations}
+<br>
+{bundled} ·
+{deployed} ·
+{operations} ·
+{ooui} ·
 {milkshake}
 </div>
 """.format(
