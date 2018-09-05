@@ -95,7 +95,7 @@ def phab_repo(callsign):
         'url': 'https://phabricator.wikimedia.org/diffusion/' + callsign,
         'url-pattern': {
             'base-url': 'https://phabricator.wikimedia.org/diffusion/'
-                        '%s/browse/master/{path}{anchor}' % callsign,
+                        '%s/browse/{rev}/{path}{anchor}' % callsign,
             'anchor': '${line}'
         },
         'ms-between-poll': POLL,
@@ -107,7 +107,7 @@ def repo_info(gerrit_name):
         'url': 'https://gerrit.wikimedia.org/r/' + gerrit_name,
         'url-pattern': {
             'base-url': 'https://gerrit.wikimedia.org/g/' +
-                        '%s/+/master/{path}{anchor}' % gerrit_name,
+                        '%s/+/{rev}/{path}{anchor}' % gerrit_name,
             'anchor': '#{line}'
         },
         'ms-between-poll': POLL,
