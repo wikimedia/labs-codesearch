@@ -58,11 +58,21 @@ def mwstake_extensions():
     config.read_string(r.text)
     repos = []
     for section in config.sections():
-        # Drop the ssh prefix and drop .git suffix
-        name = config[section]['url'].replace('git@github.com:', '')
-        if name.endswith('.git'):
-            name = name[:-4]
-        repos.append(name)
+        # TODO: Use a proper URL parser instead of string manipulation
+        url = config[section]['url']
+        if url.endswith('.git'):
+            url = url[:-4]
+        if 'github.com' in url:
+            name = url.replace('git@github.com:', '').replace('https://github.com/', '')
+            repos.append((name, gh_repo(name)))
+        elif 'bitbucket.org' in url:
+            name = url.replace('https://bitbucket.org/', '')
+            repos.append((name, bitbucket_repo(name)))
+        elif 'gitlab.com' in url:
+            name = url.replace('https://gitlab.com/', '')
+            repos.append((name, gitlab_repo(name)))
+        else:
+            raise RuntimeError('Unsure how to handle URL: %s' % url)
 
     return repos
 
@@ -114,9 +124,27 @@ def repo_info(gerrit_name):
     }
 
 
-def gh_repo(gh_name):
+def bitbucket_repo(bb_name):
     return {
-        'url': 'https://github.com/' + gh_name,
+        'url': 'https://bitbucket.org/%s.git' % bb_name,
+        'url-pattern': {
+            'base-url': 'https://bitbucket.org/%s/src/{rev}/{path}' % bb_name,
+            # The anchor syntax used by bitbucket is too complicated for hound to
+            # be able to generate. It's `#basename({path})-{line}`.
+            'anchor': ''
+        },
+        'ms-between-poll': POLL,
+    }
+
+
+def gitlab_repo(gl_name):
+    # Lazy/avoid duplication
+    return gh_repo(gl_name, host='gitlab.com')
+
+
+def gh_repo(gh_name, host='github.com'):
+    return {
+        'url': 'https://%s/%s' % (host, gh_name),
         'ms-between-poll': POLL,
     }
 
@@ -166,8 +194,8 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['VisualEditor core'] = repo_info(
             'VisualEditor/VisualEditor'
         )
-        for repo_name in mwstake_extensions():
-            conf['repos'][repo_name] = gh_repo(repo_name)
+        for repo_name, info in mwstake_extensions():
+            conf['repos'][repo_name] = info
 
     if skins:
         for skin in data['query']['extdistrepos']['skins']:
