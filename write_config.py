@@ -172,7 +172,7 @@ WantedBy=multi-user.target
 
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
-              bundled=False, vendor=False, wikimedia=False):
+              bundled=False, vendor=False, wikimedia=False, pywikibot=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -181,6 +181,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
 
     if core:
         conf['repos']['MediaWiki core'] = repo_info('mediawiki/core')
+
+    if pywikibot:
+        conf['repos']['Pywikibot'] = repo_info('pywikibot/core')
 
     if ooui:
         conf['repos']['OOUI'] = repo_info('oojs/ui')
@@ -247,8 +250,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
 
 def main():
     make_conf('search', core=True, exts=True, skins=True, ooui=True,
-              operations=True, twn=True)
+              operations=True, twn=True, pywikibot=True)
     make_conf('core', core=True)
+    make_conf('pywikibot', pywikibot=True)
     make_conf('extensions', exts=True)
     make_conf('skins', skins=True)
     make_conf('things', exts=True, skins=True)

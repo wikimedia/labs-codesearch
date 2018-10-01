@@ -29,4 +29,5 @@ PORTS = {
     'milkshake': 6088,
     'bundled': 6089,
     'deployed': 6090,
+    'pywikibot': 6091,
 }

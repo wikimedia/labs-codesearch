@@ -16,4 +16,5 @@ systemctl $MODE hound-armchairgm
 systemctl $MODE hound-milkshake
 systemctl $MODE hound-bundled
 systemctl $MODE hound-deployed
+systemctl $MODE hound-pywikibot
 systemctl $MODE hound_proxy

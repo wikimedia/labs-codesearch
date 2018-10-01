@@ -42,6 +42,7 @@ DESCRIPTIONS = {
     'milkshake': 'Milkshake',
     'bundled': 'MW tarball',
     'deployed': 'Wikimedia deployed',
+    'pywikibot': 'Pywikibot'
 }
 
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
@@ -139,13 +140,14 @@ def index(backend):
 {core} ·
 {ext} ·
 {skins} ·
-{things}
+{things} .
+{bundled}
 <br>
-{bundled} ·
 {deployed} ·
 {operations} ·
 {ooui} ·
-{milkshake}
+{milkshake} .
+{pywikibot}
 </div>
 """.format(
         search=index_url('search', backend),
@@ -157,7 +159,8 @@ def index(backend):
         operations=index_url('operations', backend),
         milkshake=index_url('milkshake', backend),
         bundled=index_url('bundled', backend),
-        deployed=index_url('deployed', backend)
+        deployed=index_url('deployed', backend),
+        pywikibot=index_url('pywikibot', backend)
     )
     title = '<title>MediaWiki code search</title>'
 
