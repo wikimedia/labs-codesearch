@@ -140,13 +140,13 @@ def index(backend):
 {core} ·
 {ext} ·
 {skins} ·
-{things} .
+{things} ·
 {bundled}
 <br>
 {deployed} ·
 {operations} ·
 {ooui} ·
-{milkshake} .
+{milkshake} ·
 {pywikibot}
 </div>
 """.format(
