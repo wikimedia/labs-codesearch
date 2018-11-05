@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from flask import Flask, Response, request, redirect, url_for, \
     send_from_directory, render_template
 
+from collections import OrderedDict
 import os
 import re
 import requests
@@ -104,7 +105,7 @@ def parse_systemctl_show(output):
 
 @app.route('/_health')
 def health():
-    status = {}
+    status = OrderedDict()
     for backend, port in sorted(PORTS.items()):
         # First try to hit the hound backend, if it's up, we're good
         try:
