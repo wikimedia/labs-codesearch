@@ -105,7 +105,7 @@ def parse_systemctl_show(output):
 @app.route('/_health')
 def health():
     status = {}
-    for backend, port in PORTS.items():
+    for backend, port in sorted(PORTS.items()):
         # First try to hit the hound backend, if it's up, we're good
         try:
             r = requests.get('http://localhost:%s/api/v1/search' % port)
