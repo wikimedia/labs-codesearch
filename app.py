@@ -208,7 +208,7 @@ def proxy(backend, path='', mangle=False):
             'http://localhost:%s/%s' % (port, path),
             params=request.args
         )
-    except requests.exceptions.ConnectionError as e:
+    except requests.exceptions.ConnectionError:
         resp = """
 Unable to contact hound. If <https://codesearch.wmflabs.org/_health>
 says "starting up", please wait a few minutes for the initial indexing
