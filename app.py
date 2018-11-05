@@ -46,6 +46,7 @@ DESCRIPTIONS = {
 }
 
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
+HOUND_STARTUP = 'Hound is not ready.\n'
 
 
 @app.before_request
@@ -107,8 +108,11 @@ def health():
     for backend, port in PORTS.items():
         # First try to hit the hound backend, if it's up, we're good
         try:
-            requests.get('http://localhost:%s/api/v1/search' % port)
-            status[backend] = 'up'
+            r = requests.get('http://localhost:%s/api/v1/search' % port)
+            if r.text == HOUND_STARTUP:
+                status[backend] = 'starting up'
+            else:
+                status[backend] = 'up'
         except requests.exceptions.ConnectionError:
             # See whether the systemd unit is running
             try:
@@ -208,6 +212,12 @@ def proxy(backend, path='', mangle=False):
             'http://localhost:%s/%s' % (port, path),
             params=request.args
         )
+        if r.text == HOUND_STARTUP:
+            return Response("""
+Hound is still starting up, please wait a few minutes for the initial indexing
+to complete. See <https://codesearch.wmflabs.org/_health> for more
+information.
+""", 503, mimetype='text/plain')
     except requests.exceptions.ConnectionError:
         resp = """
 Unable to contact hound. If <https://codesearch.wmflabs.org/_health>
