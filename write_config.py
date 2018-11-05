@@ -164,6 +164,8 @@ ExecStartPre=-/usr/bin/docker rm -f {name}
 ExecStartPre=/usr/bin/docker pull etsy/hound
 ExecStart=/usr/bin/docker run -p {port}:6080 --name {name} -v /srv/hound/{name}:/data etsy/hound
 ExecStop=/usr/bin/docker stop {name}
+RuntimeMaxSec=86400
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
