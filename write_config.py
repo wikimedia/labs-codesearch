@@ -164,7 +164,7 @@ ExecStartPre=-/usr/bin/docker rm -f {name}
 ExecStartPre=/usr/bin/docker pull etsy/hound
 ExecStart=/usr/bin/docker run -p {port}:6080 --name {name} \
     -v /srv/hound/{name}:/data \
-    -v /srv/puppet:/puppet \
+    -v /srv/puppet:/operations/puppet \
     etsy/hound
 ExecStop=/usr/bin/docker stop {name}
 RuntimeMaxSec=86400
@@ -220,7 +220,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         )
         # puppet is very special because of the non-master branch
         puppet = repo_info('operations/puppet')
-        puppet['url'] = 'file:///puppet'
+        puppet['url'] = 'file:///operations/puppet'
         conf['repos']['Wikimedia Puppet'] = puppet
 
     if armchairgm:
