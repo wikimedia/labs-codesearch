@@ -162,7 +162,10 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill {name}
 ExecStartPre=-/usr/bin/docker rm -f {name}
 ExecStartPre=/usr/bin/docker pull etsy/hound
-ExecStart=/usr/bin/docker run -p {port}:6080 --name {name} -v /srv/hound/{name}:/data etsy/hound
+ExecStart=/usr/bin/docker run -p {port}:6080 --name {name} \
+    -v /srv/hound/{name}:/data \
+    -v /srv/puppet:/puppet \
+    etsy/hound
 ExecStop=/usr/bin/docker stop {name}
 RuntimeMaxSec=86400
 Restart=on-failure
@@ -215,7 +218,10 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
         )
-        # TODO: Add puppet once non-master branches are supported
+        # puppet is very special because of the non-master branch
+        puppet = repo_info('operations/puppet')
+        puppet['url'] = 'file:///puppet'
+        conf['repos']['Wikimedia Puppet'] = puppet
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = phab_repo('AMGM')

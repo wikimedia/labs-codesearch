@@ -25,6 +25,13 @@ proceed with actually setting up codesearch now:
  sudo apt install docker-engine python3 gunicorn3 python3-flask \
    python3-requests python3-yaml
 
+ # operations/puppet is special (T211999)
+ git clone https://gerrit.wikimedia.org/r/operations/puppet /srv/puppet
+ cd /srv/puppet
+ git symbolic-ref refs/remotes/origin/master refs/remotes/origin/production
+ git symbolic-ref refs/heads/master refs/heads/production
+ # Verify with git show-ref
+
  git clone https://gerrit.wikimedia.org/r/labs/codesearch /srv/codesearch
  cd /srv/codesearch
  ./write_config.py
