@@ -242,6 +242,10 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
     if wikimedia:
         for repo_name in wikimedia_deployed_repos():
             conf['repos'][repo_name] = repo_info(repo_name)
+        # Also mw-config (T214341)
+        conf['repos']['Wikimedia MediaWiki config'] = repo_info(
+            'operations/mediawiki-config'
+        )
 
     if vendor:
         conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
