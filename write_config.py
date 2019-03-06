@@ -224,6 +224,10 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia conftool'] = repo_info(
             'operations/software/conftool'
         )
+        # CI config T217716
+        conf['repos']['Wikimedia continuous integration config'] = repo_info(
+            'integration/config'
+        )
         # puppet is very special because of the non-master branch
         puppet = repo_info('operations/puppet')
         puppet['url'] = 'file:///operations/puppet'
