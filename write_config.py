@@ -195,6 +195,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
 
     data = get_extdist_repos()
     if exts:
+        # Sanity check (T223771)
+        if not data['query']['extdistrepos']['extensions']:
+            raise RuntimeError('Why are there no Gerrit extensions?')
         for ext in data['query']['extdistrepos']['extensions']:
             conf['repos']['Extension:%s' % ext] = repo_info(
                 'mediawiki/extensions/%s' % ext
