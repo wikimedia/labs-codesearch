@@ -115,7 +115,7 @@ def phab_repo(callsign):
 
 def repo_info(gerrit_name):
     return {
-        'url': 'https://ggmirror.wmflabs.org/cgit/' + gerrit_name + '.git',
+        'url': 'https://ggmirror.wmflabs.org/git/' + gerrit_name + '.git',
         'url-pattern': {
             'base-url': 'https://gerrit.wikimedia.org/g/' +
                         '%s/+/{rev}/{path}{anchor}' % gerrit_name,
