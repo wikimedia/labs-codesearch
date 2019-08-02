@@ -29,7 +29,6 @@ from ports import PORTS
 
 # One hour
 POLL = 60 * 60 * 1000
-HALF_POLL = 30 * 60 * 1000
 DATA = '/srv/hound'
 
 
@@ -115,13 +114,13 @@ def phab_repo(callsign):
 
 def repo_info(gerrit_name):
     return {
-        'url': 'https://ggmirror.wmflabs.org/git/' + gerrit_name + '.git',
+        'url': 'https://gerrit-replica.wikimedia.org/r/' + gerrit_name + '.git',
         'url-pattern': {
             'base-url': 'https://gerrit.wikimedia.org/g/' +
                         '%s/+/{rev}/{path}{anchor}' % gerrit_name,
             'anchor': '#{line}'
         },
-        'ms-between-poll': HALF_POLL,
+        'ms-between-poll': POLL,
     }
 
 
