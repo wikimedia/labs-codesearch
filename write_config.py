@@ -221,6 +221,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
         )
+        conf['repos']['Wikimedia conftool'] = repo_info(
+            'operations/software/conftool'
+        )
         # puppet is very special because of the non-master branch
         puppet = repo_info('operations/puppet')
         puppet['url'] = 'file:///operations/puppet'
