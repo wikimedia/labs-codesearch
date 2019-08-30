@@ -30,4 +30,5 @@ PORTS = {
     'bundled': 6089,
     'deployed': 6090,
     'pywikibot': 6091,
+    'services': 6092,
 }

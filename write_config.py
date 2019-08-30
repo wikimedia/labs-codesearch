@@ -177,7 +177,8 @@ WantedBy=multi-user.target
 
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
-              bundled=False, vendor=False, wikimedia=False, pywikibot=False):
+              bundled=False, vendor=False, wikimedia=False, pywikibot=False,
+              services=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -260,6 +261,15 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
     if vendor:
         conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
 
+    if services:
+        conf['repos']['Parsoid service'] = repo_info('mediawiki/services/parsoid')
+        conf['repos']['Mobile apps'] = repo_info('mediawiki/services/mobileapps')
+        conf['repos']['Mobile apps'] = repo_info('mediawiki/services/mobileapps')
+        conf['repos']['EventStreams'] = repo_info('mediawiki/services/eventstreams')
+        conf['repos']['PoolCounter'] = repo_info('mediawiki/services/poolcounter')
+        conf['repos']['CX server'] = repo_info('mediawiki/services/cxserver')
+        conf['repos']['Kask'] = repo_info('mediawiki/services/kask')
+
     dirname = 'hound-' + name
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -272,7 +282,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
 
 def main():
     make_conf('search', core=True, exts=True, skins=True, ooui=True,
-              operations=True, twn=True, pywikibot=True)
+              operations=True, twn=True, pywikibot=True, services=True)
     make_conf('core', core=True)
     make_conf('pywikibot', pywikibot=True)
     make_conf('extensions', exts=True)
@@ -282,8 +292,9 @@ def main():
     make_conf('operations', operations=True)
     make_conf('armchairgm', armchairgm=True)
     make_conf('milkshake', milkshake=True)
-    make_conf('bundled', core=True, bundled=True, vendor=True)
-    make_conf('deployed', core=True, wikimedia=True, vendor=True)
+    make_conf('bundled', core=True, bundled=True, vendor=True, services=True)
+    make_conf('deployed', core=True, wikimedia=True, vendor=True, services=True)
+    make_conf('services', services=True)
 
 
 if __name__ == '__main__':
