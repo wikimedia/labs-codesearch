@@ -264,7 +264,6 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
     if services:
         conf['repos']['Parsoid service'] = repo_info('mediawiki/services/parsoid')
         conf['repos']['Mobile apps'] = repo_info('mediawiki/services/mobileapps')
-        conf['repos']['Mobile apps'] = repo_info('mediawiki/services/mobileapps')
         conf['repos']['EventStreams'] = repo_info('mediawiki/services/eventstreams')
         conf['repos']['PoolCounter'] = repo_info('mediawiki/services/poolcounter')
         conf['repos']['CX server'] = repo_info('mediawiki/services/cxserver')
