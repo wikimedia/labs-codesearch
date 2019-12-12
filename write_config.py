@@ -71,6 +71,9 @@ def mwstake_extensions():
         elif 'gitlab.com' in url:
             name = url.replace('https://gitlab.com/', '')
             repos.append((name, gitlab_repo(name)))
+        elif 'phabricator.nichework.com' in url:
+            # FIXME: implement
+            continue
         else:
             raise RuntimeError('Unsure how to handle URL: %s' % url)
 
