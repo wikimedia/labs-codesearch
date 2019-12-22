@@ -242,7 +242,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia Puppet'] = puppet
 
     if armchairgm:
-        conf['repos']['ArmchairGM'] = phab_repo('AMGM')
+        conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
 
     if twn:
         conf['repos']['translatewiki.net'] = repo_info('translatewiki')
