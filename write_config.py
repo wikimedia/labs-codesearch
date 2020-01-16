@@ -292,7 +292,7 @@ def main():
     make_conf('operations', operations=True)
     make_conf('armchairgm', armchairgm=True)
     make_conf('milkshake', milkshake=True)
-    make_conf('bundled', core=True, bundled=True, vendor=True, services=True)
+    make_conf('bundled', core=True, bundled=True, vendor=True)
     make_conf('deployed', core=True, wikimedia=True, vendor=True, services=True)
     make_conf('services', services=True)
 
