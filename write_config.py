@@ -88,23 +88,17 @@ def _get_gerrit_file(gerrit_name, path):
 
 
 @functools.lru_cache()
+def _settings_yaml() -> dict:
+    return yaml.safe_load(_get_gerrit_file('mediawiki/tools/release',
+                                           'make-release/settings.yaml'))
+
+
 def bundled_repos():
-    config = yaml.safe_load(_get_gerrit_file(
-        'mediawiki/tools/release', 'make-release/settings.yaml'))
-    return ['mediawiki/' + name for name in config['bundles']['base']]
+    return [name for name in _settings_yaml()['bundles']['base']]
 
 
-@functools.lru_cache()
 def wikimedia_deployed_repos():
-    conf = json.loads(_get_gerrit_file(
-        'mediawiki/tools/release', 'make-wmf-branch/config.json'))
-
-    ret = ['mediawiki/' + name for name in conf['extensions']]
-    # Handle special_extensions specially...
-    for name in conf['special_extensions']:
-        ret.append('mediawiki/' + name)
-
-    return ret
+    return [name for name in _settings_yaml()['bundles']['wmf_core']]
 
 
 def phab_repo(callsign):
