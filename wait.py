@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import os
 import random
 import requests
 import time
@@ -26,13 +27,19 @@ def main():
     """Wait until no hound instances are starting up"""
     wait = True
     while wait:
-        # Random skew so all the waits hopefully
-        # don't give up at the same time
-        time.sleep(random.randint(5, 20))
         req = requests.get('http://localhost:3002/_health.json')
         req.raise_for_status()
         health = req.json()
-        wait = 'starting up' in health.values()
+        wait_for = [name for name in health if health[name] == 'starting up']
+        if wait_for:
+            wait = True
+            print('{}: Sleeping while waiting for {}'.format(
+                os.environ.get('HOUND_NAME', 'unknown'),
+                ', '.join(wait_for))
+            )
+            # Random skew so all the waits hopefully
+            # don't give up at the same time
+            time.sleep(random.randint(5, 20))
 
 
 if __name__ == '__main__':

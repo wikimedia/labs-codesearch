@@ -155,14 +155,16 @@ def generate_service(name):
     return """
 [Unit]
 Description={name}
-After=docker.service
-Requires=docker.service
+After=docker.service hound_proxy.service
+Requires=docker.service hound_proxy.service
 
 [Service]
 TimeoutStartSec=0
+Environment="HOUND_NAME={name}"
 ExecStartPre=-/usr/bin/docker kill {name}
 ExecStartPre=-/usr/bin/docker rm -f {name}
 ExecStartPre=/usr/bin/docker pull etsy/hound
+ExecStartPre=/srv/codesearch/wait.py
 ExecStart=/usr/bin/docker run -p {port}:6080 --name {name} \
     -v /srv/hound/{name}:/data \
     -v /srv/puppet:/operations/puppet \
