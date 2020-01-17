@@ -40,6 +40,8 @@ def main():
             # Random skew so all the waits hopefully
             # don't give up at the same time
             time.sleep(random.randint(5, 20))
+        else:
+            wait = False
 
 
 if __name__ == '__main__':
