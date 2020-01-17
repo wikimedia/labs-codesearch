@@ -283,8 +283,27 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
 
 
 def main():
-    make_conf('search', core=True, exts=True, skins=True, ooui=True,
-              operations=True, twn=True, pywikibot=True, services=True)
+    # "Search" profile should include everything unless there's a good reason
+    make_conf('search',
+              core=True,
+              exts=True,
+              skins=True,
+              ooui=True,
+              operations=True,
+              # A dead codebase used by just one person
+              armchairgm=False,
+              twn=True,
+              # FIXME: Justify
+              milkshake=False,
+              # FIXME: Justify
+              bundled=False,
+              # Avoiding upstream libraries; to reconsider, see T227704
+              vendor=False,
+              # FIXME: Justify
+              wikimedia=False,
+              pywikibot=True,
+              services=True)
+
     make_conf('core', core=True)
     make_conf('pywikibot', pywikibot=True)
     make_conf('extensions', exts=True)
