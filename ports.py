@@ -17,18 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-PORTS = {
-    'search': 6080,
-    'extensions': 6081,
-    'skins': 6082,
-    'things': 6083,
-    'core': 6084,
-    'ooui': 6085,
-    'operations': 6086,
-    'armchairgm': 6087,
-    'milkshake': 6088,
-    'bundled': 6089,
-    'deployed': 6090,
-    'pywikibot': 6091,
-    'services': 6092,
-}
+import json
+import os
+
+if os.path.exists('/etc/codesearch_ports.json'):
+    with open('/etc/codesearch_ports.json') as f:
+        PORTS = json.load(f)
+else:
+    PORTS = {
+        'search': 6080,
+        'extensions': 6081,
+        'skins': 6082,
+        'things': 6083,
+        'core': 6084,
+        'ooui': 6085,
+        'operations': 6086,
+        'armchairgm': 6087,
+        'milkshake': 6088,
+        'bundled': 6089,
+        'deployed': 6090,
+        'pywikibot': 6091,
+        'services': 6092,
+    }
