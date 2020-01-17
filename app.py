@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from flask import Flask, Response, request, redirect, url_for, \
-    send_from_directory, render_template
+    send_from_directory, render_template, jsonify
 
 from collections import OrderedDict
 import os
@@ -104,8 +104,7 @@ def parse_systemctl_show(output):
     return data
 
 
-@app.route('/_health')
-def health():
+def _health() -> OrderedDict:
     status = OrderedDict()
     for backend, port in sorted(PORTS.items()):
         # First try to hit the hound backend, if it's up, we're good
@@ -125,13 +124,22 @@ def health():
                 if info['MainPID'] == '0':
                     status[backend] = 'down'
                 else:
-                    # No webservice, but hound is running, so it's probably
-                    # just starting up still
-                    status[backend] = 'starting up'
+                    # No webservice, so hound hasn't started yet so it's waiting
+                    status[backend] = 'pre-start'
             except subprocess.CalledProcessError:
                 status[backend] = 'unknown'
 
-    return render_template('health.html', status=status)
+    return status
+
+
+@app.route('/_health')
+def health():
+    return render_template('health.html', status=_health())
+
+
+@app.route('/_health.json')
+def health_json():
+    return jsonify(_health())
 
 
 @app.route('/<backend>/')
