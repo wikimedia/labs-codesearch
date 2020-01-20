@@ -21,27 +21,17 @@ storage. Note that you should disable puppet so it won't interfere.
 
 Running `df -hi` should show an increase in available inodes. You can
 proceed with actually setting up codesearch now by enabling the puppet
-role: `role::codesearch`.
-
- # Force a puppet run
+role: `role::codesearch`. Then, force a puppet run:
  sudo puppet agent -tv
 
- # operations/puppet is special (T211999)
- cd /srv/puppet
- git symbolic-ref refs/remotes/origin/master refs/remotes/origin/production
- git symbolic-ref refs/heads/master refs/heads/production
- # Verify with git show-ref
+If you get errors related to iptables and docker, reboot the instance
+and they should fix themselves.
 
- ./write_config.py
- sudo cp *.service /etc/systemd/system/
- sudo MODE=start ./manage.sh
+You might also need to force hound configuration to be written by running:
+ sudo systemctl start codesearch-write-config
 
-If that works, then `curl http://localhost:3002/` should work, and you can point
-a web proxy to that port.
-
-Once you're happy with what is running, you should run
-`sudo MODE=enable ./manage.sh` so that the services will automatically start
-upon boot.
+If all that works, then `curl http://localhost:3002/` should work, and you can
+point a web proxy to that port.
 
 The hound- instances will be automatically restarted by systemd after 24
 hours, which will pick up any new config changes.
@@ -55,7 +45,7 @@ requests to hound, and inject our HTML during that process.
 Hound is (C) 2014, Etsy, Inc. under the terms of the MIT license, see
 <https://github.com/etsy/hound/blob/master/LICENSE> for details.
 
-codesearch is (C) 2017, Kunal Mehta under the terms of the GPL, v3 or any
+codesearch is (C) 2017-2020, Kunal Mehta under the terms of the GPL, v3 or any
 later version. See COPYING for details.
 
 The favicon is a combination of the MediaWiki logo (Public domain) by Anthere,

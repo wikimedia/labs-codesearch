@@ -25,8 +25,6 @@ import os
 import requests
 import yaml
 
-from ports import PORTS
-
 # One hour
 POLL = 60 * 60 * 1000
 DATA = '/srv/hound'
@@ -150,34 +148,6 @@ def gh_repo(gh_name, host='github.com'):
     }
 
 
-def generate_service(name):
-    # Leave whitespace at the top so it's easy to read, lstrip() at the bottom
-    return """
-[Unit]
-Description={name}
-After=docker.service hound_proxy.service
-Requires=docker.service hound_proxy.service
-
-[Service]
-TimeoutStartSec=0
-Environment="HOUND_NAME={name}"
-ExecStartPre=-/usr/bin/docker kill {name}
-ExecStartPre=-/usr/bin/docker rm -f {name}
-ExecStartPre=/usr/bin/docker pull etsy/hound
-ExecStartPre=/srv/codesearch/wait.py
-ExecStart=/usr/bin/docker run -p {port}:6080 --name {name} \
-    -v /srv/hound/{name}:/data \
-    -v /srv/puppet:/operations/puppet \
-    etsy/hound
-ExecStop=/usr/bin/docker stop {name}
-RuntimeMaxSec=86400
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-""".format(name='hound-' + name, port=PORTS[name]).lstrip()
-
-
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
@@ -278,8 +248,6 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         os.mkdir(directory)
     with open(os.path.join(directory, 'config.json'), 'w') as f:
         json.dump(conf, f, indent='\t')
-    with open(os.path.join(os.path.dirname(__file__), dirname + '.service'), 'w') as f:
-        f.write(generate_service(name))
 
 
 def main():
