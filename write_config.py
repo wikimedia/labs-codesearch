@@ -23,6 +23,7 @@ import functools
 import json
 import os
 import requests
+from typing import List
 import yaml
 
 # One hour
@@ -31,13 +32,13 @@ DATA = '/srv/hound'
 
 
 @functools.lru_cache()
-def get_extdist_repos():
+def get_extdist_repos() -> dict:
     r = requests.get(
         'https://www.mediawiki.org/w/api.php',
         params={
             "action": "query",
             "format": "json",
-            'formatversion': 2,
+            'formatversion': "2",
             "list": "extdistrepos"
         }
     )
@@ -73,13 +74,13 @@ def mwstake_extensions():
             # FIXME: implement
             continue
         else:
-            raise RuntimeError('Unsure how to handle URL: %s' % url)
+            raise RuntimeError(f'Unsure how to handle URL: {url}')
 
     return repos
 
 
-def _get_gerrit_file(gerrit_name, path):
-    url = 'https://gerrit.wikimedia.org/g/{}/+/master/{}?format=TEXT'.format(gerrit_name, path)
+def _get_gerrit_file(gerrit_name: str, path: str) -> str:
+    url = f'https://gerrit.wikimedia.org/g/{gerrit_name}/+/master/{path}?format=TEXT'
     print('Fetching ' + url)
     r = requests.get(url)
     return base64.b64decode(r.text).decode()
@@ -91,17 +92,17 @@ def _settings_yaml() -> dict:
                                            'make-release/settings.yaml'))
 
 
-def bundled_repos():
+def bundled_repos() -> List[str]:
     return [name for name in _settings_yaml()['bundles']['base']]
 
 
-def wikimedia_deployed_repos():
+def wikimedia_deployed_repos() -> List[str]:
     return [name for name in _settings_yaml()['bundles']['wmf_core']]
 
 
-def phab_repo(callsign):
+def phab_repo(callsign: str) -> dict:
     return {
-        'url': 'https://phabricator.wikimedia.org/diffusion/' + callsign,
+        'url': f'https://phabricator.wikimedia.org/diffusion/{callsign}',
         'url-pattern': {
             'base-url': 'https://phabricator.wikimedia.org/diffusion/'
                         '%s/browse/{rev}/{path}{anchor}' % callsign,
@@ -111,9 +112,9 @@ def phab_repo(callsign):
     }
 
 
-def repo_info(gerrit_name):
+def repo_info(gerrit_name: str) -> dict:
     return {
-        'url': 'https://gerrit-replica.wikimedia.org/r/' + gerrit_name + '.git',
+        'url': f'https://gerrit-replica.wikimedia.org/r/{gerrit_name}.git',
         'url-pattern': {
             'base-url': 'https://gerrit.wikimedia.org/g/' +
                         '%s/+/{rev}/{path}{anchor}' % gerrit_name,
@@ -123,9 +124,9 @@ def repo_info(gerrit_name):
     }
 
 
-def bitbucket_repo(bb_name):
+def bitbucket_repo(bb_name: str) -> dict:
     return {
-        'url': 'https://bitbucket.org/%s.git' % bb_name,
+        'url': f'https://bitbucket.org/{bb_name}.git',
         'url-pattern': {
             'base-url': 'https://bitbucket.org/%s/src/{rev}/{path}' % bb_name,
             # The anchor syntax used by bitbucket is too complicated for hound to
@@ -136,14 +137,14 @@ def bitbucket_repo(bb_name):
     }
 
 
-def gitlab_repo(gl_name):
+def gitlab_repo(gl_name: str) -> dict:
     # Lazy/avoid duplication
     return gh_repo(gl_name, host='gitlab.com')
 
 
-def gh_repo(gh_name, host='github.com'):
+def gh_repo(gh_name: str, host: str = 'github.com') -> dict:
     return {
-        'url': 'https://%s/%s' % (host, gh_name),
+        'url': f'https://{host}/{gh_name}',
         'ms-between-poll': POLL,
     }
 
@@ -242,7 +243,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['CX server'] = repo_info('mediawiki/services/cxserver')
         conf['repos']['Kask'] = repo_info('mediawiki/services/kask')
 
-    dirname = 'hound-' + name
+    dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
         os.mkdir(directory)

@@ -80,9 +80,9 @@ def favicon():
 def index_url(target, current):
     text = DESCRIPTIONS[target]
     if target == current:
-        return '<b>%s</b>' % text
+        return f'<b>{text}</b>'
     else:
-        return '<a href="%s">%s</a>' % (
+        return '<a href="{}">{}</a>'.format(
             url_for('index', backend=target),
             text
         )
@@ -111,7 +111,7 @@ def _health() -> OrderedDict:
     for backend, port in sorted(PORTS.items()):
         # First try to hit the hound backend, if it's up, we're good
         try:
-            r = requests.get('http://localhost:%s/api/v1/search' % port)
+            r = requests.get(f'http://localhost:{port}/api/v1/search')
             if r.text == HOUND_STARTUP:
                 status[backend] = 'starting up'
             else:
@@ -120,7 +120,7 @@ def _health() -> OrderedDict:
             # See whether the systemd unit is running
             try:
                 show = subprocess.check_output(
-                    ['systemctl', 'show', 'hound-%s' % backend]
+                    ['systemctl', 'show', f'hound-{backend}']
                 )
                 info = parse_systemctl_show(show.decode())
                 if info['MainPID'] == '0':
@@ -223,7 +223,7 @@ def proxy(backend, path='', mangle=False):
     port = PORTS[backend]
     try:
         r = requests.get(
-            'http://localhost:%s/%s' % (port, path),
+            f'http://localhost:{port}/{path}',
             params=request.args
         )
         if r.text == HOUND_STARTUP:
