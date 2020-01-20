@@ -185,7 +185,7 @@ def index(backend):
     footer = """
 <p style="text-align: center;">
 <a href="https://www.mediawiki.org/wiki/codesearch">MediaWiki code search</a>
-is powered by <a href="https://github.com/etsy/hound">hound</a>.
+is powered by <a href="https://github.com/hound-search/hound">hound</a>.
 <br />
 <a href="https://gerrit.wikimedia.org/g/labs/codesearch">Source code</a>
 is available under the terms of the GPL v3 or any later version.

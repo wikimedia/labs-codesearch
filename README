@@ -43,7 +43,7 @@ requests to hound, and inject our HTML during that process.
 
 == License ==
 Hound is (C) 2014, Etsy, Inc. under the terms of the MIT license, see
-<https://github.com/etsy/hound/blob/master/LICENSE> for details.
+<https://github.com/hound-search/hound/blob/master/LICENSE> for details.
 
 codesearch is (C) 2017-2020, Kunal Mehta under the terms of the GPL, v3 or any
 later version. See COPYING for details.
