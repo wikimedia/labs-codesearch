@@ -152,7 +152,7 @@ def gh_repo(gh_name: str, host: str = 'github.com') -> dict:
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
-              services=False):
+              services=False, libs=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -243,6 +243,40 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['CX server'] = repo_info('mediawiki/services/cxserver')
         conf['repos']['Kask'] = repo_info('mediawiki/services/kask')
 
+    if libs:
+        conf['repos']['alea'] = repo_info('mediawiki/libs/alea')
+        conf['repos']['Assert'] = repo_info('mediawiki/libs/Assert')
+        conf['repos']['Equivset'] = repo_info('mediawiki/libs/Equivset')
+        conf['repos']['etcd'] = repo_info('mediawiki/libs/etcd')
+        conf['repos']['IPUtils'] = repo_info('mediawiki/libs/IPUtils')
+        conf['repos']['LangConv'] = repo_info('mediawiki/libs/LangConv')
+        conf['repos']['ObjectCache'] = repo_info('mediawiki/libs/ObjectCache')
+        conf['repos']['ObjectFactory'] = repo_info('mediawiki/libs/ObjectFactory')
+        conf['repos']['PasswordBlacklist'] = repo_info('mediawiki/libs/PasswordBlacklist')
+        conf['repos']['RemexHtml'] = repo_info('mediawiki/libs/RemexHtml')
+        conf['repos']['ScopedCallback'] = repo_info('mediawiki/libs/ScopedCallback')
+        conf['repos']['Services'] = repo_info('mediawiki/libs/Services')
+        conf['repos']['Timestamp'] = repo_info('mediawiki/libs/Timestamp')
+        conf['repos']['WaitConditionLoop'] = repo_info('mediawiki/libs/WaitConditionLoop')
+        conf['repos']['XMPReader'] = repo_info('mediawiki/libs/XMPReader')
+        conf['repos']['Zest'] = repo_info('mediawiki/libs/Zest')
+        conf['repos']['AhoCorasick'] = repo_info('AhoCorasick')
+        conf['repos']['cdb'] = repo_info('cdb')
+        conf['repos']['CLDRPluralRuleParser'] = repo_info('CLDRPluralRuleParser')
+        conf['repos']['HtmlFormatter'] = repo_info('HtmlFormatter')
+        conf['repos']['IPSet'] = repo_info('IPSet')
+        conf['repos']['RelPath'] = repo_info('RelPath')
+        conf['repos']['RunningStat'] = repo_info('RunningStat')
+        conf['repos']['WrappedString'] = repo_info('WrappedString')
+
+        conf['repos']['WikibaseDataModel'] = gh_repo('wmde/WikibaseDataModel')
+        conf['repos']['WikibaseDataModelSerialization'] = \
+            gh_repo('wmde/WikibaseDataModelSerialization')
+        conf['repos']['WikibaseDataModelServices'] = gh_repo('wmde/WikibaseDataModelServices')
+        conf['repos']['WikibaseInternalSerialization'] = \
+            gh_repo('wmde/WikibaseInternalSerialization')
+        conf['repos']['wikibase-term-store'] = gh_repo('wmde/wikibase-term-store')
+
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -271,7 +305,8 @@ def main():
               # FIXME: Justify
               wikimedia=False,
               pywikibot=True,
-              services=True)
+              services=True,
+              libs=True)
 
     make_conf('core', core=True)
     make_conf('pywikibot', pywikibot=True)
@@ -285,6 +320,7 @@ def main():
     make_conf('bundled', core=True, bundled=True, vendor=True)
     make_conf('deployed', core=True, wikimedia=True, vendor=True, services=True)
     make_conf('services', services=True)
+    make_conf('libraries', ooui=True, milkshake=True, libs=True)
 
 
 if __name__ == '__main__':

@@ -42,6 +42,7 @@ DESCRIPTIONS = {
     'things': 'Extensions & skins',
     'bundled': 'MW tarball',
     'deployed': 'Wikimedia deployed',
+    'libraries': 'PHP libraries',
     'operations': 'Wikimedia Operations',
     'ooui': 'OOUI',
     'milkshake': 'Milkshake',
