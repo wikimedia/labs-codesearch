@@ -1,0 +1,4 @@
+# We use Debian packages, so pin to the same versions as Buster
+flask==1.0.2
+requests==2.21.0
+pyyaml==3.13
