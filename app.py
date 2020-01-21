@@ -28,10 +28,10 @@ import requests
 import subprocess
 import traceback
 
-with open('/etc/codesearch_ports.json') as f:
-    PORTS = json.load(f)
-
 app = Flask(__name__)
+if os.path.exists('/etc/codesearch_ports.json'):
+    with open('/etc/codesearch_ports.json') as f:
+        app.config['PORTS'] = json.load(f)
 
 DESCRIPTIONS = {
     'search': 'Everything',
@@ -108,7 +108,7 @@ def parse_systemctl_show(output):
 
 def _health() -> OrderedDict:
     status = OrderedDict()
-    for backend, port in sorted(PORTS.items()):
+    for backend, port in sorted(app.config['PORTS'].items()):
         # First try to hit the hound backend, if it's up, we're good
         try:
             r = requests.get(f'http://localhost:{port}/api/v1/search')
@@ -146,7 +146,7 @@ def health_json():
 
 @app.route('/<backend>/')
 def index(backend):
-    if backend not in PORTS:
+    if backend not in app.config['PORTS']:
         return 'invalid backend'
     header = """
 <div style="text-align: center;">
@@ -209,7 +209,7 @@ is available under the terms of the GPL v3 or any later version.
 
 @app.route('/<backend>/open_search.xml')
 def opensearch(backend):
-    if backend not in PORTS:
+    if backend not in app.config['PORTS']:
         return 'invalid backend'
     temp = render_template('open_search.xml', backend=backend,
                            description=DESCRIPTIONS[backend])
@@ -218,9 +218,9 @@ def opensearch(backend):
 
 @app.route('/<backend>/<path:path>')
 def proxy(backend, path='', mangle=False):
-    if backend not in PORTS:
+    if backend not in app.config['PORTS']:
         return 'invalid backend'
-    port = PORTS[backend]
+    port = app.config['PORTS'][backend]
     try:
         r = requests.get(
             f'http://localhost:{port}/{path}',
