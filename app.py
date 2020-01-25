@@ -33,20 +33,22 @@ if os.path.exists('/etc/codesearch_ports.json'):
     with open('/etc/codesearch_ports.json') as f:
         app.config['PORTS'] = json.load(f)
 
+# This order is the order they will display in the UI
 DESCRIPTIONS = {
     'search': 'Everything',
     'core': 'MediaWiki core',
     'extensions': 'Extensions',
     'skins': 'Skins',
     'things': 'Extensions & skins',
-    'ooui': 'OOUI',
-    'operations': 'Wikimedia Operations',
-    'armchairgm': 'ArmchairGM',
-    'milkshake': 'Milkshake',
     'bundled': 'MW tarball',
     'deployed': 'Wikimedia deployed',
+    'operations': 'Wikimedia Operations',
+    'ooui': 'OOUI',
+    'milkshake': 'Milkshake',
     'pywikibot': 'Pywikibot',
-    'services': 'Wikimedia Services'
+    'services': 'Wikimedia Services',
+    # Not visible
+    'armchairgm': 'ArmchairGM',
 }
 
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
@@ -148,38 +150,17 @@ def health_json():
 def index(backend):
     if backend not in app.config['PORTS']:
         return 'invalid backend'
-    header = """
-<div style="text-align: center;">
+    urls = ' . '.join(index_url(target, backend)
+                      for target in DESCRIPTIONS
+                      if target != 'armchairgm' and target in app.config['PORTS'])
+    # max-width matches hound's css for #root
+    header = f"""
+<div style="text-align: center; max-width: 960px; margin: 0 auto;">
 <h2>MediaWiki code search</h2>
 
-{search} ·
-{core} ·
-{ext} ·
-{skins} ·
-{things} ·
-{bundled}
-<br>
-{deployed} ·
-{operations} ·
-{ooui} ·
-{milkshake} ·
-{pywikibot} .
-{services}
+{urls}
 </div>
-""".format(
-        search=index_url('search', backend),
-        core=index_url('core', backend),
-        ext=index_url('extensions', backend),
-        skins=index_url('skins', backend),
-        things=index_url('things', backend),
-        ooui=index_url('ooui', backend),
-        operations=index_url('operations', backend),
-        milkshake=index_url('milkshake', backend),
-        bundled=index_url('bundled', backend),
-        deployed=index_url('deployed', backend),
-        pywikibot=index_url('pywikibot', backend),
-        services=index_url('services', backend),
-    )
+"""
     title = '<title>MediaWiki code search</title>'
 
     footer = """

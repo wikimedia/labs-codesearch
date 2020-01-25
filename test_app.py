@@ -45,6 +45,14 @@ def test_index_url(client):
     assert '<a href="/extensions/">Extensions</a>' == app.index_url('extensions', 'search')
 
 
+def test_index(client, requests_mock):
+    requests_mock.get('http://localhost:6080/', text='<body>')
+    rv = client.get('/search/')
+    assert '<b>Everything</b> . ' \
+           '<a href="/extensions/">Extensions</a> . ' \
+           '<a href="/skins/">Skins</a>\n</div>' in rv.data.decode()
+
+
 def test_parse_systemctl_show():
     # Abbreviated version of output
     input = """
