@@ -298,11 +298,11 @@ def main():
               twn=True,
               # FIXME: Justify
               milkshake=False,
-              # FIXME: Justify
+              # All of these should already be included via core/exts/skins
               bundled=False,
               # Avoiding upstream libraries; to reconsider, see T227704
               vendor=False,
-              # FIXME: Justify
+              # All of these should already be included via core/exts/skins
               wikimedia=False,
               pywikibot=True,
               services=True,
