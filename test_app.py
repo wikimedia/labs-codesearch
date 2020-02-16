@@ -48,9 +48,9 @@ def test_index_url(client):
 def test_index(client, requests_mock):
     requests_mock.get('http://localhost:6080/', text='<body>')
     rv = client.get('/search/')
-    assert '<b>Everything</b> . ' \
-           '<a href="/extensions/">Extensions</a> . ' \
-           '<a href="/skins/">Skins</a>\n</div>' in rv.data.decode()
+    assert '<ul><li class="index"><b>Everything</b></li>' \
+           '<li class="index"><a href="/extensions/">Extensions</a></li>' \
+           '<li class="index"><a href="/skins/">Skins</a></li></ul>\n</div>' in rv.data.decode()
 
 
 def test_parse_systemctl_show():

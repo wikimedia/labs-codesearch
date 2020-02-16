@@ -151,18 +151,36 @@ def health_json():
 def index(backend):
     if backend not in app.config['PORTS']:
         return 'invalid backend'
-    urls = ' . '.join(index_url(target, backend)
-                      for target in DESCRIPTIONS
-                      if target != 'armchairgm' and target in app.config['PORTS'])
+    sep = '</li><li class="index">'
+    urls = sep.join(index_url(target, backend)
+                    for target in DESCRIPTIONS
+                    if target != 'armchairgm' and target in app.config['PORTS'])
     # max-width matches hound's css for #root
     header = f"""
 <div style="text-align: center; max-width: 960px; margin: 0 auto;">
 <h2>MediaWiki code search</h2>
 
-{urls}
+<ul><li class="index">{urls}</li></ul>
 </div>
 """
     title = '<title>MediaWiki code search</title>'
+
+    style = """
+<style>
+.index {
+    display: inline;
+}
+.index a {
+    white-space: nowrap;
+}
+.index:after {
+    content:" • ";
+}
+.index:last-child:after {
+    content: none;
+}
+</style>
+"""
 
     footer = """
 <p style="text-align: center;">
@@ -184,6 +202,7 @@ is available under the terms of the GPL v3 or any later version.
         text = text.replace('<body>', '<body>' + header)
         text = text.replace('</body>', footer + '</body>')
         text = text.replace('<title>Hound</title>', title)
+        text = text.replace('</head>', style + '</head>')
         text = LINK_OPENSEARCH.sub(opensearch_link, text)
         return text
     return proxy(backend, mangle=mangle)
