@@ -275,7 +275,8 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['WikibaseDataModelServices'] = gh_repo('wmde/WikibaseDataModelServices')
         conf['repos']['WikibaseInternalSerialization'] = \
             gh_repo('wmde/WikibaseInternalSerialization')
-        conf['repos']['wikibase-term-store'] = gh_repo('wmde/wikibase-term-store')
+        conf['repos']['wikibase-termbox'] = repo_info('wikibase/termbox')
+        conf['repos']['wikibase-vuejs-components'] = repo_info('wikibase/vuejs-components')
 
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
