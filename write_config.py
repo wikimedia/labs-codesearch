@@ -26,8 +26,8 @@ import requests
 from typing import List
 import yaml
 
-# One hour
-POLL = 60 * 60 * 1000
+# 90 minutes
+POLL = 90 * 60 * 1000
 DATA = '/srv/hound'
 
 
