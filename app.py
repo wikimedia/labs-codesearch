@@ -48,6 +48,7 @@ DESCRIPTIONS = {
     'milkshake': 'Milkshake',
     'pywikibot': 'Pywikibot',
     'services': 'Wikimedia Services',
+    'analytics': 'Analytics',
     # Not visible
     'armchairgm': 'ArmchairGM',
 }

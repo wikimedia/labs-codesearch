@@ -170,7 +170,7 @@ def gh_repo(gh_name: str, host: str = 'github.com') -> dict:
 def make_conf(name, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
-              services=False, libs=False):
+              services=False, libs=False, analytics=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -281,6 +281,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['wikibase-termbox'] = repo_info('wikibase/termbox')
         conf['repos']['wikibase-vuejs-components'] = repo_info('wikibase/vuejs-components')
 
+    if analytics:
+        conf['repos'].update(gerrit_prefix_list('analytics/'))
+
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -310,7 +313,8 @@ def main():
               wikimedia=False,
               pywikibot=True,
               services=True,
-              libs=True)
+              libs=True,
+              analytics=True)
 
     make_conf('core', core=True)
     make_conf('pywikibot', pywikibot=True)
@@ -325,6 +329,7 @@ def main():
     make_conf('deployed', core=True, wikimedia=True, vendor=True, services=True)
     make_conf('services', services=True)
     make_conf('libraries', ooui=True, milkshake=True, libs=True)
+    make_conf('analytics', analytics=True)
 
 
 if __name__ == '__main__':
