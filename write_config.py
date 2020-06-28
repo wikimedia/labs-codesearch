@@ -92,6 +92,24 @@ def _settings_yaml() -> dict:
                                            'make-release/settings.yaml'))
 
 
+def gerrit_prefix_list(prefix: str) -> dict:
+    """Generator based on Gerrit prefix search"""
+    req = requests.get('https://gerrit.wikimedia.org/r/projects/', params={
+        'b': 'master',
+        'p': prefix,
+    })
+    req.raise_for_status()
+    data = json.loads(req.text[4:])
+    repos = {}
+    for repo in data:
+        info = data[repo]
+        if info['state'] != 'ACTIVE':
+            continue
+        repos[repo] = repo_info(repo)
+
+    return repos
+
+
 def bundled_repos() -> List[str]:
     return [name for name in _settings_yaml()['bundles']['base']]
 
@@ -244,22 +262,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Kask'] = repo_info('mediawiki/services/kask')
 
     if libs:
-        conf['repos']['alea'] = repo_info('mediawiki/libs/alea')
-        conf['repos']['Assert'] = repo_info('mediawiki/libs/Assert')
-        conf['repos']['CommonPasswords'] = repo_info('mediawiki/libs/CommonPasswords')
-        conf['repos']['Equivset'] = repo_info('mediawiki/libs/Equivset')
-        conf['repos']['etcd'] = repo_info('mediawiki/libs/etcd')
-        conf['repos']['IPUtils'] = repo_info('mediawiki/libs/IPUtils')
-        conf['repos']['LangConv'] = repo_info('mediawiki/libs/LangConv')
-        conf['repos']['ObjectCache'] = repo_info('mediawiki/libs/ObjectCache')
-        conf['repos']['ObjectFactory'] = repo_info('mediawiki/libs/ObjectFactory')
-        conf['repos']['RemexHtml'] = repo_info('mediawiki/libs/RemexHtml')
-        conf['repos']['ScopedCallback'] = repo_info('mediawiki/libs/ScopedCallback')
-        conf['repos']['Services'] = repo_info('mediawiki/libs/Services')
-        conf['repos']['Timestamp'] = repo_info('mediawiki/libs/Timestamp')
-        conf['repos']['WaitConditionLoop'] = repo_info('mediawiki/libs/WaitConditionLoop')
-        conf['repos']['XMPReader'] = repo_info('mediawiki/libs/XMPReader')
-        conf['repos']['Zest'] = repo_info('mediawiki/libs/Zest')
+        conf['repos'].update(gerrit_prefix_list('mediawiki/libs/'))
         conf['repos']['AhoCorasick'] = repo_info('AhoCorasick')
         conf['repos']['cdb'] = repo_info('cdb')
         conf['repos']['CLDRPluralRuleParser'] = repo_info('CLDRPluralRuleParser')
