@@ -6,5 +6,5 @@
     <Tags>mediawiki</Tags>
     <Url type="text/html"
          method="get"
-         template="https://codesearch.wmflabs.org/{{ backend }}/?q={searchTerms}" />
+         template="https://codesearch.wmcloud.org/{{ backend }}/?q={searchTerms}" />
 </OpenSearchDescription>

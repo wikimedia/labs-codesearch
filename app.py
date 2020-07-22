@@ -231,12 +231,12 @@ def proxy(backend, path='', mangle=False):
         if r.text == HOUND_STARTUP:
             return Response("""
 Hound is still starting up, please wait a few minutes for the initial indexing
-to complete. See <https://codesearch.wmflabs.org/_health> for more
+to complete. See <https://codesearch.wmcloud.org/_health> for more
 information.
 """, 503, mimetype='text/plain')
     except requests.exceptions.ConnectionError:
         resp = """
-Unable to contact hound. If <https://codesearch.wmflabs.org/_health>
+Unable to contact hound. If <https://codesearch.wmclouad.org/_health>
 says "starting up", please wait a few minutes for the initial indexing
 to complete.
 
