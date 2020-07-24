@@ -277,6 +277,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['RunningStat'] = repo_info('RunningStat')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
 
+        # Wikibase libraries
         conf['repos']['WikibaseDataModel'] = gh_repo('wmde/WikibaseDataModel')
         conf['repos']['WikibaseDataModelSerialization'] = \
             gh_repo('wmde/WikibaseDataModelSerialization')
@@ -285,6 +286,12 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
             gh_repo('wmde/WikibaseInternalSerialization')
         conf['repos']['wikibase-termbox'] = repo_info('wikibase/termbox')
         conf['repos']['wikibase-vuejs-components'] = repo_info('wikibase/vuejs-components')
+        conf['repos']['WikibaseDataValuesValueView'] = repo_info('data-values/value-view')
+        conf['repos']['WikibaseJavascriptAPI'] = repo_info('wikibase/javascript-api')
+        conf['repos']['WikibaseDataValuesJavaScript'] = gh_repo('wmde/DataValuesJavaScript')
+        conf['repos']['WikibaseSerializationJavaScript'] = \
+            gh_repo('wmde/WikibaseSerializationJavaScript')
+        conf['repos']['WikibaseDataModelJavaScript'] = gh_repo('wmde/WikibaseDataModelJavaScript')
 
     if analytics:
         conf['repos'].update(gerrit_prefix_list('analytics/'))
