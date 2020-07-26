@@ -218,6 +218,16 @@ def opensearch(backend):
     return Response(temp, content_type='text/xml')
 
 
+@app.route('/<backend>/config.json')
+def config_json(backend):
+    if backend not in app.config['PORTS']:
+        return 'invalid backend'
+    return send_from_directory(
+        f'/srv/hound/hound-{backend}',
+        'config.json'
+    )
+
+
 @app.route('/<backend>/<path:path>')
 def proxy(backend, path='', mangle=False):
     if backend not in app.config['PORTS']:
