@@ -222,10 +222,12 @@ def opensearch(backend):
 def config_json(backend):
     if backend not in app.config['PORTS']:
         return 'invalid backend'
-    return send_from_directory(
+    resp = send_from_directory(
         f'/srv/hound/hound-{backend}',
         'config.json'
     )
+    resp.headers['access-control-allow-origin'] = '*'
+    return resp
 
 
 @app.route('/<backend>/<path:path>')
