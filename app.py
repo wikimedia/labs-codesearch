@@ -248,7 +248,7 @@ information.
 """, 503, mimetype='text/plain')
     except requests.exceptions.ConnectionError:
         resp = """
-Unable to contact hound. If <https://codesearch.wmclouad.org/_health>
+Unable to contact hound. If <https://codesearch.wmcloud.org/_health>
 says "starting up", please wait a few minutes for the initial indexing
 to complete.
 
