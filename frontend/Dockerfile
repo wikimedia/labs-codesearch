@@ -1,7 +1,6 @@
 FROM rust AS builder
 
 RUN rustup target add wasm32-unknown-unknown && cargo install wasm-pack
-COPY Cargo.lock .
 COPY Cargo.toml .
 COPY src/ src/
 RUN wasm-pack build --target web --out-name package
