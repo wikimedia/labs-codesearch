@@ -1,0 +1,48 @@
+.highlight {
+    font-weight: bold;
+    background-color: rgba(255,255,140,0.5);
+}
+
+.file {
+    margin: 10px 0 20px;
+}
+
+.lineno {
+  padding-right: .5em;
+}
+
+.code {
+  padding-left: .5em;
+}
+
+.card-body {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.results a {
+  color: rgb(33, 37, 41);
+}
+
+.heading {
+    text-align: center;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+.index {
+    display: inline;
+}
+.index a {
+    white-space: nowrap;
+}
+.index:after {
+    content:" • ";
+}
+.index:last-child:after {
+    content: none;
+}
+
+.form-query {
+    width: 100%;
+}
