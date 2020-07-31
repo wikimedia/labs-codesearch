@@ -111,11 +111,17 @@ enum Msg {
 fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
     match msg {
         Msg::SearchSubmitted => {
-            model.loading = true;
             model.error = None;
             model.results = None;
             let options = model.options.clone();
+
+            if options.query.is_empty() {
+                // Don't do anything if there is no search term
+                return;
+            }
+
             let profile = model.profile.clone();
+            model.loading = true;
             orders.perform_cmd(async move {
                 let fconfig = codesearch::fetch_config(&profile);
                 let fresults = codesearch::send_query(&options, &profile);
