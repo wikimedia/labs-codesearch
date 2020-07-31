@@ -148,7 +148,7 @@ fn view_form_result_format(model: &Model) -> Node<Msg> {
     let formats = vec!["Default", "Phabricator"];
     let selected = &model.result_format;
     div![
-        "Result format:",
+        "Result format: ",
         formats.iter().map(|fmt| {
             let id = format!("format-{}", &fmt);
             div![
@@ -330,7 +330,7 @@ fn view_response_default(
                         a![
                             C!["nav-link"],
                             attrs!{At::Href => format!("#{}", repo)},
-                            repo,
+                            format!("{} ", repo),
                             span![
                                 C!["badge badge-secondary"],
                                 format!("{}", result.matches.len())
