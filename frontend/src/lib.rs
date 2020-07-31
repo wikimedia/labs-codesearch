@@ -154,13 +154,19 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
         }
         Msg::SearchQueryChanged(val) => {
             model.options.query = val;
+            // No need to re-render
+            orders.skip();
         }
         Msg::FilesChanged(val) => {
             model.options.files = val;
+            // No need to re-render
+            orders.skip();
         }
         Msg::CaseInsensitiveChanged => {
             let current = model.options.case_insensitive;
             model.options.case_insensitive = !current;
+            // No need to re-render
+            orders.skip();
         }
         Msg::ResultsReceived(config, results) => {
             model.hound_config = Some(config);
