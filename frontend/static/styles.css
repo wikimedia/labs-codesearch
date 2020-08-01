@@ -50,3 +50,14 @@
 .form-query {
     width: 100%;
 }
+
+/* We want reposlist to be first on mobile but right on desktop */
+@media (max-width: 991px) {
+    .cards {
+        order: 2;
+    }
+
+    .reposlist {
+        order: 1;
+    }
+}

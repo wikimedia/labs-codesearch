@@ -258,8 +258,9 @@ fn view_response_default(
         }
     });
     div![
+        C!["results row"],
         div![
-            C!["cards col"],
+            C!["cards col-lg"],
             results.iter().map(|(repo, result)| {
                 // FIXME: what if config.json and hound get out of sync?
                 let cfg = hound_config.repos.get(repo.to_owned()).unwrap();
@@ -318,9 +319,8 @@ fn view_response_default(
                 ]
             })
         ],
-        C!["results row"],
         div![
-            C!["col col-md-auto"],
+            C!["reposlist col col-md-auto"],
             h5!["Matched repositories"],
             ul![
                 C!["nav flex-column"],
