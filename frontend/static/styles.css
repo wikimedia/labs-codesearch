@@ -30,6 +30,10 @@
     margin: 1rem auto 0;
 }
 
+.heading a {
+    color: #007bff;
+}
+
 .index {
     display: inline;
 }

@@ -85,13 +85,17 @@ impl Model {
         } else {
             "nope".to_string()
         };
-        Url::new()
-            .add_path_part(&format!("{}/", self.profile))
-            .set_search(UrlSearch::new(vec![
-                ("q", vec![&self.options.query]),
-                ("i", vec![&case_insenstive]),
-                ("files", vec![&self.options.files]),
-            ]))
+        if self.options.query.is_empty() {
+            Url::new().add_path_part(&format!("{}/", self.profile))
+        } else {
+            Url::new()
+                .add_path_part(&format!("{}/", self.profile))
+                .set_search(UrlSearch::new(vec![
+                    ("q", vec![&self.options.query]),
+                    ("i", vec![&case_insenstive]),
+                    ("files", vec![&self.options.files]),
+                ]))
+        }
     }
 }
 
@@ -105,6 +109,12 @@ enum Msg {
     ResultsErrored(String),
     ChangeProfile(String),
     ChangeResultFormat(String),
+}
+
+fn change_url(new_url: &str) {
+    util::history()
+        .push_state_with_url(&JsValue::from_str("{}"), "", Some(&new_url))
+        .unwrap();
 }
 
 /// `update` describes how to handle each `Msg`.
@@ -121,10 +131,15 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             }
 
             let profile = model.profile.clone();
+            let url = model.to_url().to_string().clone();
             model.loading = true;
             orders.perform_cmd(async move {
                 let fconfig = codesearch::fetch_config(&profile);
                 let fresults = codesearch::send_query(&options, &profile);
+
+                // Update the URLs once we've fired off our requests
+                change_url(&url);
+
                 let config = match fconfig.await {
                     Ok(config) => config,
                     Err(e) => return Msg::ResultsErrored(e.to_string()),
@@ -144,13 +159,6 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
                     ),
                 }
             });
-            util::history()
-                .push_state_with_url(
-                    &JsValue::from_str("{}"),
-                    "",
-                    Some(&model.to_url().to_string()),
-                )
-                .unwrap();
         }
         Msg::SearchQueryChanged(val) => {
             model.options.query = val;
@@ -179,7 +187,12 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
         }
         Msg::ChangeProfile(profile) => {
             model.profile = profile;
-            model.results = None;
+            // If we already had some results, retrigger a search
+            if model.results.is_some() {
+                orders.perform_cmd(async { Msg::SearchSubmitted });
+            } else {
+                change_url(&model.to_url().to_string());
+            }
         }
         Msg::ChangeResultFormat(result_format) => {
             model.result_format = result_format;

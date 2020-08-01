@@ -55,7 +55,7 @@ fn view_heading(model: &Model) -> Node<Msg> {
                 if &model.profile == backend {
                     b![label]
                 } else {
-                    a![attrs! {At::Href => format!("/{}/", backend)}, label]
+                    a![label]
                 }
             ]
         })]
