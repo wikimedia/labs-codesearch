@@ -92,7 +92,7 @@ fn view_form(model: &Model) -> Node<Msg> {
                         Msg::SearchSubmitted
                     }),
                     IF!(model.loading => span![
-                        C!["spinner-border spinner-border-sm"],
+                        C!["spinner-border spinner-border-sm search-spinner"],
                         attrs!{At::from("role") => "status"},
                     ]),
                     IF!(model.loading => "Searching..."),
@@ -122,7 +122,7 @@ fn view_form(model: &Model) -> Node<Msg> {
             div![
                 C!["form-group col-12 col-sm-6 order-4"],
                 div![
-                    C!["form-check"],
+                    C!["form-check case-insensitive-checkbox"],
                     input![
                         C!["form-check-input"],
                         attrs! {
