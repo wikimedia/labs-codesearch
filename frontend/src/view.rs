@@ -219,8 +219,7 @@ fn view_response_phabricator(
         .map(|(repo, result)| {
             // FIXME: what if config.json and hound get out of sync?
             let cfg = hound_config.repos.get(&repo.to_owned()).unwrap();
-            let num = result.matches.len();
-            let mut ret = vec![format!("[ ] {} ({} files)", repo, num)];
+            let mut ret = vec![format!("[ ] {} ({} files)", repo, result.files_with_match)];
             for match_ in &result.matches {
                 let num_matches = match_.matches.len();
                 let filename = match_.filename.clone();
@@ -240,9 +239,9 @@ fn view_response_phabricator(
 
 fn view_response_default(
     hound_config: &codesearch::HoundConfig,
-    results: &codesearch::HoundResults,
+    original_results: &codesearch::HoundResults,
 ) -> Node<Msg> {
-    let hresults = results.clone();
+    let hresults = original_results.clone();
     let mut results: Vec<(&String, &codesearch::RepoResult)> =
         hresults.iter().collect();
     results.sort_unstable_by(|(a_name, a_res), (b_name, b_res)| {
@@ -264,6 +263,8 @@ fn view_response_default(
             results.iter().map(|(repo, result)| {
                 // FIXME: what if config.json and hound get out of sync?
                 let cfg = hound_config.repos.get(repo.to_owned()).unwrap();
+                let has_more = result.files_with_match > result.matches.len();
+                let repo_name = repo.to_owned().clone();
                 div![
                     C!["repo"],
                     h2![
@@ -315,7 +316,15 @@ fn view_response_default(
                                 ]]
                             ]
                         ]
-                    })
+                    }),
+                    IF!(has_more => button![
+                        C!["btn btn-secondary load-more"],
+                        attrs!{At::Type => "button"},
+                        ev(Ev::Click, move |_| {
+                            Msg::LoadMoreResults(repo_name.to_string())
+                        }),
+                        format!("Load all {} matches in {}", result.files_with_match, repo),
+                    ]),
                 ]
             })
         ],
@@ -333,7 +342,7 @@ fn view_response_default(
                             format!("{} ", repo),
                             span![
                                 C!["badge badge-secondary"],
-                                format!("{}", result.matches.len())
+                                format!("{}", result.files_with_match)
                             ]
                         ]
                     ]

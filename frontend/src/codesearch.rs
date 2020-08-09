@@ -32,17 +32,17 @@ pub struct HoundResponse {
 
 pub type HoundResults = HashMap<String, RepoResult>;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct RepoResult {
     #[serde(rename = "Matches")]
     pub matches: Vec<RepoMatch>,
     #[serde(rename = "FilesWithMatch")]
-    pub files_with_match: u32,
+    pub files_with_match: usize,
     #[serde(rename = "Revision")]
     pub revision: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct RepoMatch {
     #[serde(rename = "Filename")]
     pub(crate) filename: String,
@@ -50,7 +50,7 @@ pub struct RepoMatch {
     pub(crate) matches: Vec<Match>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Match {
     #[serde(rename = "Line")]
     line: String,
@@ -103,6 +103,7 @@ pub fn is_valid_backend(profile: &str) -> bool {
 pub struct SearchOptions {
     pub query: String,
     pub files: String,
+    pub repos: Option<String>,
     pub case_insensitive: bool,
 }
 
@@ -117,6 +118,8 @@ pub async fn send_query(
     } else {
         "nope"
     };
+    // offset to query
+    let rng = if opts.repos.is_some() { "20:" } else { ":20" };
     let resp = Client::new()
         .get(&format!(
             "https://codesearch.wmcloud.org/{}/api/v1/search",
@@ -125,8 +128,8 @@ pub async fn send_query(
         // stats=fosho&repos=*&rng=%3A20&q=class+LinkRenderer%5Cb&files=&i=nope
         .query(&[
             ("stats", "fosho"),
-            ("repos", "*"),
-            ("rng", ":20"),
+            ("repos", &opts.repos.unwrap_or("*".to_string())),
+            ("rng", rng),
             ("q", &opts.query),
             ("files", &opts.files),
             ("i", case_insensitive),
@@ -171,8 +174,8 @@ impl Default for UrlPattern {
 }
 
 pub async fn fetch_config(profile: &str) -> Result<HoundConfig> {
-    // XXX: Can we just assume the browser will cache this request
-    // properly? I think so.
+    // FIXME: we can't use https://codesearch.wmcloud.org/search/api/v1/repos because
+    // it doesn't have good caching headers...
     let resp = Client::new()
         .get(&format!(
             "https://codesearch.wmcloud.org/{}/config.json",

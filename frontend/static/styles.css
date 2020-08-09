@@ -47,7 +47,8 @@
     content: none;
 }
 
-.form-query {
+.form-query,
+.load-more {
     width: 100%;
 }
 
@@ -58,6 +59,10 @@
 .spinner-border.search-spinner {
     margin-right: .125rem;
     vertical-align: initial;
+}
+
+h2 {
+    margin-top: .5rem;
 }
 
 /* We want reposlist to be first on mobile but right on desktop */
