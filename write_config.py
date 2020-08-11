@@ -259,12 +259,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
 
     if services:
-        conf['repos']['Parsoid service'] = repo_info('mediawiki/services/parsoid')
-        conf['repos']['Mobile apps'] = repo_info('mediawiki/services/mobileapps')
-        conf['repos']['EventStreams'] = repo_info('mediawiki/services/eventstreams')
-        conf['repos']['PoolCounter'] = repo_info('mediawiki/services/poolcounter')
-        conf['repos']['CX server'] = repo_info('mediawiki/services/cxserver')
-        conf['repos']['Kask'] = repo_info('mediawiki/services/kask')
+        conf['repos'].update(gerrit_prefix_list('mediawiki/services/'))
 
     if libs:
         conf['repos'].update(gerrit_prefix_list('mediawiki/libs/'))
