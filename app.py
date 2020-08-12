@@ -275,7 +275,7 @@ with the following information:
     if path == 'api/v1/repos':
         # Allow this endpoint to be cached
         resp.add_etag()
-    return resp
+    return resp.make_conditional(request)
 
 
 if __name__ == '__main__':

@@ -54,10 +54,15 @@ def test_index(client, requests_mock):
 
 
 def test_api_v1_repos(client, requests_mock):
-    # Verify this endpoitn has an etag
+    # Verify this endpoint has an etag
     requests_mock.get('http://localhost:6080/api/v1/repos', text='{}')
     rv = client.get('/search/api/v1/repos')
-    assert 'etag' in rv.headers
+    etag = rv.headers['etag']
+    assert rv.status_code == 200
+    rv2 = client.get('/search/api/v1/repos', headers={'if-none-match': etag})
+    assert rv2.status_code == 304
+    rv3 = client.get('/search/api/v1/repos', headers={'if-none-match': 'blahblahblah'})
+    assert rv3.status_code == 200
 
 
 def test_api_v1_search(client, requests_mock):
