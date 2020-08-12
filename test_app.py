@@ -53,6 +53,20 @@ def test_index(client, requests_mock):
            '<li class="index"><a href="/skins/">Skins</a></li></ul>\n</div>' in rv.data.decode()
 
 
+def test_api_v1_repos(client, requests_mock):
+    # Verify this endpoitn has an etag
+    requests_mock.get('http://localhost:6080/api/v1/repos', text='{}')
+    rv = client.get('/search/api/v1/repos')
+    assert 'etag' in rv.headers
+
+
+def test_api_v1_search(client, requests_mock):
+    # no etag for this endpoint
+    requests_mock.get('http://localhost:6080/api/v1/search', text='{}')
+    rv = client.get('/search/api/v1/search')
+    assert 'etag' not in rv.headers
+
+
 def test_parse_systemctl_show():
     # Abbreviated version of output
     input = """

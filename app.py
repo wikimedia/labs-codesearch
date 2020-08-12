@@ -267,11 +267,15 @@ with the following information:
         text = mangle(r.text)
     else:
         text = r.content
-    return Response(
+    resp = Response(
         text,
         r.status_code,
         headers
     )
+    if path == 'api/v1/repos':
+        # Allow this endpoint to be cached
+        resp.add_etag()
+    return resp
 
 
 if __name__ == '__main__':
