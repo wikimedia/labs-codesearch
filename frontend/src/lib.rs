@@ -63,7 +63,7 @@ impl From<Url> for codesearch::SearchOptions {
             query,
             files,
             case_insensitive,
-            repos: None
+            repos: None,
         }
     }
 }
@@ -207,9 +207,11 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             let repo2 = repo.clone();
             options.repos = Some(repo);
             orders.perform_cmd(async move {
-                let resp = match codesearch::send_query(&options, &profile).await {
+                let resp = match codesearch::send_query(&options, &profile)
+                    .await
+                {
                     Ok(resp) => resp,
-                    Err(err) => return Msg::ResultsErrored(err.to_string())
+                    Err(err) => return Msg::ResultsErrored(err.to_string()),
                 };
                 if let Some(error) = resp.error {
                     return Msg::ResultsErrored(error);
@@ -218,20 +220,25 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
                 match resp.results {
                     Some(results) => {
                         let our_results = results[&repo2].clone();
-                        Msg::PartialResultsReceived(our_results, options.repos.unwrap())
-                    },
+                        Msg::PartialResultsReceived(
+                            our_results,
+                            options.repos.unwrap(),
+                        )
+                    }
                     None => Msg::ResultsErrored(
                         "Unknown error fetching search results".to_string(),
                     ),
                 }
             });
-        },
+        }
         Msg::PartialResultsReceived(new_results, repo) => {
             // Need to merge the results together
             if let Some(results) = model.results.as_mut() {
                 //results.insert(repo, new_results);
                 let repomatch = results.get_mut(&repo).unwrap();
-                repomatch.matches.extend(new_results.matches.iter().cloned());
+                repomatch
+                    .matches
+                    .extend(new_results.matches.iter().cloned());
             }
         }
     }

@@ -218,8 +218,11 @@ fn view_response_phabricator(
         .iter()
         .map(|(repo, result)| {
             // FIXME: what if config.json and hound get out of sync?
-            let cfg = hound_config.repos.get(&repo.to_owned()).unwrap();
-            let mut ret = vec![format!("[ ] {} ({} files)", repo, result.files_with_match)];
+            let cfg = hound_config.get(&repo.to_owned()).unwrap();
+            let mut ret = vec![format!(
+                "[ ] {} ({} files)",
+                repo, result.files_with_match
+            )];
             for match_ in &result.matches {
                 let num_matches = match_.matches.len();
                 let filename = match_.filename.clone();
@@ -262,7 +265,7 @@ fn view_response_default(
             C!["cards col-lg"],
             results.iter().map(|(repo, result)| {
                 // FIXME: what if config.json and hound get out of sync?
-                let cfg = hound_config.repos.get(repo.to_owned()).unwrap();
+                let cfg = hound_config.get(repo.to_owned()).unwrap();
                 let has_more = result.files_with_match > result.matches.len();
                 let repo_name = repo.to_owned().clone();
                 div![

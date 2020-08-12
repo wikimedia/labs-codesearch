@@ -141,16 +141,12 @@ pub async fn send_query(
     Ok(resp)
 }
 
-#[derive(Deserialize)]
-pub struct HoundConfig {
-    pub repos: HashMap<String, RepoConfig>,
-}
+pub type HoundConfig = HashMap<String, RepoConfig>;
 
 #[derive(Deserialize)]
 pub struct RepoConfig {
     pub url: String,
     #[serde(rename = "url-pattern")]
-    #[serde(default)]
     pub url_pattern: UrlPattern,
 }
 
@@ -161,24 +157,10 @@ pub struct UrlPattern {
     pub anchor: String,
 }
 
-impl Default for UrlPattern {
-    /// default pattern is intended for GitHub-style URLs
-    fn default() -> Self {
-        Self {
-            // Note that the default hound config hardcodes master
-            // instead of {rev} but we can do better than that
-            base_url: "{url}/blob/{rev}/{path}{anchor}".to_string(),
-            anchor: "#L{line}".to_string(),
-        }
-    }
-}
-
 pub async fn fetch_config(profile: &str) -> Result<HoundConfig> {
-    // FIXME: we can't use https://codesearch.wmcloud.org/search/api/v1/repos because
-    // it doesn't have good caching headers...
     let resp = Client::new()
         .get(&format!(
-            "https://codesearch.wmcloud.org/{}/config.json",
+            "https://codesearch.wmcloud.org/{}/api/v1/repos",
             profile
         ))
         .send()
