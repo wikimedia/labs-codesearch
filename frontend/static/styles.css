@@ -75,3 +75,7 @@ h2 {
         order: 1;
     }
 }
+
+.border-right {
+    user-select: none;
+}
