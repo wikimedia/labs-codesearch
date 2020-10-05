@@ -274,6 +274,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['RelPath'] = repo_info('RelPath')
         conf['repos']['RunningStat'] = repo_info('RunningStat')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
+        conf['repos']['MediaWiki CodeSniffer'] = repo_info(
+            'mediawiki/tools/codesniffer'
+        )
 
         # Wikibase libraries
         conf['repos']['WikibaseDataModel'] = gh_repo('wmde/WikibaseDataModel')
