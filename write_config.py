@@ -233,6 +233,9 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['MediaWiki Vagrant'] = repo_info(
             'mediawiki/vagrant'
         )
+        conf['repos']['Deployment Charts'] = repo_info(
+            'operations/deployment-charts'
+        )
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
