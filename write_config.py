@@ -229,6 +229,8 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         puppet['url'] = 'file:///operations/puppet'
         conf['repos']['Wikimedia Puppet'] = puppet
 
+        conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
+
         # TODO: Move this to a dedicated section like "development tools"
         conf['repos']['MediaWiki Vagrant'] = repo_info(
             'mediawiki/vagrant'
