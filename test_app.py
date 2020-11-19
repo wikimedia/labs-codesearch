@@ -36,7 +36,6 @@ def test_homepage(client):
     # Redirect to /search/
     rv = client.get('/')
     assert rv.headers['Location'] == 'http://localhost/search/'
-    assert 'Strict-Transport-Security' in rv.headers
 
 
 def test_index_url(client):
