@@ -76,7 +76,7 @@ pub fn backends() -> Vec<(String, String)> {
         ("core".to_string(), "MediaWiki core".to_string()),
         ("extensions".to_string(), "Extensions".to_string()),
         ("skins".to_string(), "Skins".to_string()),
-        ("things".to_string(), "Extensions & things".to_string()),
+        ("things".to_string(), "Extensions & skins".to_string()),
         ("bundled".to_string(), "MW tarball".to_string()),
         ("deployed".to_string(), "Wikimedia deployed".to_string()),
         ("libraries".to_string(), "PHP libraries".to_string()),
