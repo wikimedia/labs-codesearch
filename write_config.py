@@ -268,6 +268,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
 
     if services:
         conf['repos'].update(gerrit_prefix_list('mediawiki/services/'))
+        conf['repos']['mwaddlink'] = repo_info('research/mwaddlink')
 
     if libs:
         conf['repos'].update(gerrit_prefix_list('mediawiki/libs/'))
