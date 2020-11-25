@@ -17,12 +17,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import argparse
 import base64
 from configparser import ConfigParser
 import functools
 import json
 import os
 import requests
+import subprocess
 from typing import List
 import yaml
 
@@ -167,7 +169,7 @@ def gh_repo(gh_name: str, host: str = 'github.com') -> dict:
     }
 
 
-def make_conf(name, core=False, exts=False, skins=False, ooui=False,
+def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
               services=False, libs=False, analytics=False):
@@ -308,13 +310,41 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
         os.mkdir(directory)
-    with open(os.path.join(directory, 'config.json'), 'w') as f:
+    dest = os.path.join(directory, 'config.json')
+    if os.path.exists(dest):
+        with open(dest) as f:
+            old = extract_urls(json.load(f))
+    else:
+        old = set()
+    new = extract_urls(conf)
+    # Write the new config always, in case names or other stuff changed
+    print(f'{dirname}: writing new config')
+    with open(dest, 'w') as f:
         json.dump(conf, f, indent='\t')
+    if args.restart:
+        if new != old:
+            print(f'{dirname}: restarting...')
+            subprocess.check_call(['systemctl', 'restart', dirname])
+        else:
+            print(f'{dirname}: skipping restart')
+
+
+def extract_urls(conf) -> set:
+    """extract a set of unique URLs from the config"""
+    return {repo['url'] for repo in conf['repos'].values()}
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description='Generate hound configuration')
+    parser.add_argument('--restart', help='Restart hound instances if necessary',
+                        action='store_true')
+    return parser.parse_args(args=argv)
 
 
 def main():
+    args = parse_args()
     # "Search" profile should include everything unless there's a good reason
-    make_conf('search',
+    make_conf('search', args,
               core=True,
               exts=True,
               skins=True,
@@ -336,20 +366,20 @@ def main():
               libs=True,
               analytics=True)
 
-    make_conf('core', core=True)
-    make_conf('pywikibot', pywikibot=True)
-    make_conf('extensions', exts=True)
-    make_conf('skins', skins=True)
-    make_conf('things', exts=True, skins=True)
-    make_conf('ooui', ooui=True)
-    make_conf('operations', operations=True)
-    make_conf('armchairgm', armchairgm=True)
-    make_conf('milkshake', milkshake=True)
-    make_conf('bundled', core=True, bundled=True, vendor=True)
-    make_conf('deployed', core=True, wikimedia=True, vendor=True, services=True)
-    make_conf('services', services=True)
-    make_conf('libraries', ooui=True, milkshake=True, libs=True)
-    make_conf('analytics', analytics=True)
+    make_conf('core', args, core=True)
+    make_conf('pywikibot', args, pywikibot=True)
+    make_conf('extensions', args, exts=True)
+    make_conf('skins', args, skins=True)
+    make_conf('things', args, exts=True, skins=True)
+    make_conf('ooui', args, ooui=True)
+    make_conf('operations', args, operations=True)
+    make_conf('armchairgm', args, armchairgm=True)
+    make_conf('milkshake', args, milkshake=True)
+    make_conf('bundled', args, core=True, bundled=True, vendor=True)
+    make_conf('deployed', args, core=True, wikimedia=True, vendor=True, services=True)
+    make_conf('services', args, services=True)
+    make_conf('libraries', args, ooui=True, milkshake=True, libs=True)
+    make_conf('analytics', args, analytics=True)
 
 
 if __name__ == '__main__':

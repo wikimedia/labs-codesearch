@@ -24,3 +24,8 @@ def test_gerrit_prefix_list():
     assert 'mediawiki/libs/alea' in d
     assert d['mediawiki/libs/alea']['url'] ==\
            'https://gerrit-replica.wikimedia.org/r/mediawiki/libs/alea.git'
+
+
+def test_parse_args():
+    assert write_config.parse_args([]).restart is False
+    assert write_config.parse_args(['--restart']).restart is True
