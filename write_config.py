@@ -228,6 +228,7 @@ def make_conf(name, core=False, exts=False, skins=False, ooui=False,
         puppet = repo_info('operations/puppet')
         puppet['url'] = 'file:///operations/puppet'
         conf['repos']['Wikimedia Puppet'] = puppet
+        conf['repos']['Blubber'] = repo_info('blubber')
 
         conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
 
