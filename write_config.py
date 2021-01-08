@@ -97,7 +97,6 @@ def _settings_yaml() -> dict:
 def gerrit_prefix_list(prefix: str) -> dict:
     """Generator based on Gerrit prefix search"""
     req = requests.get('https://gerrit.wikimedia.org/r/projects/', params={
-        'b': 'master',
         'p': prefix,
     })
     req.raise_for_status()
