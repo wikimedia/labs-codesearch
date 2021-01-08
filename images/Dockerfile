@@ -3,7 +3,7 @@ FROM alpine
 ENV GOPATH /go
 
 RUN apk update \
-	&& apk add go git subversion libc-dev mercurial bzr openssh \
+	&& apk add go git subversion libc-dev mercurial openssh \
 	&& go get github.com/hound-search/hound/cmds/houndd \
 	&& apk del go \
 	&& rm -f /var/cache/apk/* \
