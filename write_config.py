@@ -175,6 +175,11 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
+        'vcs-config': {
+            'git': {
+                'detect-ref': True
+            },
+        },
         'repos': {}
     }
 
