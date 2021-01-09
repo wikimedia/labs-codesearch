@@ -225,10 +225,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia continuous integration config'] = repo_info(
             'integration/config'
         )
-        # puppet is very special because of the non-master branch
-        puppet = repo_info('operations/puppet')
-        puppet['url'] = 'file:///operations/puppet'
-        conf['repos']['Wikimedia Puppet'] = puppet
+        conf['repos']['Wikimedia Puppet'] = repo_info('operations/puppet')
         conf['repos']['Blubber'] = repo_info('blubber')
         conf['repos']['pipelinelib'] = repo_info('integration/pipelinelib')
 
