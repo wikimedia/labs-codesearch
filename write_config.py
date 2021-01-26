@@ -171,7 +171,7 @@ def gh_repo(gh_name: str, host: str = 'github.com') -> dict:
 def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
-              services=False, libs=False, analytics=False):
+              services=False, libs=False, analytics=False, puppet=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -213,6 +213,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
                 'mediawiki/skins/%s' % skin
             )
 
+    if puppet:
+        conf['repos']['Wikimedia Puppet'] = repo_info('operations/puppet')
+
     if operations:
         conf['repos']['Wikimedia DNS'] = repo_info(
             'operations/dns'
@@ -230,7 +233,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia continuous integration config'] = repo_info(
             'integration/config'
         )
-        conf['repos']['Wikimedia Puppet'] = repo_info('operations/puppet')
         conf['repos']['Blubber'] = repo_info('blubber')
         conf['repos']['pipelinelib'] = repo_info('integration/pipelinelib')
 
@@ -352,6 +354,7 @@ def main():
               skins=True,
               ooui=True,
               operations=True,
+              puppet=True,
               # A dead codebase used by just one person
               armchairgm=False,
               twn=True,
@@ -374,7 +377,7 @@ def main():
     make_conf('skins', args, skins=True)
     make_conf('things', args, exts=True, skins=True)
     make_conf('ooui', args, ooui=True)
-    make_conf('operations', args, operations=True)
+    make_conf('operations', args, operations=True, puppet=True)
     make_conf('armchairgm', args, armchairgm=True)
     make_conf('milkshake', args, milkshake=True)
     make_conf('bundled', args, core=True, bundled=True, vendor=True)
@@ -382,6 +385,7 @@ def main():
     make_conf('services', args, services=True)
     make_conf('libraries', args, ooui=True, milkshake=True, libs=True)
     make_conf('analytics', args, analytics=True)
+    make_conf('puppet', args, puppet=True)
 
 
 if __name__ == '__main__':

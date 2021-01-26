@@ -44,6 +44,7 @@ DESCRIPTIONS = {
     'deployed': 'Wikimedia deployed',
     'libraries': 'PHP libraries',
     'operations': 'Wikimedia Operations',
+    'puppet': 'Puppet',
     'ooui': 'OOUI',
     'milkshake': 'Milkshake',
     'pywikibot': 'Pywikibot',
@@ -52,7 +53,6 @@ DESCRIPTIONS = {
     # Not visible
     'armchairgm': 'ArmchairGM',
 }
-
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
 HOUND_STARTUP = 'Hound is not ready.\n'
 
