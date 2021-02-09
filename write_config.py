@@ -215,6 +215,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
     if puppet:
         conf['repos']['Wikimedia Puppet'] = repo_info('operations/puppet')
+        conf['repos']['labs/private'] = repo_info('labs/private')
 
     if operations:
         conf['repos']['Wikimedia DNS'] = repo_info(
