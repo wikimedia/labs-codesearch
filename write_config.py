@@ -72,6 +72,9 @@ def mwstake_extensions():
         elif 'gitlab.com' in url:
             name = url.replace('https://gitlab.com/', '')
             repos.append((name, gitlab_repo(name)))
+        elif 'invent.kde.org' in url:
+            name = url.replace('https://invent.kde.org/', '')
+            repos.append((name, gh_repo(name, host='invent.kde.org')))
         elif 'phabricator.nichework.com' in url:
             # FIXME: implement
             continue
