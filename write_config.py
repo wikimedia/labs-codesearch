@@ -313,6 +313,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
     if analytics:
         conf['repos'].update(gerrit_prefix_list('analytics/'))
+        # schemas/event/ requested in T275705
+        conf['repos'].update(gerrit_prefix_list('schemas/event/'))
 
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
