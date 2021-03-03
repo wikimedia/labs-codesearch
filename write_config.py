@@ -225,15 +225,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/dns'
         )
         # Special Netbox repo
-        conf['repos']['netbox DNS'] = {
-            'url': 'https://netbox-exports.wikimedia.org/dns.git',
-            'url-pattern': {
-                # There's no web view, so just link to Netbox?
-                'base-url': 'https://netbox.wikimedia.org/',
-                'anchor': ''
-            },
-            'ms-between-poll': POLL,
-        }
+        conf['repos']['netbox DNS'] = phab_repo('ONED')
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
         )
