@@ -271,6 +271,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if wikimedia:
         for repo_name in wikimedia_deployed_repos():
             conf['repos'][repo_name] = repo_info(repo_name)
+        conf['repos']['Wikidata Query GUI'] = repo_info('wikidata/query/gui')
+        conf['repos']['Wikidata Query RDF'] = repo_info('wikidata/query/rdf')
         # Also mw-config (T214341)
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
