@@ -174,7 +174,8 @@ def gh_repo(gh_name: str, host: str = 'github.com') -> dict:
 def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
-              services=False, libs=False, analytics=False, puppet=False):
+              services=False, libs=False, analytics=False, puppet=False,
+              shouthow=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -320,6 +321,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # schemas/event/ requested in T275705
         conf['repos'].update(gerrit_prefix_list('schemas/event/'))
 
+    if shouthow:
+        conf['repos']['ShoutHow'] = gh_repo('ashley/ShoutHow', host='git.legoktm.com')
+
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -379,7 +383,10 @@ def main():
               pywikibot=True,
               services=True,
               libs=True,
-              analytics=True)
+              analytics=True,
+              # Heavily duplicates MediaWiki core + extensions
+              shouthow=False,
+              )
 
     make_conf('core', args, core=True)
     make_conf('pywikibot', args, pywikibot=True)
@@ -396,6 +403,7 @@ def main():
     make_conf('libraries', args, ooui=True, milkshake=True, libs=True)
     make_conf('analytics', args, analytics=True)
     make_conf('puppet', args, puppet=True)
+    make_conf('shouthow', args, shouthow=True)
 
 
 if __name__ == '__main__':

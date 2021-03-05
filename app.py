@@ -52,7 +52,9 @@ DESCRIPTIONS = {
     'analytics': 'Analytics',
     # Not visible
     'armchairgm': 'ArmchairGM',
+    'shouthow': 'ShoutHow',
 }
+HIDDEN = ['armchairgm', 'shouthow']
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
 HOUND_STARTUP = 'Hound is not ready.\n'
 
@@ -140,7 +142,7 @@ def index(backend):
     sep = '</li><li class="index">'
     urls = sep.join(index_url(target, backend)
                     for target in DESCRIPTIONS
-                    if target != 'armchairgm' and target in app.config['PORTS'])
+                    if target not in HIDDEN and target in app.config['PORTS'])
     # max-width matches hound's css for #root
     header = f"""
 <div style="text-align: center; max-width: 960px; margin: 0 auto;">
