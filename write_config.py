@@ -341,6 +341,11 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         json.dump(conf, f, indent='\t')
     if args.restart:
         if new != old:
+            try:
+                subprocess.check_call(['systemctl', 'status', dirname])
+            except subprocess.CalledProcessError:
+                print(f'{dirname}: not in systemd yet, skipping restart')
+                return
             print(f'{dirname}: restarting...')
             subprocess.check_call(['systemctl', 'restart', dirname])
         else:
