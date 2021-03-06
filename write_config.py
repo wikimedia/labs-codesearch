@@ -122,12 +122,12 @@ def wikimedia_deployed_repos() -> List[str]:
     return [name for name in _settings_yaml()['bundles']['wmf_core']]
 
 
-def phab_repo(callsign: str) -> dict:
+def phab_repo(name: str) -> dict:
     return {
-        'url': f'https://phabricator.wikimedia.org/diffusion/{callsign}',
+        'url': f'https://phabricator.wikimedia.org/source/{name}',
         'url-pattern': {
-            'base-url': 'https://phabricator.wikimedia.org/diffusion/'
-                        '%s/browse/{rev}/{path}{anchor}' % callsign,
+            'base-url': 'https://phabricator.wikimedia.org/source/'
+                        '%s/browse/master/{path};{rev}{anchor}' % name,
             'anchor': '${line}'
         },
         'ms-between-poll': POLL,
@@ -226,7 +226,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/dns'
         )
         # Special Netbox repo
-        conf['repos']['netbox DNS'] = phab_repo('ONED')
+        conf['repos']['netbox DNS'] = phab_repo('netbox-exported-dns')
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
         )
