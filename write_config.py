@@ -252,6 +252,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia Deployment Charts'] = repo_info(
             'operations/deployment-charts'
         )
+        conf['repos']['operations/cookbooks'] = repo_info('operations/cookbooks')
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
