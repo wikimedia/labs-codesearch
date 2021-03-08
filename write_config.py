@@ -175,7 +175,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
               services=False, libs=False, analytics=False, puppet=False,
-              shouthow=False):
+              shouthow=False, schemas=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -319,6 +319,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
     if analytics:
         conf['repos'].update(gerrit_prefix_list('analytics/'))
+    if schemas:
         # schemas/event/ requested in T275705
         conf['repos'].update(gerrit_prefix_list('schemas/event/'))
 
@@ -392,6 +393,7 @@ def main():
               analytics=True,
               # Heavily duplicates MediaWiki core + extensions
               shouthow=False,
+              schemas=True,
               )
 
     make_conf('core', args, core=True)
