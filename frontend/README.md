@@ -16,4 +16,4 @@ If you want to test with a release optimized version locally, run `cargo make bu
 ### "Production" mode
 
 * `docker build . -t codesearch-frontend`
-* `docker run -it --rm -p 8080:80 codesearch-frontend`
+* `docker run -it --rm -p 3003:80 codesearch-frontend`
