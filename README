@@ -8,16 +8,15 @@ This guide is based on setting up a new instance on the Wikimedia
 Cloud VPS infrastructure. Currently we use Debian Buster medium
 sized images.
 
-After creating the instance, you should enable the `role::labs::lvm::srv`
-puppet class, which will create a separate partition for `/srv`. We then
-want to modify the filesystem so we get some more inodes per available
-storage. Note that you should disable puppet so it won't interfere.
+After creating the instance, add and mount the cinder volume.
 
- sudo puppet agent --disable "messing with partitions"
+If we're creating a fresh volume, we want to modify the filesystem
+so we get some more inodes per available storage.
+
  sudo umount /srv
- sudo mkfs.ext4 -T news /dev/mapper/vd-second--local--disk
+ sudo mkfs.ext4 -T news /dev/sdb
+ sudo systemctl daemon-reload
  sudo mount /srv
- sudo puppet agent --enable
 
 Running `df -hi` should show an increase in available inodes. You can
 proceed with actually setting up codesearch now by enabling the puppet
