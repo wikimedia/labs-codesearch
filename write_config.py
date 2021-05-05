@@ -302,6 +302,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'mediawiki/tools/codesniffer'
         )
 
+        conf['repos']['wvui'] = repo_info('wvui')
+
         # Wikibase libraries
         conf['repos']['WikibaseDataModel'] = gh_repo('wmde/WikibaseDataModel')
         conf['repos']['WikibaseDataModelSerialization'] = \
