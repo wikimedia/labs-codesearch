@@ -1,4 +1,8 @@
 # We use Debian packages, so pin to the same versions as Buster
+click==7.0
 flask==1.0.2
+itsdangerous==0.24
+jinja2==2.10
 requests==2.21.0
 pyyaml==3.13
+werkzeug==0.14.1
