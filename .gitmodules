@@ -1,0 +1,3 @@
+[submodule "hound"]
+	path = hound
+	url = https://github.com/hound-search/hound

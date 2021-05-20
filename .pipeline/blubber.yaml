@@ -1,0 +1,24 @@
+version: v4
+base: docker-registry.wikimedia.org/wikimedia-buster:latest
+variants:
+  build:
+    base: docker-registry.wikimedia.org/golang:1.14-1
+    apt:
+      packages:
+        - gcc
+        - git
+  prep:
+    includes: [build]
+    builder:
+      command: [go, build, ./cmds/houndd]
+      requirements: [./hound]
+  hound:
+    apt:
+      packages:
+        - ca-certificates
+        - git
+    copies:
+      - from: prep
+        source: /srv/app/houndd
+        destination: /srv/app/houndd
+    entrypoint: ["./houndd", "-conf", "/data/config.json"]

@@ -1,0 +1,14 @@
+pipelines:
+  test:
+    blubberfile: blubber.yaml
+    stages:
+      - name: hound
+        build: hound
+  publish:
+    blubberfile: blubber.yaml
+    stages:
+      - name: hound
+        build: hound
+        publish:
+          image:
+            tags: [hound]
