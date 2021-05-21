@@ -50,10 +50,8 @@ def get_extdist_repos() -> dict:
 
 
 @functools.lru_cache()
-def mwstake_extensions():
-    r = requests.get(
-        'https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules'
-    )
+def parse_gitmodules(url):
+    r = requests.get(url)
     r.raise_for_status()
     config = ConfigParser()
     config.read_string(r.text)
@@ -208,7 +206,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['VisualEditor core'] = repo_info(
             'VisualEditor/VisualEditor'
         )
-        for repo_name, info in mwstake_extensions():
+        for repo_name, info in parse_gitmodules(
+                "https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules"
+        ):
             conf['repos'][repo_name] = info
 
     if skins:
@@ -216,6 +216,11 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             conf['repos']['Skin:%s' % skin] = repo_info(
                 'mediawiki/skins/%s' % skin
             )
+
+        for repo_name, info in parse_gitmodules(
+                "https://raw.githubusercontent.com/MWStake/nonwmf-skins/master/.gitmodules"
+        ):
+            conf['repos'][repo_name] = info
 
     if puppet:
         conf['repos']['Wikimedia Puppet'] = repo_info('operations/puppet')
