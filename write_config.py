@@ -259,6 +259,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/deployment-charts'
         )
         conf['repos']['operations/cookbooks'] = repo_info('operations/cookbooks')
+        conf['repos']['operations/software/spicerack'] = repo_info(
+            'operations/software/spicerack'
+        )
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
