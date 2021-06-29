@@ -262,6 +262,10 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/software/spicerack'] = repo_info(
             'operations/software/spicerack'
         )
+        conf['repos']['performance/navtiming'] = repo_info('performance/navtiming')
+        conf['repos']['performance/coal'] = repo_info('performance/coal')
+        conf['repos']['Arc Lamp'] = repo_info('performance/arc-lamp')
+        conf['repos']['Fresnel'] = repo_info('performance/fresnel')
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
@@ -286,6 +290,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
         )
+        conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
 
     if vendor:
         conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
