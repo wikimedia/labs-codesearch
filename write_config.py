@@ -262,6 +262,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/software/spicerack'] = repo_info(
             'operations/software/spicerack'
         )
+        conf['repos']['operations/software/tools-webservice'] = repo_info(
+            'operations/software/tools-webservice'
+        )
         conf['repos']['performance/navtiming'] = repo_info('performance/navtiming')
         conf['repos']['performance/coal'] = repo_info('performance/coal')
         conf['repos']['Arc Lamp'] = repo_info('performance/arc-lamp')
