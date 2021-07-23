@@ -91,7 +91,7 @@ pub fn backends() -> Vec<(String, String)> {
 
 pub fn is_valid_backend(profile: &str) -> bool {
     for (backend, _) in backends() {
-        if &backend == profile {
+        if backend == profile {
             return true;
         }
     }
@@ -128,7 +128,7 @@ pub async fn send_query(
         // stats=fosho&repos=*&rng=%3A20&q=class+LinkRenderer%5Cb&files=&i=nope
         .query(&[
             ("stats", "fosho"),
-            ("repos", &opts.repos.unwrap_or("*".to_string())),
+            ("repos", &opts.repos.unwrap_or_else(|| "*".to_string())),
             ("rng", rng),
             ("q", &opts.query),
             ("files", &opts.files),
@@ -187,28 +187,28 @@ pub fn flatten(repomatch: &RepoMatch) -> File {
         // But if the before line already exists, we don't want to
         // overwrite highlight
         let before_length = match_.before.len();
-        if before_length >= 1 {
-            if !file.lines.contains_key(&(&match_.line_number - 2)) {
-                file.lines.insert(
-                    match_.line_number - 2,
-                    Line {
-                        highlight: false,
-                        text: match_.before[0].to_string(),
-                    },
-                );
-            }
+        if before_length >= 1
+            && !file.lines.contains_key(&(&match_.line_number - 2))
+        {
+            file.lines.insert(
+                match_.line_number - 2,
+                Line {
+                    highlight: false,
+                    text: match_.before[0].to_string(),
+                },
+            );
         }
 
-        if before_length == 2 {
-            if !file.lines.contains_key(&(&match_.line_number - 1)) {
-                file.lines.insert(
-                    match_.line_number - 1,
-                    Line {
-                        highlight: false,
-                        text: match_.before[1].to_string(),
-                    },
-                );
-            }
+        if before_length == 2
+            && !file.lines.contains_key(&(&match_.line_number - 1))
+        {
+            file.lines.insert(
+                match_.line_number - 1,
+                Line {
+                    highlight: false,
+                    text: match_.before[1].to_string(),
+                },
+            );
         }
         let after_length = match_.after.len();
         if after_length >= 1 {

@@ -134,7 +134,7 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             }
 
             let profile = model.profile.clone();
-            let url = model.to_url().to_string().clone();
+            let url = model.to_url().to_string();
             model.loading = true;
             orders.perform_cmd(async move {
                 let fconfig = codesearch::fetch_config(&profile);

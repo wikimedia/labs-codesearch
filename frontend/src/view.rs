@@ -49,9 +49,7 @@ fn view_heading(model: &Model) -> Node<Msg> {
             let bkend = backend.clone();
             li![
                 C!["index"],
-                ev(Ev::Click, move |_| {
-                    Msg::ChangeProfile(bkend.to_string())
-                }),
+                ev(Ev::Click, move |_| { Msg::ChangeProfile(bkend) }),
                 if &model.profile == backend {
                     b![label]
                 } else {
@@ -324,7 +322,7 @@ fn view_response_default(
                         C!["btn btn-secondary load-more"],
                         attrs!{At::Type => "button"},
                         ev(Ev::Click, move |_| {
-                            Msg::LoadMoreResults(repo_name.to_string())
+                            Msg::LoadMoreResults(repo_name)
                         }),
                         format!("Load all {} matches in {}", result.files_with_match, repo),
                     ]),
