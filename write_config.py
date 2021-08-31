@@ -269,6 +269,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['performance/coal'] = repo_info('performance/coal')
         conf['repos']['Arc Lamp'] = repo_info('performance/arc-lamp')
         conf['repos']['Fresnel'] = repo_info('performance/fresnel')
+        conf['repos']['performance/synthetic-monitoring-tests'] = repo_info(
+            'performance/synthetic-monitoring-tests'
+        )
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
