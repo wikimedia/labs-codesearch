@@ -320,6 +320,10 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['MediaWiki CodeSniffer'] = repo_info(
             'mediawiki/tools/codesniffer'
         )
+        conf['repos']['MediaWiki Phan'] = repo_info('mediawiki/tools/phan')
+        conf['repos']['SecurityCheckPlugin'] = repo_info(
+            'mediawiki/tools/phan/SecurityCheckPlugin'
+        )
 
         conf['repos']['wvui'] = repo_info('wvui')
 
