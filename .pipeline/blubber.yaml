@@ -1,8 +1,8 @@
 version: v4
-base: docker-registry.wikimedia.org/wikimedia-buster:latest
+base: docker-registry.wikimedia.org/bullseye:latest
 variants:
   build:
-    base: docker-registry.wikimedia.org/golang:1.14-1
+    base: docker-registry.wikimedia.org/golang1.15:1.15-1
     apt:
       packages:
         - gcc
