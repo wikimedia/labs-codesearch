@@ -90,6 +90,20 @@ def test_health_json(mocker, client):
     assert json.loads(rv.data.decode()) == health
 
 
+def test_metrics(mocker, client):
+    health = {'search': 'starting up', 'extensions': 'up', 'skins': 'down'}
+    mock = mocker.patch('app._health')
+    mock.return_value = health
+    rv = client.get('/_metrics')
+    assert rv.data.decode() == """
+# HELP codesearch_backend Whether Hound backend is up or not
+# TYPE codesearch_backend gauge
+codesearch_backend{backend="search"} 0
+codesearch_backend{backend="extensions"} 1
+codesearch_backend{backend="skins"} 0
+"""
+
+
 @pytest.mark.parametrize('input,expected', ((
     ('<title>Hound</title>', '<title>MediaWiki code search</title>'),
     (app.HOUND_STARTUP, 'Hound is still starting up')

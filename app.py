@@ -135,6 +135,17 @@ def health_json():
     return jsonify(_health())
 
 
+@app.route('/_metrics')
+def metrics():
+    text = """
+# HELP codesearch_backend Whether Hound backend is up or not
+# TYPE codesearch_backend gauge
+"""
+    for backend, status in _health().items():
+        text += 'codesearch_backend{backend="%s"} %s\n' % (backend, int(status == "up"))
+    return Response(text, mimetype="text/plain")
+
+
 @app.route('/<backend>/')
 def index(backend):
     if backend not in app.config['PORTS']:
