@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate a hound config.json file
-Copyright (C) 2017-2018 Kunal Mehta <legoktm@member.fsf.org>
+Copyright (C) 2017-2018 Kunal Mehta <legoktm@debian.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,7 +1,7 @@
 [package]
 version = "0.1.0"
 name = "codesearch-frontend"
-authors = ["Kunal Mehta <legoktm@member.fsf.org>"]
+authors = ["Kunal Mehta <legoktm@debian.org>"]
 description = "Frontend for MediaWiki code search"
 license = "GPL-3.0-or-later"
 readme = "../README"
