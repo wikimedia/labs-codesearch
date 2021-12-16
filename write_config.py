@@ -239,6 +239,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia conftool'] = repo_info(
             'operations/software/conftool'
         )
+        conf['repos']['operations/software'] = repo_info('operations/software')
         conf['repos']['scap'] = repo_info(
             'mediawiki/tools/scap'
         )
