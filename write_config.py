@@ -325,6 +325,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['SecurityCheckPlugin'] = repo_info(
             'mediawiki/tools/phan/SecurityCheckPlugin'
         )
+        conf['repos']['Purtle'] = repo_info('purtle')
 
         conf['repos']['wvui'] = repo_info('wvui')
 
