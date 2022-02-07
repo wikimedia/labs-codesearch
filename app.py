@@ -50,6 +50,7 @@ DESCRIPTIONS = {
     'pywikibot': 'Pywikibot',
     'services': 'Wikimedia Services',
     'analytics': 'Analytics',
+    'wmcs': 'Wikimedia Cloud Services',
     # Not visible
     'armchairgm': 'ArmchairGM',
     'shouthow': 'ShoutHow',

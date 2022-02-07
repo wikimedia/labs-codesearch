@@ -173,7 +173,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
               services=False, libs=False, analytics=False, puppet=False,
-              shouthow=False, schemas=False):
+              shouthow=False, schemas=False, wmcs=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -225,6 +225,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if puppet:
         conf['repos']['Wikimedia Puppet'] = repo_info('operations/puppet')
         conf['repos']['labs/private'] = repo_info('labs/private')
+
+    if puppet or wmcs:
         conf['repos']['cloud/instance-puppet'] = repo_info('cloud/instance-puppet')
         # instance-puppet for the codfw1dev testing deployment
         conf['repos']['cloud/instance-puppet-dev'] = repo_info('cloud/instance-puppet-dev')
@@ -267,9 +269,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         )
         conf['repos']['operations/software/purged'] = repo_info(
             'operations/software/purged'
-        )
-        conf['repos']['operations/software/tools-webservice'] = repo_info(
-            'operations/software/tools-webservice'
         )
         conf['repos']['performance/navtiming'] = repo_info('performance/navtiming')
         conf['repos']['performance/coal'] = repo_info('performance/coal')
@@ -360,6 +359,14 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if shouthow:
         conf['repos']['ShoutHow'] = gh_repo('ashley/ShoutHow', host='git.legoktm.com')
 
+    if wmcs:
+        # toolforge infra
+        conf['repos'].update(gerrit_prefix_list('operations/software/tools-'))
+        conf['repos'].update(gerrit_prefix_list('cloud/toolforge/'))
+
+        # custom horizon panels, but not upstream code
+        conf['repos'].update(gerrit_prefix_list('openstack/horizon/wmf-'))
+
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -425,6 +432,7 @@ def main():
               services=True,
               libs=True,
               analytics=True,
+              wmcs=True,
               # Heavily duplicates MediaWiki core + extensions
               shouthow=False,
               schemas=True,
@@ -444,6 +452,7 @@ def main():
     make_conf('services', args, services=True)
     make_conf('libraries', args, ooui=True, milkshake=True, libs=True)
     make_conf('analytics', args, analytics=True)
+    make_conf('wmcs', args, wmcs=True)
     make_conf('puppet', args, puppet=True)
     make_conf('shouthow', args, shouthow=True)
 

@@ -86,6 +86,7 @@ pub fn backends() -> Vec<(String, String)> {
         ("pywikibot".to_string(), "Pywikibot".to_string()),
         ("services".to_string(), "Wikimedia Services".to_string()),
         ("analytics".to_string(), "Analytics".to_string()),
+        ("wmcs".to_string(), "Wikimedia Cloud Services".to_string()),
     ]
 }
 
