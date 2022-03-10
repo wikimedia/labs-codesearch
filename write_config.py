@@ -265,6 +265,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/software/spicerack'] = repo_info(
             'operations/software/spicerack'
         )
+        conf['repos']['operations/software/purged'] = repo_info(
+            'operations/software/purged'
+        )
         conf['repos']['operations/software/tools-webservice'] = repo_info(
             'operations/software/tools-webservice'
         )
