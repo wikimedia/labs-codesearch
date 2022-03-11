@@ -333,6 +333,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Purtle'] = repo_info('purtle')
 
         conf['repos']['wvui'] = repo_info('wvui')
+        conf['repos']['codex'] = repo_info('codex')
 
         # Wikibase libraries
         conf['repos']['WikibaseDataModel'] = gh_repo('wmde/WikibaseDataModel')
