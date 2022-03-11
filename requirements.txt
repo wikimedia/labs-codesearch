@@ -6,3 +6,4 @@ jinja2==2.10
 requests==2.21.0
 pyyaml==3.13
 werkzeug==0.14.1
+markupsafe>=1.1.1,<2.1.0
