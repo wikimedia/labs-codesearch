@@ -79,7 +79,7 @@ pub fn backends() -> Vec<(String, String)> {
         ("things".to_string(), "Extensions & skins".to_string()),
         ("bundled".to_string(), "MW tarball".to_string()),
         ("deployed".to_string(), "Wikimedia deployed".to_string()),
-        ("libraries".to_string(), "PHP libraries".to_string()),
+        ("libraries".to_string(), "Libraries".to_string()),
         ("operations".to_string(), "Wikimedia Operations".to_string()),
         ("ooui".to_string(), "OOUI".to_string()),
         ("milkshake".to_string(), "Milkshake".to_string()),
