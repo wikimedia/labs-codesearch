@@ -1,13 +1,9 @@
-FROM rust AS builder
+FROM php:8.1-apache-bullseye
 
-RUN rustup target add wasm32-unknown-unknown && cargo install wasm-pack
-COPY Cargo.toml .
-COPY src/ src/
-RUN wasm-pack build --target web --out-name package
+RUN a2enmod rewrite
 
-FROM nginx:latest
+# https://pecl.php.net/package/APCu
+RUN pecl install apcu-5.1.21 \
+	&& docker-php-ext-enable apcu
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY index.html /srv/
-COPY static/ /srv/static/
-COPY --from=builder pkg/ /srv/pkg/
+COPY . /var/www/html/

@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^/?[0-9a-z]+/?$ /index.php [L,QSA]
+
+# TODO:
+# Proxy ^/<word>/api/ to codesearch-hound backend

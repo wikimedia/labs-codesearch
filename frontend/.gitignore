@@ -1,2 +1,5 @@
-/target
-/pkg
+/vendor/
+/node_modules/
+/.eslintcache
+/composer.lock
+/package-lock.json

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" class="cs-client-nojs">
+<head>
+	<meta charset="utf-8">
+	<title>{{#doctitle}}{{doctitle}} - {{/doctitle}}MediaWiki Codesearch (β)</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	{{#apiQueryUrl}}<link rel="preload" as="fetch" crossorigin href="{{apiQueryUrl}}">{{/apiQueryUrl}}
+	<script>
+if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
+	document.documentElement.className = "cs-client-js";
+	window.CS_CLIENT = 1;
+}
+	</script>
+	<link rel="modulepreload" href="/static/util.js">
+	<link rel="modulepreload" href="/static/view.js">
+	<script deferred src="/static/lib/fuzzysort-2.0.1/fuzzysort.js"></script>
+	<script type="module" src="/static/codesearch.js"></script>
+	<link rel="stylesheet" href="/static/lib/bootstrap-5.1.3/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/styles.css">
+	<link rel="shortcut icon" href="/static/favicon.ico">
+	<link rel="search" href="/static/opensearch.xml" type="application/opensearchdescription+xml" title="MediaWiki Codesearch">
+</head>
+<body>
+	<div class="container">
+		<div class="cs-heading mt-2">
+			<h2>MediaWiki Codesearch</h2>
+			<ul class="nav nav-pills mb-2">
+			{{#backends}}
+				<li class="nav-item"><a href="{{href}}" class="nav-link{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>{{label}}</a></li>
+			{{/backends}}
+			</ul>
+		</div>
+
+		<form method="get" action="./" id="cs-form" class="row mb-3">
+			<div class="mb-2 col-12 col-md-8 col-lg-9 col-xl-10 order-first">
+				<input class="form-query form-control form-control-lg" type="text" autofocus="true" placeholder="Search query..." name="q" value="{{fields.query}}">
+			</div>
+			<div class="mb-2 order-last col-md-4 order-md-2 col-lg-3 col-xl-2">
+				<button id="cs-form-submitIdle" {{#isSubmit}}hidden{{/isSubmit}} class="btn btn-primary btn-lg" type="submit">Search!</button>
+				<button id="cs-form-submitLoading" {{^isSubmit}}hidden{{/isSubmit}} class="btn btn-primary btn-lg" type="submit">
+					<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+					Searching...
+				</button>
+			</div>
+			<div class="mb-2 col-12 order-3 col-md-4 col-lg-5 col-xl-3">
+				<div class="form-floating">
+					<input type="text" class="form-control" id="cs-field-filePath" placeholder="" name="files" value="{{fields.filePath}}">
+					<label class="form-label" for="cs-field-filePath">File path (regexp)</label>
+				</div>
+			</div>
+			<div class="mb-2 col-12 order-3 col-md-4 col-lg-4 col-xl-3">
+				<div class="form-floating">
+					<input type="text" class="form-control" id="cs-field-excludeFilePath" placeholder="" name="excludeFiles" value="{{fields.excludeFilePath}}">
+					<label class="form-label" for="cs-field-excludeFilePath">Exclude files (regexp)</label>
+				</div>
+			</div>
+			<div class="mb-2 col-12 order-3 col-md-8 col-lg-9 col-xl-4">
+				<input type="hidden" id="cs-field-repos" name="repos" value="{{fields.repos}}" autocomplete="off">
+				<div class="form-floating" id="cs-field-reposelector">
+					<input type="text" class="form-control" id="cs-field-reposelector-input" autocomplete="off">
+					<label class="form-label" for="cs-field-reposelector-input">Select repos{{#selectedRepoCount}} ({{selectedRepoCount}}){{/selectedRepoCount}}</label>
+					<div class="dropdown-menu"></div>
+				</div>
+			</div>
+			<div class="mb-2 col-12 order-3 col-md-4 col-lg-3 col-xl-2">
+				<div class="form-check case-insensitive-checkbox">
+					<input class="form-check-input" id="cs-field-caseInsensitive" type="checkbox" name="i" value="fosho"{{#fields.caseInsensitive}} checked{{/fields.caseInsensitive}}>
+					<label class="form-check-label" for="cs-field-caseInsensitive">Ignore case</label>
+				</div>
+			</div>
+		</form>
+		{{#warnings}}
+		<div class="alert alert-warning" role="alert">{{.}}</div>
+		{{/warnings}}
+		</div>
+	</div>
+	<div class="container" {{^isSubmit}}hidden{{/isSubmit}}>
+		<div class="alert alert-warning cs-display-nojs" role="alert">This page requires JavaScript.</div>
+		<div class="row cs-display-onlyjs cs-output-placeholder" id="cs-output-placeholder" {{^isSubmit}}hidden{{/isSubmit}}>
+			<div class="col-lg-7 col-xl-8 order-2 order-lg-1 mt-3 cs-results placeholder-wave">
+				<section>
+					<h2><span class="placeholder bg-secondary col-4"></span></h2>
+					<div class="card mb-3">
+						<div class="card-header">
+							<span class="link-secondary"><span class="placeholder col-2"></span></span>
+						</div>
+						<div class="card-body cs-result">
+							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary col-1"></span></code></div>
+							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary col-2"></span></code></div>
+							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder ms-5 col-2"></span> <span class="placeholder bg-secondary col-2"></span></code></div>
+							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary ms-5 col-1"></span></code></div>
+							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary col-1"></span></code></div>
+						</div>
+					</div>
+				</section>
+			</div>
+			<div class="col-lg-5 col-xl-4 order-1 order-lg-2 cs-reposlist placeholder-glow">
+				<p class="h5">Matched repositories</p>
+				<div class="list-group">
+					<span class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><span class="placeholder bg-secondary col-4">&nbsp;<!-- https://github.com/twbs/bootstrap/issues/36563 --></span></span>
+					<span class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><span class="placeholder bg-secondary col-4">&nbsp;</span></span>
+					<span class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"><span class="placeholder bg-secondary col-6">&nbsp;</span></span>
+				</div>
+			</div>
+		</div>
+		<div id="cs-output" class="cs-output"></div>
+	</div>
+	<div class="container">
+		<footer class="py-5 my-4 border-top">
+			<p>
+				<a href="https://www.mediawiki.org/wiki/codesearch">MediaWiki Codesearch</a>
+				is powered by <a href="https://github.com/hound-search/hound">hound</a>.
+				<br />
+				<a href="https://gerrit.wikimedia.org/g/labs/codesearch">Source code</a>
+				is available under the terms of the GPL v3 or any later version.
+			</p>
+		</footer>
+	</div>
+	<script>
+	if ( window.CS_CLIENT ) {
+		CS_JSDATA = {{{jsDataRawHtml}}};
+	}
+	</script>
+</body>
+</html>

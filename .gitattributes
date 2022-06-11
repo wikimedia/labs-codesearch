@@ -1,0 +1,2 @@
+# Avoid results from git-grep
+*.css.map binary

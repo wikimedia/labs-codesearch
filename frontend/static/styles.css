@@ -1,81 +1,76 @@
-.highlight {
-    font-weight: bold;
-    background-color: rgba(255,255,140,0.5);
+/* Heading */
+
+.cs-client-js .cs-display-nojs,
+.cs-client-nojs .cs-display-onlyjs {
+	display: none;
 }
 
-.file {
-    margin: 10px 0 20px;
+.cs-heading {
+	text-align: center;
+	max-width: 1050px;
+	margin: 0 auto;
 }
 
-.lineno {
-  padding-right: .5em;
+/* Results */
+
+.cs-output-placeholder {
+	/* match height of buildFormatNav, avoid margin as it collapsed with form's margin */
+	padding-top: 38px;
+}
+.cs-output > .alert:first-child {
+	margin-top: 38px;
 }
 
-.code {
-  padding-left: .5em;
+.cs-result {
+	/* override boostrap .card-body */
+	padding-top: 0;
+	padding-bottom: 0;
+	overflow-y: auto;
 }
 
-.card-body {
-  padding-top: 0;
-  padding-bottom: 0;
+.cs-result code {
+	/* override boostrap */
+	color: inherit;
+	white-space: pre;
 }
 
-.results a {
-  color: rgb(33, 37, 41);
+.cs-line {
+	font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	font-size: 14px;
+	/* this prevents long cs-line-code values from being pushed below cs-line-no */
+	white-space: pre;
 }
 
-.heading {
-    text-align: center;
-    max-width: 960px;
-    margin: 1rem auto 0;
+.cs-line-no {
+	display: inline-block;
+	width: 3rem;
+	text-align: right;
+	padding: 0 0.5rem 0 0;
+	/* match boostrap .card border */
+	border-right: 1px solid rgba(0,0,0,.125);
+	user-select: none;
 }
 
-.heading a {
-    color: #007bff;
+.cs-line-code {
+	padding: 3px 0 3px 0.5rem;
 }
 
-.index {
-    display: inline;
-}
-.index a {
-    white-space: nowrap;
-}
-.index:after {
-    content:" • ";
-}
-.index:last-child:after {
-    content: none;
+.cs-highlight,
+.cs-line-code em {
+	display: inline-block;
+	font-style: normal;
+	font-weight: bold;
+	color: #333;
+	background-color: rgba(255,255,140,0.5);
 }
 
-.form-query,
-.load-more {
-    width: 100%;
+.cs-phabresult {
+	min-height: 20rem;
+	white-space: pre;;
 }
 
-.case-insensitive-checkbox {
-    padding: .375rem 1.25rem;
-}
+/* Footer */
 
-.spinner-border.search-spinner {
-    margin-right: .125rem;
-    vertical-align: initial;
-}
-
-h2 {
-    margin-top: .5rem;
-}
-
-/* We want reposlist to be first on mobile but right on desktop */
-@media (max-width: 991px) {
-    .cards {
-        order: 2;
-    }
-
-    .reposlist {
-        order: 1;
-    }
-}
-
-.border-right {
-    user-select: none;
+footer {
+	text-align: center;
 }
