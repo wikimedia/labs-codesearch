@@ -18,8 +18,8 @@
  */
 namespace Wikimedia\Codesearch;
 
+use Mustache;
 use Mustache_Engine;
-use Mustache_Loader_FilesystemLoader;
 
 class View {
 	public function __construct(
@@ -29,13 +29,19 @@ class View {
 	}
 
 	public function render(): string {
-		// TODO: Use native php-mustache when available (e.g. Dockerfile build)
-		// instead of composer bobthecow/mustache.php (e.g. local dev server)
-		$mustache = new Mustache_Engine( [
-			'entity_flags' => ENT_QUOTES,
-			'loader' => new Mustache_Loader_FilesystemLoader( dirname( __DIR__ ) . '/templates' ),
-		] );
+		if ( class_exists( Mustache::class ) ) {
+			// Prefer native php-mustache (PECL) when available (e.g. Dockerfile build)
+			$mustache = new Mustache();
+		} else {
+			// Fallback to composer bobthecow/mustache.php for local dev server
+			$mustache = new Mustache_Engine( [
+				'entity_flags' => ENT_QUOTES
+			] );
+		}
 
-		return $mustache->render( $this->template, $this->data );
+		$templateFile = dirname( __DIR__ ) . '/templates/' . $this->template . '.mustache';
+		$templateContent = file_get_contents( $templateFile );
+
+		return $mustache->render( $templateContent, $this->data );
 	}
 }
