@@ -240,10 +240,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
         )
-        conf['repos']['Wikimedia conftool'] = repo_info(
-            'operations/software/conftool'
-        )
-        conf['repos']['operations/software'] = repo_info('operations/software')
         conf['repos']['scap'] = repo_info(
             'mediawiki/tools/scap'
         )
@@ -254,29 +250,39 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Blubber'] = repo_info('blubber')
         conf['repos']['pipelinelib'] = repo_info('integration/pipelinelib')
 
-        conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
-
         # TODO: Move this to a dedicated section like "development tools"
         conf['repos']['MediaWiki Vagrant'] = repo_info(
             'mediawiki/vagrant'
         )
-        conf['repos']['Wikimedia Deployment Charts'] = repo_info(
+        conf['repos']['operations/cookbooks'] = repo_info('operations/cookbooks')
+        conf['repos']['operations/deployment-charts'] = repo_info(
             'operations/deployment-charts'
         )
-        conf['repos']['operations/cookbooks'] = repo_info('operations/cookbooks')
+        conf['repos']['operations/software'] = repo_info('operations/software')
+        conf['repos']['operations/software/conftool'] = repo_info(
+            'operations/software/conftool'
+        )
         conf['repos']['operations/software/spicerack'] = repo_info(
             'operations/software/spicerack'
         )
         conf['repos']['operations/software/purged'] = repo_info(
             'operations/software/purged'
         )
-        conf['repos']['performance/navtiming'] = repo_info('performance/navtiming')
+
+        conf['repos']['performance/arc-lamp'] = repo_info('performance/arc-lamp')
+        conf['repos']['performance/asoranking'] = repo_info('performance/asoranking')
+        conf['repos']['performance/bttostatsv'] = repo_info('performance/bttostatsv')
         conf['repos']['performance/coal'] = repo_info('performance/coal')
-        conf['repos']['Arc Lamp'] = repo_info('performance/arc-lamp')
-        conf['repos']['Fresnel'] = repo_info('performance/fresnel')
+        conf['repos']['performance/docroot'] = repo_info('performance/docroot')
+        conf['repos']['performance/fresnel'] = repo_info('performance/fresnel')
+        conf['repos']['performance/mobile-synthetic-monitoring-tests'] = repo_info(
+            'performance/mobile-synthetic-monitoring-tests'
+        )
+        conf['repos']['performance/navtiming'] = repo_info('performance/navtiming')
         conf['repos']['performance/synthetic-monitoring-tests'] = repo_info(
             'performance/synthetic-monitoring-tests'
         )
+        conf['repos']['performance/WikimediaDebug'] = repo_info('performance/WikimediaDebug')
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
