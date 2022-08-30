@@ -420,6 +420,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
     if services:
         conf['repos'].update(gerrit_prefix_list('mediawiki/services/'))
+        conf['repos'].update(gerrit_prefix_list('wikimedia/discovery/'))
         conf['repos']['mwaddlink'] = repo_info('research/mwaddlink')
         conf['repos']['recommendation-api'] = repo_info('research/recommendation-api')
         conf['repos']['Wikidata Query GUI'] = wmf_gitlab_repo('repos/wmde/wikidata-query-gui')
