@@ -32,9 +32,9 @@ RUN mkdir /srv/composer \
 
 COPY . /var/www/html/
 
-# Run composer-install
 # This is basically just to set up a PSR-4 autoloader.
 # (In Docker mode we use native PECL mustache, instead of the Composer package.)
 USER nobody
 RUN cd /var/www/html/ \
-	&& /usr/bin/composer install --no-dev
+	&& rm -rf /var/www/html/vendor \
+	&& /usr/bin/composer dump-autoload -a
