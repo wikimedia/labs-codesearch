@@ -369,6 +369,11 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # toolforge infra
         conf['repos'].update(gerrit_prefix_list('operations/software/tools-'))
         conf['repos'].update(gerrit_prefix_list('cloud/toolforge/'))
+        # toolforge infra that's in the wrong place for legacy reasons
+        conf['repos']['labs/tools/maintain-kubeusers'] = repo_info('labs/tools/maintain-kubeusers')
+        conf['repos']['labs/tools/registry-admission-webhook'] = repo_info(
+            'labs/tools/registry-admission-webhook'
+        )
 
         # custom horizon panels, but not upstream code
         conf['repos'].update(gerrit_prefix_list('openstack/horizon/wmf-'))
