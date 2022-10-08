@@ -38,3 +38,5 @@ USER nobody
 RUN cd /var/www/html/ \
 	&& rm -rf /var/www/html/vendor \
 	&& /usr/bin/composer dump-autoload -a
+
+USER root
