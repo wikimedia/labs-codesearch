@@ -69,6 +69,15 @@
 	white-space: pre;;
 }
 
+.cs-reposlist {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	overflow: auto;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+
 /* Footer */
 
 footer {
