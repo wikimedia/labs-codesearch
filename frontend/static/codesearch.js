@@ -121,38 +121,41 @@ async function sendQuery( jsData ) {
 	submitLoadingNode.hidden = outputLoadingNode.hidden = true;
 	queryState.responseDuration = now() - queryState.requestStart;
 
+	// Refresh callback
+	const rerenderFn = () => {
+		outputNode.innerHTML = '';
+		outputNode.append( renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) );
+	}
+	// Load more callback
+	const loadFn = async ( repoId, sectionNode, completeFn ) => {
+		const repoConf = repos[ repoId ];
+		let result;
+		try {
+			const resp = await fetchResults( formatApiQueryUrl( jsData.apiQueryUrl, repoId, OFFSET_MORE ) );
+			result = resp.Results && resp.Results[ repoId ];
+			if ( !result ) {
+				throw new Error( 'No additional matches found' );
+			}
+		} catch ( err ) {
+			sectionNode.append( view.buildError( err ) );
+			return;
+		} finally {
+			completeFn();
+		}
+
+		sectionNode.append(
+			...result.Matches.map( ( match ) =>
+				view.buildResultDefaultCard( match, repoConf, result.Revision, queryState.getRegexp() )
+			)
+		);
+	}
+
 	outputNode.append( renderResponse(
 		repos,
 		apiData,
 		queryState,
-		// Refresh callback
-		() => {
-			outputNode.innerHTML = '';
-			outputNode.append( renderResponse( repos, apiData, queryState ) );
-		},
-		// Load more callback
-		async ( repoId, sectionNode, completeFn ) => {
-			const repoConf = repos[ repoId ];
-			let result;
-			try {
-				const resp = await fetchResults( formatApiQueryUrl( jsData.apiQueryUrl, repoId, OFFSET_MORE ) );
-				result = resp.Results && resp.Results[ repoId ];
-				if ( !result ) {
-					throw new Error( 'No additional matches found' );
-				}
-			} catch ( err ) {
-				sectionNode.append( view.buildError( err ) );
-				return;
-			} finally {
-				completeFn();
-			}
-
-			sectionNode.append(
-				...result.Matches.map( ( match ) =>
-					view.buildResultDefaultCard( match, repoConf, result.Revision, queryState.getRegexp() )
-				)
-			);
-		}
+		rerenderFn,
+		loadFn
 	) );
 }
 
