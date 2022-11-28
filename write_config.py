@@ -209,6 +209,10 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         for repo_name, info in parse_gitmodules(
                 "https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules"
         ):
+            # Explicitly excluding men rights activists
+            # T323956
+            if 'wikimannia' in repo_name.lower() or 'wikimannia' in info['url'].lower():
+                continue
             conf['repos'][repo_name] = info
 
     if skins:
