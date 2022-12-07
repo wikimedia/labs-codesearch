@@ -81,12 +81,14 @@ class Model {
 
 		// Maintain a clean (but Hound-compatible) URL
 		// Don't include "repos" here, because it does not translate to other backends.
-		$canonicalFrontendQueryString = '?' . http_build_query( [
+		$canonicalFrontendQueryString = http_build_query( [
 			'q' => $this->query !== '' ? $this->query : null,
 			'i' => $this->caseInsensitive ? 'fosho' : null,
 			'files' => $this->filePath !== '' ? $this->filePath : null,
 			'excludeFilePath' => $this->excludeFilePath !== '' ? $this->excludeFilePath : null,
 		] );
+		// Avoid dangling "?" by itself
+		$canonicalFrontendQueryString = $canonicalFrontendQueryString ? "?$canonicalFrontendQueryString": '';
 
 		if ( $this->backend === '' ) {
 			// Redirect to default backend
