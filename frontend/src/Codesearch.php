@@ -40,6 +40,7 @@ class Codesearch {
 		'analytics' => 'Analytics',
 		'wmcs' => 'Wikimedia Cloud Services',
 	];
+	public const HEALTH_PAGE = 'https://codesearch.wmcloud.org/_health';
 
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
 
@@ -90,6 +91,9 @@ class Codesearch {
 		} else {
 			$url = $this->formatConfigUrl( $backend );
 			$val = json_decode( $this->fetchUrl( $url ), true );
+			if ( !$val ) {
+				throw new ApiUnavailable( 'Hound returned empty or invalid config data' );
+			}
 			// Strip out data not needed by client
 			foreach ( $val as $repoId => &$repoConf ) {
 				$repoConf = [
@@ -122,10 +126,10 @@ class Codesearch {
 		}
 		$curlRes = curl_exec( $curlHandle );
 		if ( curl_errno( $curlHandle ) == CURLE_OPERATION_TIMEOUTED ) {
-			throw new Exception( 'Internal curl request timed out' );
+			throw new ApiUnavailable( 'Internal curl request timed out' );
 		}
 		if ( $curlRes === false ) {
-			throw new Exception( 'Internal curl request failed: ' . curl_error( $curlHandle ) );
+			throw new ApiUnavailable( 'Internal curl request failed: ' . curl_error( $curlHandle ) );
 		}
 		curl_close( $curlHandle );
 		return $curlRes;

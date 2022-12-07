@@ -116,7 +116,17 @@ class Model {
 			return $response;
 		}
 
-		$repoData = $this->search->getCachedConfig( $this->backend );
+		try {
+			$repoData = $this->search->getCachedConfig( $this->backend );
+		} catch ( ApiUnavailable $e ) {
+			$response->statusCode = 501;
+			$response->view = new View( 'health', [
+				'doctitle' => 'Index unavailable',
+				'backends' => $backends,
+				'healthUrl' => Codesearch::HEALTH_PAGE,
+			] );
+			return $response;
+		}
 
 		$selectedRepos = explode( ',', $this->repos );
 		$selectedRepos = array_intersect( $selectedRepos, array_keys( $repoData ) );
