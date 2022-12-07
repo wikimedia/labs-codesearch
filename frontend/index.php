@@ -19,6 +19,7 @@ try {
 		new Wikimedia\Codesearch\View( 'error', [
 			'doctitle' => 'Internal error',
 			'error' => get_class( $e ) . ': ' . $e->getMessage(),
+			'trace' => $e->getTraceAsString(),
 		] )
 	);
 }
