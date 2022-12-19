@@ -245,9 +245,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['cloud/instance-puppet-dev'] = repo_info('cloud/instance-puppet-dev')
 
     if operations:
-        conf['repos']['Wikimedia DNS'] = repo_info(
-            'operations/dns'
-        )
+        conf['repos']['operations/dns'] = repo_info('operations/dns')
         # Special Netbox repo
         conf['repos']['netbox DNS'] = phab_repo('netbox-exported-dns')
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
@@ -267,6 +265,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['MediaWiki Vagrant'] = repo_info(
             'mediawiki/vagrant'
         )
+        conf['repos']['operations/alerts'] = repo_info('operations/alerts')
         conf['repos']['operations/cookbooks'] = repo_info('operations/cookbooks')
         conf['repos']['operations/deployment-charts'] = repo_info(
             'operations/deployment-charts'
