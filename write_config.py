@@ -281,20 +281,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/software/purged'
         )
 
-        conf['repos']['performance/arc-lamp'] = repo_info('performance/arc-lamp')
-        conf['repos']['performance/asoranking'] = repo_info('performance/asoranking')
-        conf['repos']['performance/bttostatsv'] = repo_info('performance/bttostatsv')
-        conf['repos']['performance/coal'] = repo_info('performance/coal')
-        conf['repos']['performance/docroot'] = repo_info('performance/docroot')
-        conf['repos']['performance/fresnel'] = repo_info('performance/fresnel')
-        conf['repos']['performance/mobile-synthetic-monitoring-tests'] = repo_info(
-            'performance/mobile-synthetic-monitoring-tests'
-        )
-        conf['repos']['performance/navtiming'] = repo_info('performance/navtiming')
-        conf['repos']['performance/synthetic-monitoring-tests'] = repo_info(
-            'performance/synthetic-monitoring-tests'
-        )
-        conf['repos']['performance/WikimediaDebug'] = repo_info('performance/WikimediaDebug')
+        conf['repos'].update(gerrit_prefix_list('performance/'))
+        conf['repos'].update(gerrit_prefix_list('mediawiki/php/'))
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
@@ -320,6 +308,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/mediawiki-config'
         )
         conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
+        conf['repos'].update(gerrit_prefix_list('mediawiki/php/'))
 
     if vendor:
         conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
