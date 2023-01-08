@@ -251,9 +251,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia MediaWiki config'] = repo_info(
             'operations/mediawiki-config'
         )
-        conf['repos']['scap'] = repo_info(
-            'mediawiki/tools/scap'
-        )
+        conf['repos'].update(gerrit_prefix_list('mediawiki/tools/'))
         # CI config T217716
         conf['repos']['Wikimedia continuous integration config'] = repo_info(
             'integration/config'
@@ -329,15 +327,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['RelPath'] = repo_info('RelPath')
         conf['repos']['RunningStat'] = repo_info('RunningStat')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
-        conf['repos']['MediaWiki CodeSniffer'] = repo_info(
-            'mediawiki/tools/codesniffer'
-        )
-        conf['repos']['MediaWiki Phan'] = repo_info('mediawiki/tools/phan')
-        conf['repos']['SecurityCheckPlugin'] = repo_info(
-            'mediawiki/tools/phan/SecurityCheckPlugin'
-        )
         conf['repos']['Purtle'] = repo_info('purtle')
-
         conf['repos']['wvui'] = repo_info('wvui')
         conf['repos']['codex'] = repo_info('design/codex')
 
