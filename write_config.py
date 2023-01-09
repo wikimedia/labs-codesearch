@@ -70,9 +70,12 @@ def parse_gitmodules(url):
         elif 'gitlab.com' in url:
             name = url.replace('https://gitlab.com/', '')
             repos.append((name, gitlab_repo(name)))
+        elif 'gitlab.wikimedia.org' in url:
+            name = url.replace('https://gitlab.wikimedia.org/', '')
+            repos.append((name, wmf_gitlab_repo(name)))
         elif 'invent.kde.org' in url:
             name = url.replace('https://invent.kde.org/', '')
-            repos.append((name, gh_repo(name, host='invent.kde.org')))
+            repos.append((name, generic_repo(name, host='invent.kde.org')))
         elif 'phabricator.nichework.com' in url:
             # FIXME: implement
             continue
@@ -157,14 +160,28 @@ def bitbucket_repo(bb_name: str) -> dict:
     }
 
 
-def gitlab_repo(gl_name: str) -> dict:
-    # Lazy/avoid duplication
-    return gh_repo(gl_name, host='gitlab.com')
-
-
-def gh_repo(gh_name: str, host: str = 'github.com') -> dict:
+def generic_repo(repo_name: str, host: str) -> dict:
     return {
-        'url': f'https://{host}/{gh_name}',
+        'url': f'https://{host}/{repo_name}',
+        'ms-between-poll': POLL,
+    }
+
+
+def gitlab_repo(gl_name: str) -> dict:
+    return generic_repo(gl_name, 'gitlab.com')
+
+
+def gh_repo(gh_name: str) -> dict:
+    return generic_repo(gh_name, 'github.com')
+
+
+def wmf_gitlab_repo(name: str) -> dict:
+    return {
+        'url': f'https://gitlab.wikimedia.org/{name}.git',
+        'url-pattern': {
+            'base-url': 'https://gitlab.wikimedia.org/%s/-/tree/{rev}/{path}{anchor}' % name,
+            'anchor': '#L{line}'
+        },
         'ms-between-poll': POLL,
     }
 
@@ -252,11 +269,14 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/mediawiki-config'
         )
         conf['repos'].update(gerrit_prefix_list('mediawiki/tools/'))
+        conf['repos']['scap'] = wmf_gitlab_repo(
+            'repos/releng/scap'
+        )
         # CI config T217716
         conf['repos']['Wikimedia continuous integration config'] = repo_info(
             'integration/config'
         )
-        conf['repos']['Blubber'] = repo_info('blubber')
+        conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
         conf['repos']['pipelinelib'] = repo_info('integration/pipelinelib')
 
         # TODO: Move this to a dedicated section like "development tools"
@@ -354,7 +374,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('schemas/event/'))
 
     if shouthow:
-        conf['repos']['ShoutHow'] = gh_repo('ashley/ShoutHow', host='git.legoktm.com')
+        conf['repos']['ShoutHow'] = generic_repo('ashley/ShoutHow', host='git.legoktm.com')
 
     if wmcs:
         # toolforge infra
