@@ -272,6 +272,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['scap'] = wmf_gitlab_repo(
             'repos/releng/scap'
         )
+        conf['repos']['release'] = wmf_gitlab_repo(
+            'repos/releng/release'
+        )
         # CI config T217716
         conf['repos']['Wikimedia continuous integration config'] = repo_info(
             'integration/config'
