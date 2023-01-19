@@ -29,3 +29,29 @@ def test_gerrit_prefix_list():
 def test_parse_args():
     assert write_config.parse_args([]).restart is False
     assert write_config.parse_args(['--restart']).restart is True
+
+
+def test_repo_info_gitlab():
+    assert write_config.wmf_gitlab_repo('repos/releng/scap')['url'] == \
+        'https://gitlab.wikimedia.org/repos/releng/scap.git'
+    assert write_config.wmf_gitlab_repo('repos/releng/scap')['url-pattern']['anchor'] == '#L{line}'
+    assert write_config.wmf_gitlab_repo('repos/releng/scap')['url-pattern']['base-url'] == \
+        'https://gitlab.wikimedia.org/repos/releng/scap/-/tree/{rev}/{path}{anchor}'
+
+
+def test_repo_info_gerrit():
+    assert write_config.repo_info('operations/alerts')['url'] == \
+        'https://gerrit-replica.wikimedia.org/r/operations/alerts.git'
+    assert write_config.repo_info('operations/alerts')['url-pattern']['anchor'] == '#{line}'
+    assert write_config.repo_info('operations/alerts')['url-pattern']['base-url'] == \
+        'https://gerrit.wikimedia.org/g/operations/alerts/+/{rev}/{path}{anchor}'
+
+
+def test_repo_info_github():
+    assert write_config.gh_repo('wmde/WikibaseDataModel')['url'] == \
+        'https://github.com/wmde/WikibaseDataModel'
+
+
+def test_repo_info_generic():
+    assert write_config.generic_repo('ashley/ShoutHow', host='git.legoktm.com')['url'] == \
+        'https://git.legoktm.com/ashley/ShoutHow'
