@@ -92,9 +92,16 @@ def _get_gerrit_file(gerrit_name: str, path: str) -> str:
     return base64.b64decode(r.text).decode()
 
 
+def _get_gitlab_file(repo_name: str, path: str, branch="master") -> str:
+    url = f'https://gitlab.wikimedia.org/{repo_name}/-/raw/{branch}/{path}'
+    print('Fetching ' + url)
+    r = requests.get(url)
+    return r.text
+
+
 @functools.lru_cache()
 def _settings_yaml() -> dict:
-    return yaml.safe_load(_get_gerrit_file('mediawiki/tools/release',
+    return yaml.safe_load(_get_gitlab_file('repos/releng/release',
                                            'make-release/settings.yaml'))
 
 
