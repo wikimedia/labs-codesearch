@@ -64,7 +64,7 @@ HOUND_STARTUP = 'Hound is not ready.\n'
 def favicon():
     # http://flask.pocoo.org/docs/0.12/patterns/favicon/
     return send_from_directory(
-        os.path.join(app.root_path, 'static'),
+        os.path.join(app.root_path, 'frontend'),
         'favicon.ico',
         mimetype='image/vnd.microsoft.icon')
 
