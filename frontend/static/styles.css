@@ -11,6 +11,18 @@
 	margin: 0 auto;
 }
 
+.dropdown-menu.show {
+	max-height: min(70vh, 700px);
+	overflow-y: auto;
+}
+#cs-field-reposelector:after {
+	content: "";
+	display: block;
+	position: absolute;
+	height: calc(min(70vh, 700px) + 20px);
+	width: 1px;
+}
+
 /* Results */
 
 .cs-output-placeholder {
