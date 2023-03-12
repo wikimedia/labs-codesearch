@@ -56,8 +56,8 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 			</div>
 			<div class="mb-2 col-12 order-3 col-md-8 col-lg-9 col-xl-4">
 				<input type="hidden" id="cs-field-repos" name="repos" value="{{fields.repos}}" autocomplete="off">
-				<div class="form-floating" id="cs-field-reposelector">
-					<input type="text" class="form-control" id="cs-field-reposelector-input" autocomplete="off">
+				<div class="form-floating cs-field-reposelector" id="cs-field-reposelector">
+					<input type="text" class="form-control" id="cs-field-reposelector-input" autocomplete="off" placeholder="Type to fuzzy match…">
 					<label class="form-label" for="cs-field-reposelector-input">Select repos{{#selectedRepoCount}} ({{selectedRepoCount}}){{/selectedRepoCount}}</label>
 					<div class="dropdown-menu"></div>
 				</div>

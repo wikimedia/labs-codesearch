@@ -11,11 +11,15 @@
 	margin: 0 auto;
 }
 
-.dropdown-menu.show {
+.cs-field-reposelector .dropdown-menu.show {
 	max-height: min(70vh, 700px);
 	overflow-y: auto;
 }
-#cs-field-reposelector:after {
+.cs-field-reposelector > .form-control:focus::placeholder {
+	color: #6c757d;
+}
+.cs-field-reposelector::after {
+	/* simulate margin-bottom on the absolutely positioned dropdown-menu */
 	content: "";
 	display: block;
 	position: absolute;
