@@ -40,10 +40,9 @@ class Codesearch {
 		'analytics' => 'Analytics',
 		'wmcs' => 'Wikimedia Cloud Services',
 	];
-	public const HEALTH_PAGE = 'https://codesearch.wmcloud.org/_health';
-
+	public const URL_HEALTH = 'https://codesearch-backend.wmcloud.org/_health';
+	private const URL_HOUND_BASE = 'https://codesearch-backend.wmcloud.org/';
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
-
 	private const REPOS_CACHE_TTL = 3600;
 
 	private array $apcuStats = [
@@ -59,12 +58,12 @@ class Codesearch {
 		return $this->apcuStats + [ 'enabled' => function_exists( 'apcu_fetch' ) ];
 	}
 
-	public function formatConfigUrl( string $backend ): string {
-		return "https://codesearch.wmcloud.org/$backend/api/v1/repos";
+	private function getRepoConfigUrl( string $backend ): string {
+		return self::URL_HOUND_BASE . "$backend/api/v1/repos";
 	}
 
-	public function getApiBaseUrl( string $backend ): string {
-		return "https://codesearch.wmcloud.org/$backend/api/v1/search";
+	private function getApiBaseUrl( string $backend ): string {
+		return self::URL_HOUND_BASE . "$backend/api/v1/search";
 	}
 
 	public function formatApiQueryUrl( string $backend, array $fields ): string {
@@ -89,7 +88,7 @@ class Codesearch {
 		if ( $val ) {
 			$this->apcuStats['hits']++;
 		} else {
-			$url = $this->formatConfigUrl( $backend );
+			$url = $this->getRepoConfigUrl( $backend );
 			$val = json_decode( $this->fetchUrl( $url ), true );
 			if ( !$val ) {
 				throw new ApiUnavailable( 'Hound returned empty or invalid config data' );
