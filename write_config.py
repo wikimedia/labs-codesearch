@@ -193,15 +193,6 @@ def wmf_gitlab_repo(name: str) -> dict:
     }
 
 
-def should_skip_repo(repo_name: str, info: dict):
-    # Explicitly excluding men rights activists
-    # T323956
-    if 'wikimannia' in repo_name.lower() or 'wikimannia' in info['url'].lower():
-        return True
-
-    return False
-
-
 def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
@@ -242,8 +233,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         for repo_name, info in parse_gitmodules(
                 "https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules"
         ):
-            if should_skip_repo(repo_name, info):
-                continue
             conf['repos'][repo_name] = info
 
     if skins:
@@ -255,8 +244,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         for repo_name, info in parse_gitmodules(
                 "https://raw.githubusercontent.com/MWStake/nonwmf-skins/master/.gitmodules"
         ):
-            if should_skip_repo(repo_name, info):
-                continue
             conf['repos'][repo_name] = info
 
     if puppet:
