@@ -87,12 +87,18 @@ function flattenMatchesToLines( matches ) {
 		lines.set( matchedLineno, {
 			lineno: matchedLineno,
 			text: match.Line,
-			isMatch: true
+			isMatch: true,
+			isMatchBoundary: false
 		} );
 
-		// Add before/after lines only if not already there from another match,
-		// including and especially if the overlapping match has this line as a
-		// matching line (which we must not overwrite).
+		// Improve upon the default Hound UI by merging match blocks together.
+		// This way we avoid displaying the same line multiple times, and avoids
+		// needless separator lines when one match's last context line neatly
+		// into the next match's first context line.
+
+		// Record new before/after context lines only if not already seen,
+		// including and especially if the existing entry for this line is a
+		// matching line (which we must not overwrite with a context line).
 		const totalBefore = match.Before.length;
 		for ( let i = 0; i < match.Before.length; i++ ) {
 			const lineno = matchedLineno - totalBefore + i;
@@ -100,7 +106,8 @@ function flattenMatchesToLines( matches ) {
 				lines.set( lineno, {
 					lineno,
 					text: match.Before[ i ],
-					isMatch: false
+					isMatch: false,
+					isMatchBoundary: false
 				} );
 			}
 		}
@@ -110,7 +117,8 @@ function flattenMatchesToLines( matches ) {
 				lines.set( lineno, {
 					lineno,
 					text: match.After[ i ],
-					isMatch: false
+					isMatch: false,
+					isMatchBoundary: false
 				} );
 			}
 		}
@@ -118,6 +126,10 @@ function flattenMatchesToLines( matches ) {
 
 	lines = Array.from( lines.values() );
 	lines.sort( ( a, b ) => a.lineno - b.lineno );
+	lines.reduce( ( prev, line ) => {
+		line.isMatchBoundary = prev.lineno + 1 !== line.lineno;
+		return line;
+	} );
 	return lines;
 }
 

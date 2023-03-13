@@ -22,9 +22,8 @@
 }
 
 .cs-result {
-	/* override boostrap .card-body */
-	padding-top: 0;
-	padding-bottom: 0;
+	/* override bootstrap .card-body */
+	padding: 0;
 	overflow-y: auto;
 }
 
@@ -41,12 +40,16 @@
 	white-space: pre;
 }
 
+.cs-line-boundary {
+	border-top: 1px solid rgba(0,0,0,.125);
+}
+
 .cs-line-no {
 	display: inline-block;
 	width: 3rem;
 	text-align: right;
 	padding: 0 0.5rem 0 0;
-	/* match boostrap .card border */
+	/* match bootstrap .card border */
 	border-right: 1px solid rgba(0,0,0,.125);
 	user-select: none;
 }

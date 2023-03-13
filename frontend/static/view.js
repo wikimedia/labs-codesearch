@@ -137,7 +137,9 @@ function buildResultDefaultCard( match, repoConf, resultRevision, regexp ) {
 		] ),
 		dom( 'div', { className: 'card-body cs-result' },
 			flattenMatchesToLines( match.Matches )
-				.map( ( line ) => dom( 'div', { className: 'cs-line' }, [
+				.map( ( line ) => dom( 'div', {
+					className: line.isMatchBoundary ? 'cs-line cs-line-boundary' : 'cs-line'
+				}, [
 					dom( 'a', {
 						className: 'link-secondary cs-line-no',
 						href: formatUrl( repoConf, resultRevision, match.Filename, line.lineno ),
