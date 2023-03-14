@@ -18,13 +18,16 @@
 
 /* global fuzzysort */
 
+import htm from './lib/htm-3.1.1-mini/index.mjs';
+// import htm from 'https://unpkg.com/htm@3.1.1/src/index.mjs'; // Debugging
+
 function select( selector ) {
 	return document.querySelector( selector );
 }
 
 /**
  * @param {string} tagName
- * @param {Object|undefined} props
+ * @param {Object<string,string|boolean|number|Function>} [props]
  * @param {Array<string|HTMLElement>|undefined} [children]
  * @return {HTMLElement}
  */
@@ -46,6 +49,11 @@ function dom( tagName, props, children ) {
 	}
 	return element;
 }
+
+const html = htm.bind( function ( tagName, props, ...children ) {
+	return dom( tagName, props, children.flat( Infinity ) );
+} );
+window.html = html; // Debugging
 
 function isEmpty( obj ) {
 	// eslint-disable-next-line no-unreachable-loop
@@ -152,7 +160,7 @@ function fuzzyFilter( inputText, options, limit ) {
 
 export {
 	select,
-	dom,
+	html,
 	isEmpty,
 	escapeRegExp,
 	flattenMatchesToLines,

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { select, dom, isEmpty, now } from './util.js';
+import { select, html, isEmpty, now } from './util.js';
 import * as view from './view.js';
 
 const OFFSET_INTIAL = false;
@@ -52,15 +52,19 @@ function renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) {
 	}
 
 	if ( isEmpty( apiData.Results ) ) {
-		return dom( 'div', {
-			className: 'alert alert-primary',
-			role: 'alert'
-		}, [ 'No results found.' ] );
+		return html`<div role="alert" className="alert alert-primary">No results found.</div>`;
 	}
 
 	try {
 		const formatted = document.createDocumentFragment();
-		formatted.append( view.buildFormatNav( repos, apiData, queryState, rerenderFn ) );
+		const nav = view.buildFormatNav( repos, apiData, queryState );
+		nav.addEventListener( 'input', ( e ) => {
+			if ( e.target.matches( '.cs-field-format' ) ) {
+				queryState.format = e.target.value;
+				rerenderFn();
+			}
+		} );
+		formatted.append( nav );
 		switch ( queryState.format ) {
 			case 'Default':
 				formatted.append( view.buildResultsDefault( repos, apiData.Results, queryState, loadFn ) );
@@ -91,18 +95,16 @@ async function sendQuery( jsData ) {
 	const repos = jsData.reposData;
 	const queryState = {
 		format: 'Default',
-		regexp: null,
-		getRegexp() {
-			if ( !queryState.regexp ) {
-				// Optimisation: Cache regex creation to re-use *many* times.
-				// Correctness: Defer this until needed because when the input contains
-				// invalid syntax, we want the detailed server error to be reported in the UI,
-				// and not an early generic SyntaxError from this code.
-				queryState.regexp = new RegExp(
-					jsData.fields.query,
-					jsData.fields.caseInsensitive ? 'ig' : 'g'
-				);
-			}
+		get regexp() {
+			delete queryState.regexp;
+			// Optimisation: Cache regex creation to re-use *many* times.
+			// Correctness: Defer this until needed because when the input contains
+			// invalid syntax, we want the detailed server error to be reported in the UI,
+			// and not an early generic SyntaxError from this code.
+			queryState.regexp = new RegExp(
+				jsData.fields.query,
+				jsData.fields.caseInsensitive ? 'ig' : 'g'
+			);
 			return queryState.regexp;
 		},
 		time: {
@@ -125,12 +127,6 @@ async function sendQuery( jsData ) {
 	// Stop loading animation
 	submitIdleNode.hidden = false;
 	submitLoadingNode.hidden = outputLoadingNode.hidden = true;
-
-	// Refresh callback
-	const rerenderFn = () => {
-		outputNode.innerHTML = '';
-		outputNode.append( renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) );
-	}
 	// Load more callback
 	const loadFn = async ( repoId, sectionNode, completeFn ) => {
 		const repoConf = repos[ repoId ];
@@ -150,10 +146,15 @@ async function sendQuery( jsData ) {
 
 		sectionNode.append(
 			...result.Matches.map( ( match ) =>
-				view.buildResultDefaultCard( match, repoConf, result.Revision, queryState.getRegexp() )
+				view.buildResultDefaultCard( match, repoConf, result, queryState )
 			)
 		);
-	}
+	};
+	// Refresh callback
+	const rerenderFn = () => {
+		outputNode.innerHTML = '';
+		outputNode.append( renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) );
+	};
 
 	outputNode.append( renderResponse(
 		repos,

@@ -1,2 +1,4 @@
 /vendor/
 /static/lib/
+# https://github.com/eslint/eslint/issues/17113
+/node_modules/
