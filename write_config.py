@@ -273,6 +273,10 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikimedia continuous integration config'] = repo_info(
             'integration/config'
         )
+        # Quibble T332995
+        conf['repos']['Quibble continuous integration runner'] = repo_info(
+            'integration/quibble'
+        )
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
         conf['repos']['pipelinelib'] = repo_info('integration/pipelinelib')
 
