@@ -39,6 +39,12 @@ class Codesearch {
 		'services' => 'Wikimedia Services',
 		'analytics' => 'Analytics',
 		'wmcs' => 'Wikimedia Cloud Services',
+		'armchairgm' => 'ArmchairGM',
+		'shouthow' => 'ShoutHow',
+	];
+	public const BACKENDS_HIDDEN = [
+		'armchairgm' => true,
+		'shouthow' => true,
 	];
 	public const URL_HEALTH = 'https://codesearch-backend.wmcloud.org/_health';
 	private const URL_HOUND_BASE = 'https://codesearch-backend.wmcloud.org/';

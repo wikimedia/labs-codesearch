@@ -100,6 +100,9 @@ class Model {
 
 		$backends = [];
 		foreach ( Codesearch::BACKENDS as $id => $label ) {
+			if ( isset( Codesearch::BACKENDS_HIDDEN[$id] ) ) {
+				continue;
+			}
 			$backends[] = [
 				'href' => "/$id/$canonicalFrontendQueryString",
 				'label' => $label,
