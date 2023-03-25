@@ -56,8 +56,8 @@ class Codesearch {
 		'misses' => 0,
 	];
 
-	public function isValidBackend( string $backend ): bool {
-		return array_key_exists( $backend, self::BACKENDS );
+	public function getBackendLabel( string $backend ): ?string {
+		return self::BACKENDS[ $backend ] ?? null;
 	}
 
 	public function getApcuStats(): array {

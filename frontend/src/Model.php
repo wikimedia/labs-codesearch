@@ -110,7 +110,8 @@ class Model {
 			];
 		}
 
-		if ( !$this->search->isValidBackend( $this->backend ) ) {
+		$label = $this->search->getBackendLabel( $this->backend );
+		if ( $label === null ) {
 			$response->statusCode = 404;
 			$error = "Unknown search backend \"{$this->backend}\".";
 			$response->view = new View( 'error', [
@@ -167,6 +168,7 @@ class Model {
 			'isSubmit' => $isSubmit,
 			'doctitle' => $isSubmit ? $this->query : null,
 			'apiQueryUrl' => $apiQueryUrl,
+			'backendLabel' => $label,
 			'backends' => $backends,
 			'fields' => $fields,
 			'selectedRepoCount' => strval( count( $selectedRepos ) ?: '' ),
