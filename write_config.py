@@ -216,7 +216,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Pywikibot'] = repo_info('pywikibot/core')
 
     if ooui:
-        conf['repos']['OOUI'] = repo_info('oojs/ui')
+        conf['repos']['oojs/core'] = repo_info('oojs/core')
+        conf['repos']['oojs/ui'] = repo_info('oojs/ui')
 
     data = get_extdist_repos()
     if exts:
