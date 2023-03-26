@@ -445,8 +445,7 @@ def main():
               # A dead codebase used by just one person
               armchairgm=False,
               twn=True,
-              # FIXME: Justify
-              milkshake=False,
+              milkshake=True,
               # All of these should already be included via core/exts/skins
               bundled=False,
               # Avoiding upstream libraries; to reconsider, see T227704
