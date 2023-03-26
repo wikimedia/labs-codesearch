@@ -44,6 +44,7 @@ DESCRIPTIONS = {
     'deployed': 'Wikimedia deployed',
     'libraries': 'Libraries',
     'operations': 'Wikimedia Operations',
+    'devtools': 'CI & Development',
     'puppet': 'Puppet',
     'ooui': 'OOUI',
     'milkshake': 'Milkshake',
@@ -55,7 +56,7 @@ DESCRIPTIONS = {
     'armchairgm': 'ArmchairGM',
     'shouthow': 'ShoutHow',
 }
-HIDDEN = ['armchairgm', 'shouthow']
+HIDDEN = ['armchairgm', 'shouthow', 'devtools']
 LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
 HOUND_STARTUP = 'Hound is not ready.\n'
 

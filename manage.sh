@@ -24,3 +24,4 @@ systemctl $MODE hound-analytics
 systemctl $MODE hound-puppet
 systemctl $MODE hound-shouthow
 systemctl $MODE hound-wmcs
+systemctl $MODE hound-devtools

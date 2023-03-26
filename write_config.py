@@ -197,7 +197,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
               services=False, libs=False, analytics=False, puppet=False,
-              shouthow=False, schemas=False, wmcs=False):
+              shouthow=False, schemas=False, wmcs=False, devtools=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -248,7 +248,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             conf['repos'][repo_name] = info
 
     if puppet:
-        conf['repos']['Wikimedia Puppet'] = repo_info('operations/puppet')
+        conf['repos']['operations/puppet'] = repo_info('operations/puppet')
         conf['repos']['labs/private'] = repo_info('labs/private')
 
     if puppet or wmcs:
@@ -260,31 +260,10 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/dns'] = repo_info('operations/dns')
         # Special Netbox repo
         conf['repos']['netbox DNS'] = phab_repo('netbox-exported-dns')
-        conf['repos']['Wikimedia MediaWiki config'] = repo_info(
+        conf['repos']['operations/mediawiki-config'] = repo_info(
             'operations/mediawiki-config'
         )
-        conf['repos'].update(gerrit_prefix_list('mediawiki/tools/'))
-        conf['repos']['scap'] = wmf_gitlab_repo(
-            'repos/releng/scap'
-        )
-        conf['repos']['release'] = wmf_gitlab_repo(
-            'repos/releng/release'
-        )
-        # CI config T217716
-        conf['repos']['Wikimedia continuous integration config'] = repo_info(
-            'integration/config'
-        )
-        # Quibble T332995
-        conf['repos']['Quibble continuous integration runner'] = repo_info(
-            'integration/quibble'
-        )
-        conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
-        conf['repos']['pipelinelib'] = repo_info('integration/pipelinelib')
 
-        # TODO: Move this to a dedicated section like "development tools"
-        conf['repos']['MediaWiki Vagrant'] = repo_info(
-            'mediawiki/vagrant'
-        )
         conf['repos']['operations/alerts'] = repo_info('operations/alerts')
         conf['repos']['operations/cookbooks'] = repo_info('operations/cookbooks')
         conf['repos']['operations/deployment-charts'] = repo_info(
@@ -303,6 +282,17 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
         conf['repos'].update(gerrit_prefix_list('performance/'))
         conf['repos'].update(gerrit_prefix_list('mediawiki/php/'))
+
+    if devtools:
+        # Continous integration T217716, T332995
+        conf['repos'].update(gerrit_prefix_list('integration/'))
+        conf['repos'].update(gerrit_prefix_list('mediawiki/tools/'))
+
+        conf['repos']['mediawiki/vagrant'] = repo_info('mediawiki/vagrant')
+
+        conf['repos']['scap'] = wmf_gitlab_repo('repos/releng/scap')
+        conf['repos']['releng/release'] = wmf_gitlab_repo('repos/releng/release')
+        conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
 
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
@@ -324,7 +314,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         for repo_name in wikimedia_deployed_repos():
             conf['repos'][repo_name] = repo_info(repo_name)
         # Also mw-config (T214341)
-        conf['repos']['Wikimedia MediaWiki config'] = repo_info(
+        conf['repos']['operations/mediawiki-config'] = repo_info(
             'operations/mediawiki-config'
         )
         conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
@@ -479,6 +469,7 @@ def main():
     make_conf('wmcs', args, wmcs=True)
     make_conf('puppet', args, puppet=True)
     make_conf('shouthow', args, shouthow=True)
+    make_conf('devtools', args, devtools=True)
 
 
 if __name__ == '__main__':

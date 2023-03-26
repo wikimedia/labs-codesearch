@@ -27,16 +27,17 @@ class Codesearch {
 		'core' => 'MediaWiki core',
 		'extensions' => 'Extensions',
 		'skins' => 'Skins',
-		'things' => 'Extensions & skins',
+		'things' => 'MW extensions & skins',
 		'bundled' => 'MW tarball',
-		'deployed' => 'Wikimedia deployed',
-		'libraries' => 'Libraries',
-		'operations' => 'Wikimedia Operations',
+		'libraries' => 'MW libraries',
+		'deployed' => 'MediaWiki & services at WMF',
+		'operations' => 'Wikimedia SRE',
 		'puppet' => 'Puppet',
 		'ooui' => 'OOUI',
 		'milkshake' => 'Milkshake',
 		'pywikibot' => 'Pywikibot',
 		'services' => 'Wikimedia Services',
+		'devtools' => 'CI & Development',
 		'analytics' => 'Analytics',
 		'wmcs' => 'Wikimedia Cloud Services',
 		'armchairgm' => 'ArmchairGM',
@@ -44,7 +45,12 @@ class Codesearch {
 	];
 	public const BACKENDS_HIDDEN = [
 		'armchairgm' => true,
+		'extensions' => true,
+		'milkshake' => true,
+		'ooui' => true,
+		'services' => true,
 		'shouthow' => true,
+		'skins' => true,
 	];
 	public const URL_HEALTH = 'https://codesearch-backend.wmcloud.org/_health';
 	private const URL_HOUND_BASE = 'https://codesearch-backend.wmcloud.org/';
