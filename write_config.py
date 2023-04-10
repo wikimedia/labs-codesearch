@@ -102,7 +102,7 @@ def _get_gitlab_file(repo_name: str, path: str, branch="master") -> str:
 @functools.lru_cache()
 def _settings_yaml() -> dict:
     return yaml.safe_load(_get_gitlab_file('repos/releng/release',
-                                           'make-release/settings.yaml'))
+                                           'make-release/settings.yaml', branch='main'))
 
 
 def gerrit_prefix_list(prefix: str) -> dict:
