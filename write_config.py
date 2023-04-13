@@ -432,24 +432,25 @@ def main():
               ooui=True,
               operations=True,
               puppet=True,
-              # A dead codebase used by just one person
-              armchairgm=False,
               twn=True,
               milkshake=True,
+              pywikibot=True,
+              services=True,
+              libs=True,
+              analytics=True,
+              wmcs=True,
+              schemas=True,
+              devtools=True,
+              # A dead codebase used by just one person
+              armchairgm=False,
               # All of these should already be included via core/exts/skins
               bundled=False,
               # Avoiding upstream libraries; to reconsider, see T227704
               vendor=False,
               # All of these should already be included via core/exts/skins
               wikimedia=False,
-              pywikibot=True,
-              services=True,
-              libs=True,
-              analytics=True,
-              wmcs=True,
               # Heavily duplicates MediaWiki core + extensions
               shouthow=False,
-              schemas=True,
               )
 
     make_conf('core', args, core=True)
