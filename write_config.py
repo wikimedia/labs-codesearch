@@ -319,6 +319,18 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         )
         conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
         conf['repos'].update(gerrit_prefix_list('mediawiki/php/'))
+        conf['repos']['function-schemata'] = wmf_gitlab_repo(
+            'repos/abstract-wiki/wikifunctions/function-schemata'
+        )
+        conf['repos']['function-orchestrator'] = wmf_gitlab_repo(
+            'repos/abstract-wiki/wikifunctions/function-orchestrator'
+        )
+        conf['repos']['function-evaluator'] = wmf_gitlab_repo(
+            'repos/abstract-wiki/wikifunctions/function-evaluator'
+        )
+        conf['repos']['wikilambda-cli'] = wmf_gitlab_repo(
+            'repos/abstract-wiki/wikifunctions/wikilambda-cli'
+        )
 
     if vendor:
         conf['repos']['mediawiki/vendor'] = repo_info('mediawiki/vendor')
