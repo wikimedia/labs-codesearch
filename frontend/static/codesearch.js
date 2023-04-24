@@ -105,8 +105,12 @@ async function sendQuery( jsData ) {
 			}
 			return queryState.regexp;
 		},
-		requestStart: now(),
-		responseDuration: NaN
+		time: {
+			fetchStart: now(),
+			fetchDuration: null,
+			renderStart: null,
+			renderDuration: null
+		}
 	};
 
 	let apiData;
@@ -115,11 +119,12 @@ async function sendQuery( jsData ) {
 	} catch ( err ) {
 		outputNode.append( view.buildError( err ) );
 	}
+	queryState.time.renderStart = now();
+	queryState.time.fetchDuration = Math.round( queryState.time.renderStart - queryState.time.fetchStart );
 
 	// Stop loading animation
 	submitIdleNode.hidden = false;
 	submitLoadingNode.hidden = outputLoadingNode.hidden = true;
-	queryState.responseDuration = now() - queryState.requestStart;
 
 	// Refresh callback
 	const rerenderFn = () => {
@@ -157,6 +162,8 @@ async function sendQuery( jsData ) {
 		rerenderFn,
 		loadFn
 	) );
+	queryState.time.renderDuration = Math.round( now() - queryState.time.renderStart );
+	outputNode.querySelector( '.cs-perf' ).setAttribute( 'data-time-render', queryState.time.renderDuration );
 }
 
 // Main init

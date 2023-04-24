@@ -96,9 +96,7 @@ function buildFormatNav( repos, apiData, state, rerenderFn ) {
 				)
 			] )
 		),
-		dom( 'div', { className: 'form-text col-auto flex-grow-1 text-end' }, [
-			`${Math.round( state.responseDuration )}ms total / ${stats.Duration}ms server / ${stats.FilesOpened} files`
-		] )
+		dom( 'div', { className: 'form-text col-auto flex-grow-1 text-end cs-perf', 'data-time-backend': stats.Duration, 'data-files': stats.FilesOpened } )
 	] );
 }
 

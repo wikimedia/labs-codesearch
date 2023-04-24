@@ -27,6 +27,10 @@
 	width: 1px;
 }
 
+.cs-perf::before {
+	content: attr(data-time-backend) "ms server / " attr(data-time-render) "ms render / " attr(data-files) " files";
+}
+
 /* Results */
 
 .cs-output-placeholder {
