@@ -2,17 +2,12 @@
 	"root": true,
 	"extends": [
 		"wikimedia/client-common",
-		"wikimedia/language/es2020"
+		"wikimedia/language/es2019"
 	],
 	"parserOptions": {
 		"sourceType": "module"
 	},
-	"plugins": [
-		"compat"
-	],
 	"rules": {
-		"compat/compat": [ "error", "firefox ESR, since 2019" ],
-		"no-case-declarations": "off",
 		"max-len": "off",
 		"comma-dangle": "off"
 	}

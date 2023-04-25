@@ -18,12 +18,6 @@
 .cs-field-reposelector > .form-control:focus::placeholder {
 	color: #6c757d;
 }
-.cs-field-reposelector-foot {
-	pointer-events: none;
-	color: #6c757d;
-	text-align: center;
-	font-size: 14px;
-}
 .cs-field-reposelector::after {
 	/* simulate margin-bottom on the absolutely positioned dropdown-menu */
 	content: "";
