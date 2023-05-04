@@ -126,11 +126,6 @@ async function sendQuery( jsData ) {
 	submitIdleNode.hidden = false;
 	submitLoadingNode.hidden = outputLoadingNode.hidden = true;
 
-	// Refresh callback
-	const rerenderFn = () => {
-		outputNode.innerHTML = '';
-		outputNode.append( renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) );
-	}
 	// Load more callback
 	const loadFn = async ( repoId, sectionNode, completeFn ) => {
 		const repoConf = repos[ repoId ];
@@ -153,7 +148,12 @@ async function sendQuery( jsData ) {
 				view.buildResultDefaultCard( match, repoConf, result.Revision, queryState.getRegexp() )
 			)
 		);
-	}
+	};
+	// Refresh callback
+	const rerenderFn = () => {
+		outputNode.innerHTML = '';
+		outputNode.append( renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) );
+	};
 
 	outputNode.append( renderResponse(
 		repos,
@@ -163,7 +163,8 @@ async function sendQuery( jsData ) {
 		loadFn
 	) );
 	queryState.time.renderDuration = Math.round( now() - queryState.time.renderStart );
-	outputNode.querySelector( '.cs-perf' ).setAttribute( 'data-time-render', queryState.time.renderDuration );
+	// cs-perf is absent on "No results found" response
+	outputNode.querySelector( '.cs-perf' )?.setAttribute( 'data-time-render', queryState.time.renderDuration );
 }
 
 // Main init
@@ -177,7 +178,11 @@ async function sendQuery( jsData ) {
 			// Start loading animation right away, while the page is reloading
 			submitIdleNode.hidden = true;
 			submitLoadingNode.hidden = outputLoadingNode.hidden = false;
-			outputNode.innerHTML = '';
+			// Hide results but don't empty the output element.
+			// We keep results in-memory, to instantly restore from BFCache
+			// when using native back button.
+			outputNode.hidden = true;
+			outputNode.dataset.hasresults = '1';
 		} );
 
 		const reposHiddenNode = select( '#cs-field-repos' );
@@ -244,5 +249,14 @@ async function sendQuery( jsData ) {
 		document.addEventListener( 'keydown', onDocumentKey );
 		document.addEventListener( 'click', onDocumentTarget );
 		document.addEventListener( 'focusin', onDocumentTarget );
+
+		window.addEventListener( 'pageshow', ( e ) => {
+			if ( e.persisted && outputNode.dataset.hasresults ) {
+				// Restored from BFCache
+				submitIdleNode.hidden = false;
+				submitLoadingNode.hidden = outputLoadingNode.hidden = true;
+				outputNode.hidden = false;
+			}
+		} );
 	}
 }
