@@ -23,7 +23,7 @@ def test_gerrit_prefix_list():
     # Test one example repo
     assert 'mediawiki/libs/alea' in d
     assert d['mediawiki/libs/alea']['url'] ==\
-           'https://gerrit-replica.wikimedia.org/r/mediawiki/libs/alea.git'
+           'https://gerrit.wikimedia.org/r/mediawiki/libs/alea.git'
 
 
 def test_parse_args():
@@ -41,7 +41,7 @@ def test_repo_info_gitlab():
 
 def test_repo_info_gerrit():
     assert write_config.repo_info('operations/alerts')['url'] == \
-        'https://gerrit-replica.wikimedia.org/r/operations/alerts.git'
+        'https://gerrit.wikimedia.org/r/operations/alerts.git'
     assert write_config.repo_info('operations/alerts')['url-pattern']['anchor'] == '#{line}'
     assert write_config.repo_info('operations/alerts')['url-pattern']['base-url'] == \
         'https://gerrit.wikimedia.org/g/operations/alerts/+/{rev}/{path}{anchor}'

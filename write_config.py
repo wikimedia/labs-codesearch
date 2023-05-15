@@ -144,7 +144,7 @@ def phab_repo(name: str) -> dict:
 
 def repo_info(gerrit_name: str) -> dict:
     return {
-        'url': f'https://gerrit-replica.wikimedia.org/r/{gerrit_name}.git',
+        'url': f'https://gerrit.wikimedia.org/r/{gerrit_name}.git',
         'url-pattern': {
             'base-url': 'https://gerrit.wikimedia.org/g/' +
                         '%s/+/{rev}/{path}{anchor}' % gerrit_name,
