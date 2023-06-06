@@ -3,3 +3,4 @@
 /.eslintcache
 /composer.lock
 /package-lock.json
+/staticversion.txt

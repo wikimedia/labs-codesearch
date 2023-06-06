@@ -32,6 +32,8 @@ RUN mkdir /srv/composer \
 
 COPY . /var/www/html/
 
+RUN find /var/www/html/static -type f -print0 | xargs -0 sha1sum | sort | sha1sum | head -c 7 > /var/www/html/staticversion.txt
+
 # This is basically just to set up a PSR-4 autoloader.
 # (In Docker mode we use native PECL mustache, instead of the Composer package.)
 USER nobody

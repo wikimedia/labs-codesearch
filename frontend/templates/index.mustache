@@ -11,12 +11,21 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 	window.CS_CLIENT = 1;
 }
 	</script>
-	<link rel="modulepreload" href="/static/util.js">
-	<link rel="modulepreload" href="/static/view.js">
+	<script type="importmap">
+	{
+		"imports": {
+			"/static/util.js": "/static/util.js{{staticversion}}",
+			"/static/view.js": "/static/view.js{{staticversion}}",
+			"/static/codesearch.js": "/static/codesearch.js{{staticversion}}"
+		}
+	}
+	</script>
+	<link rel="modulepreload" href="/static/util.js{{staticversion}}">
+	<link rel="modulepreload" href="/static/view.js{{staticversion}}">
 	<script deferred src="/static/lib/fuzzysort-2.0.1/fuzzysort.js"></script>
-	<script type="module" src="/static/codesearch.js"></script>
+	<script type="module" src="/static/codesearch.js{{staticversion}}"></script>
 	<link rel="stylesheet" href="/static/lib/bootstrap-5.1.3/bootstrap.min.css">
-	<link rel="stylesheet" href="/static/styles.css">
+	<link rel="stylesheet" href="/static/styles.css{{staticversion}}">
 	<link rel="search" href="/static/opensearch.xml" type="application/opensearchdescription+xml" title="MediaWiki Codesearch">
 	<link rel="shortcut icon" href="/favicon.ico">
 </head>

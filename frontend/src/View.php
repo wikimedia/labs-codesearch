@@ -28,6 +28,43 @@ class View {
 	) {
 	}
 
+	/**
+	 * Generate optional query string for URLs to the /static/ directory.
+	 *
+	 * This is used to ensure integrity between requests around deployments,
+	 * and to ensure natural cache invalidation. For example, if a commit
+	 * changes both HTML and CSS/JavaScript such that one depends on something
+	 * new in the other, then this ensures we don't use outdated browser cache
+	 * for a CSS/JS response in combination with a new server response HTML.
+	 *
+	 * Context: https://gerrit.wikimedia.org/r/c/labs/codesearch/+/898238
+	 *
+	 * This method is written in loving memory of MediaWiki's $wgStyleVersion
+	 * (https://phabricator.wikimedia.org/T181318).
+	 *
+	 * @return string Query string
+	 */
+	private function getStaticUrlQuery(): string {
+		if ( !function_exists( 'apcu_fetch' ) ) {
+			return '';
+		}
+		$key = 'codesearch-staticversion-v1';
+		$version = apcu_fetch( $key );
+		if ( !$version ) {
+			$version = @file_get_contents( __DIR__ . '/../staticversion.txt' ) ?: 'dev';
+			// Safe to keep maximally in apcu because staticversion.txt is written
+			// at container build time. Changes naturally result in server restarts.
+			apcu_store( $key, $version, 0 /* indefinite */ );
+		}
+		return '?' . $version;
+	}
+
+	private function getSharedData(): array {
+		return [
+			'staticversion' => $this->getStaticUrlQuery(),
+		];
+	}
+
 	public function render(): string {
 		if ( class_exists( Mustache::class ) ) {
 			// Prefer native php-mustache (PECL) when available (e.g. Dockerfile build)
@@ -42,6 +79,6 @@ class View {
 		$templateFile = dirname( __DIR__ ) . '/templates/' . $this->template . '.mustache';
 		$templateContent = file_get_contents( $templateFile );
 
-		return $mustache->render( $templateContent, $this->data );
+		return $mustache->render( $templateContent, $this->data + $this->getSharedData() );
 	}
 }
