@@ -340,6 +340,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['mwaddlink'] = repo_info('research/mwaddlink')
         conf['repos']['Wikidata Query GUI'] = repo_info('wikidata/query/gui')
         conf['repos']['Wikidata Query RDF'] = repo_info('wikidata/query/rdf')
+        conf['repos']['iPoid'] = wmf_gitlab_repo('repos/mediawiki/services/ipoid')
 
     if libs:
         conf['repos'].update(gerrit_prefix_list('mediawiki/libs/'))
