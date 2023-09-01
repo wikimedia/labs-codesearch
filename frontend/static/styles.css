@@ -44,7 +44,9 @@
 .cs-result {
 	/* override bootstrap .card-body */
 	padding: 0;
-	overflow-y: auto;
+	/* allow horizontal scrolling of long code lines */
+	overflow-x: auto;
+	overflow-y: hidden;
 }
 
 .cs-result code {
