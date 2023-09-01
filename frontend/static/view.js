@@ -125,8 +125,8 @@ function buildResultsPhabricator( repos, resultsOriginal ) {
 }
 
 function buildResultDefaultCard( match, repoConf, resultRevision, regexp ) {
-	return dom( 'div', { className: 'card mb-3' }, [
-		dom( 'div', { className: 'card-header' }, [
+	return dom( 'details', { open: true, className: 'card mb-3' }, [
+		dom( 'summary', { className: 'card-header' }, [
 			dom( 'a', {
 				className: 'link-secondary',
 				href: formatUrl( repoConf, resultRevision, match.Filename, undefined ),

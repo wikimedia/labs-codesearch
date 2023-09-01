@@ -89,10 +89,10 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 			<div class="col-lg-7 col-xl-8 order-2 order-lg-1 mt-3 cs-results placeholder-wave">
 				<section>
 					<h2><span class="placeholder bg-secondary col-4"></span></h2>
-					<div class="card mb-3">
-						<div class="card-header">
+					<details open class="card mb-3">
+						<summary class="card-header">
 							<span class="link-secondary"><span class="placeholder col-2"></span></span>
-						</div>
+						</summary>
 						<div class="card-body cs-result">
 							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary col-1"></span></code></div>
 							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary col-2"></span></code></div>
@@ -100,7 +100,7 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary ms-5 col-1"></span></code></div>
 							<div class="cs-line"><span class="link-secondary cs-line-no"><span class="placeholder col-5"></span></span><code class="cs-line-code"><span class="placeholder bg-secondary col-1"></span></code></div>
 						</div>
-					</div>
+					</details>
 				</section>
 			</div>
 			<div class="col-lg-5 col-xl-4 order-1 order-lg-2 cs-reposlist placeholder-glow">
