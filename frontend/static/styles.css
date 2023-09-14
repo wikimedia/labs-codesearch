@@ -37,6 +37,11 @@
 	/* match height of buildFormatNav, avoid margin as it collapsed with form's margin */
 	padding-top: 38px;
 }
+.cs-output-placeholder summary {
+	/* prevent interaction with placeholder */
+	cursor: initial;
+	pointer-events: none;
+}
 .cs-output > .alert:first-child {
 	margin-top: 38px;
 }
