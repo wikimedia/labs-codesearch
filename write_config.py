@@ -218,6 +218,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if ooui:
         conf['repos']['oojs/core'] = repo_info('oojs/core')
         conf['repos']['oojs/ui'] = repo_info('oojs/ui')
+        conf['repos']['oojs/router'] = repo_info('oojs/router')
 
     data = get_extdist_repos()
     if exts:
@@ -345,10 +346,17 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if libs:
         conf['repos'].update(gerrit_prefix_list('mediawiki/libs/'))
         conf['repos']['AhoCorasick'] = repo_info('AhoCorasick')
+        conf['repos']['at-ease'] = repo_info('at-ease')
+        conf['repos']['base-convert'] = repo_info('base-convert')
         conf['repos']['cdb'] = repo_info('cdb')
         conf['repos']['CLDRPluralRuleParser'] = repo_info('CLDRPluralRuleParser')
+        conf['repos']['css-sanitizer'] = repo_info('css-sanitizer')
         conf['repos']['HtmlFormatter'] = repo_info('HtmlFormatter')
         conf['repos']['IPSet'] = repo_info('IPSet')
+        conf['repos']['jQuery Client'] = repo_info('jquery-client')
+        conf['repos']['mwbot-rs'] = wmf_gitlab_repo('repos/mwbot-rs/mwbot')
+        conf['repos']['oauthclient-php'] = repo_info('mediawiki/oauthclient-php')
+        conf['repos']['php-session-serializer'] = repo_info('php-session-serializer')
         conf['repos']['RelPath'] = repo_info('RelPath')
         conf['repos']['RunningStat'] = repo_info('RunningStat')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
