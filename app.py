@@ -189,7 +189,9 @@ def index(backend):
 is powered by <a href="https://github.com/hound-search/hound">hound</a>.
 <br />
 <a href="https://gerrit.wikimedia.org/g/labs/codesearch">Source code</a>
-is available under the terms of the GPL v3 or any later version.
+is available under the terms of the GPL v3 or any later version (<a href=
+"https://phabricator.wikimedia.org/maniphest/task/edit/form/1/
+?project=vps-project-codesearch">report an issue</a>).
 </p>
 """
 
