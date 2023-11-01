@@ -281,6 +281,10 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/software/purged'
         )
 
+        conf['repos']['operations/homer/public'] = repo_info(
+            'operations/homer/public'
+        )
+
         conf['repos'].update(gerrit_prefix_list('performance/'))
         conf['repos'].update(gerrit_prefix_list('mediawiki/php/'))
 
