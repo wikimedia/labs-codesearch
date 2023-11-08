@@ -391,6 +391,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
     if analytics:
         conf['repos'].update(gerrit_prefix_list('analytics/'))
+        conf["repos"]["airflow-dags"] = wmf_gitlab_repo(
+            "repos/data-engineering/airflow-dags"
+        )
     if schemas:
         # schemas/event/ requested in T275705
         conf['repos'].update(gerrit_prefix_list('schemas/event/'))
