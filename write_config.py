@@ -215,11 +215,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if pywikibot:
         conf['repos']['Pywikibot'] = repo_info('pywikibot/core')
 
-    if ooui:
-        conf['repos']['oojs/core'] = repo_info('oojs/core')
-        conf['repos']['oojs/ui'] = repo_info('oojs/ui')
-        conf['repos']['oojs/router'] = repo_info('oojs/router')
-
     data = get_extdist_repos()
     if exts:
         # Sanity check (T223771)
@@ -305,12 +300,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if twn:
         conf['repos']['translatewiki.net'] = repo_info('translatewiki')
 
-    if milkshake:
-        ms_repos = ['jquery.uls', 'jquery.ime', 'jquery.webfonts', 'jquery.i18n',
-                    'language-data']
-        for ms_repo in ms_repos:
-            conf['repos'][ms_repo] = gh_repo('wikimedia/' + ms_repo)
-
     if bundled:
         for repo_name in bundled_repos():
             conf['repos'][repo_name] = repo_info(repo_name)
@@ -389,6 +378,17 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['WikibaseSerializationJavaScript'] = \
             gh_repo('wmde/WikibaseSerializationJavaScript')
         conf['repos']['WikibaseDataModelJavaScript'] = gh_repo('wmde/WikibaseDataModelJavaScript')
+
+    if ooui:
+        conf['repos']['oojs/core'] = repo_info('oojs/core')
+        conf['repos']['oojs/ui'] = repo_info('oojs/ui')
+        conf['repos']['oojs/router'] = repo_info('oojs/router')
+
+    if milkshake:
+        ms_repos = ['jquery.uls', 'jquery.ime', 'jquery.webfonts', 'jquery.i18n',
+                    'language-data']
+        for ms_repo in ms_repos:
+            conf['repos'][ms_repo] = gh_repo('wikimedia/' + ms_repo)
 
     if analytics:
         conf['repos'].update(gerrit_prefix_list('analytics/'))
