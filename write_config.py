@@ -368,6 +368,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['RunningStat'] = repo_info('RunningStat')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
         conf['repos']['Purtle'] = repo_info('purtle')
+        conf['repos']['testing-access-wrapper'] = repo_info('testing-access-wrapper')
         conf['repos']['TextCat'] = repo_info('wikimedia/textcat')
         conf['repos']['wvui'] = repo_info('wvui')
         conf['repos']['codex'] = repo_info('design/codex')
