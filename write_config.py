@@ -266,6 +266,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/deployment-charts'
         )
         conf['repos']['operations/software'] = repo_info('operations/software')
+        conf['repos']['operations/software/benchmw'] = repo_info(
+            'operations/software/benchmw'
+        )
         conf['repos']['operations/software/conftool'] = repo_info(
             'operations/software/conftool'
         )
