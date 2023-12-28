@@ -79,6 +79,10 @@ def parse_gitmodules(url):
         elif 'phabricator.nichework.com' in url:
             # FIXME: implement
             continue
+        elif 'gitlab.wikibase.nl' in url:
+            # FIXME: Implement a general gitlab handler
+            # XXX: Security-wise, is it safe to do so?
+            continue
         else:
             raise RuntimeError(f'Unsure how to handle URL: {url}')
 
