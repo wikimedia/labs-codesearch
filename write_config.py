@@ -301,6 +301,10 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['releng/release'] = wmf_gitlab_repo('repos/releng/release')
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
 
+        # (T354852) Important BlueSpice repos outside the extensions/ tree
+        conf['repos']['BlueSpiceMWConfig'] = repo_info('bluespice/mw-config')
+        conf['repos']['BlueSpiceMWConfigOverrides'] = repo_info('bluespice/mw-config/overrides')
+
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
 
