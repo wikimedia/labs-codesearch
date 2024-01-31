@@ -38,7 +38,7 @@ class Codesearch {
 		'pywikibot' => 'Pywikibot',
 		'services' => 'Wikimedia Services',
 		'devtools' => 'CI & Development',
-		'analytics' => 'Analytics',
+		'analytics' => 'Data Engineering',
 		'wmcs' => 'Wikimedia Cloud Services',
 		'armchairgm' => 'ArmchairGM',
 		'shouthow' => 'ShoutHow',

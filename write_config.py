@@ -197,6 +197,22 @@ def wmf_gitlab_repo(name: str) -> dict:
     }
 
 
+def wmf_gitlab_group_projects(group: str) -> dict:
+    """Recursively list all repos within a specific group"""
+    repos = {}
+    resp = requests.get(
+        f"https://gitlab.wikimedia.org/groups/{group.strip('/')}/-/children.json"
+    )
+    resp.raise_for_status()
+    for child in resp.json():
+        child_path = child["relative_path"].lstrip("/")
+        if child["type"] == "group":
+            repos.update(wmf_gitlab_group_projects(group=child_path))
+        elif child["type"] == "project":
+            repos[child_path] = wmf_gitlab_repo(name=child_path)
+    return repos
+
+
 def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
@@ -403,10 +419,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             conf['repos'][ms_repo] = gh_repo('wikimedia/' + ms_repo)
 
     if analytics:
-        conf['repos'].update(gerrit_prefix_list('analytics/'))
-        conf["repos"]["airflow-dags"] = wmf_gitlab_repo(
-            "repos/data-engineering/airflow-dags"
-        )
+        conf["repos"].update(gerrit_prefix_list("analytics/"))
+        conf["repos"].update(wmf_gitlab_group_projects("repos/data-engineering/"))
     if schemas:
         # schemas/event/ requested in T275705
         conf['repos'].update(gerrit_prefix_list('schemas/event/'))

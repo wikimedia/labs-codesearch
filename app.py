@@ -50,7 +50,7 @@ DESCRIPTIONS = {
     'milkshake': 'Milkshake',
     'pywikibot': 'Pywikibot',
     'services': 'Wikimedia Services',
-    'analytics': 'Analytics',
+    'analytics': 'Data Engineering',
     'wmcs': 'Wikimedia Cloud Services',
     # Not visible
     'armchairgm': 'ArmchairGM',
