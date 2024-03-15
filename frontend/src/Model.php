@@ -23,7 +23,7 @@ class Model {
 	private string $query = '';
 	private bool $caseInsensitive = false;
 	private string $filePath = '';
-	private string $excludeFilePath = '';
+	private string $excludeFiles = '';
 	private string $repos = '';
 
 	public function __construct(
@@ -66,8 +66,8 @@ class Model {
 		return $this;
 	}
 
-	public function setExcludeFilePath( string $excludeFilePath ): self {
-		$this->excludeFilePath = $excludeFilePath;
+	public function setExcludeFilePath( string $excludeFiles ): self {
+		$this->excludeFiles = $excludeFiles;
 		return $this;
 	}
 
@@ -85,7 +85,7 @@ class Model {
 			'q' => $this->query !== '' ? $this->query : null,
 			'i' => $this->caseInsensitive ? 'fosho' : null,
 			'files' => $this->filePath !== '' ? $this->filePath : null,
-			'excludeFilePath' => $this->excludeFilePath !== '' ? $this->excludeFilePath : null,
+			'excludeFiles' => $this->excludeFiles !== '' ? $this->excludeFiles : null,
 		] );
 		// Avoid dangling "?" by itself
 		$canonicalFrontendQueryString = $canonicalFrontendQueryString ? "?$canonicalFrontendQueryString": '';
@@ -142,7 +142,7 @@ class Model {
 			'query' => $this->query,
 			'caseInsensitive' => $this->caseInsensitive,
 			'filePath' => $this->filePath,
-			'excludeFilePath' => $this->excludeFilePath,
+			'excludeFiles' => $this->excludeFiles,
 			'repos' => $repos,
 		];
 

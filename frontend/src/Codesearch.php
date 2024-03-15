@@ -83,7 +83,7 @@ class Codesearch {
 			'q' => $fields['query'],
 			'i' => $fields['caseInsensitive'] ? 'fosho' : null,
 			'files' => $fields['filePath'],
-			'excludeFiles' => $fields['excludeFilePath'],
+			'excludeFiles' => $fields['excludeFiles'],
 			'repos' => $fields['repos'] ?: '*',
 			'stats' => 'fosho',
 			// Enable rng ("offset:limit") to limit results to "page 1".
