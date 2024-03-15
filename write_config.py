@@ -439,6 +439,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # - labs/tools/registry-admission-webhook
         conf['repos'].update(gerrit_prefix_list('labs/tools/'))
         conf['repos'].update(gerrit_prefix_list('labs/codesearch'))
+        # T358983
+        conf['repos'].update(gerrit_prefix_list('labs/toollabs'))
 
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
