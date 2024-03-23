@@ -99,7 +99,7 @@ class Model {
 			'excludeFiles' => $this->excludeFiles !== '' ? $this->excludeFiles : null,
 		] );
 		// Avoid dangling "?" by itself
-		$canonicalFrontendQueryString = $canonicalFrontendQueryString ? "?$canonicalFrontendQueryString": '';
+		$canonicalFrontendQueryString = $canonicalFrontendQueryString ? "?$canonicalFrontendQueryString" : '';
 
 		if ( $this->backend === '' ) {
 			// Redirect to default backend

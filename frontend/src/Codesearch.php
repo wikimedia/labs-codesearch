@@ -18,7 +18,7 @@
  */
 namespace Wikimedia\Codesearch;
 
-use Exception;
+use RuntimeException;
 
 class Codesearch {
 	public const BACKEND_DEFAULT = 'search';
@@ -133,7 +133,7 @@ class Codesearch {
 		];
 		$curlHandle = curl_init( $url );
 		if ( !curl_setopt_array( $curlHandle, $curlOptions ) ) {
-			throw new Exception( 'Could not set curl options' );
+			throw new RuntimeException( 'Could not set curl options' );
 		}
 		$curlRes = curl_exec( $curlHandle );
 		if ( curl_errno( $curlHandle ) == CURLE_OPERATION_TIMEOUTED ) {

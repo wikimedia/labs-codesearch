@@ -51,10 +51,11 @@ class View {
 		$key = 'codesearch-staticversion-v1';
 		$version = apcu_fetch( $key );
 		if ( !$version ) {
+			// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			$version = @file_get_contents( __DIR__ . '/../staticversion.txt' ) ?: 'dev';
 			// Safe to keep maximally in apcu because staticversion.txt is written
 			// at container build time. Changes naturally result in server restarts.
-			apcu_store( $key, $version, 0 /* indefinite */ );
+			apcu_store( $key, $version, 0 );
 		}
 		return '?' . $version;
 	}
