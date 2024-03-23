@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>{{doctitle}} - MediaWiki Codesearch</title>
+	<title>Repository index - MediaWiki Codesearch ({{backendLabel}})</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="/static/lib/bootstrap-5.1.3/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/styles.css{{staticversion}}">
@@ -14,14 +14,22 @@
 			<h2>MediaWiki Codesearch</h2>
 			<ul class="nav nav-pills mb-2">
 			{{#backends}}
-				<li class="nav-item"><a href="{{href}}" class="nav-link{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>{{label}}</a></li>
+				<li class="nav-item"><a href="{{href}}?action=repos" class="nav-link{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>{{label}}</a></li>
 			{{/backends}}
 			</ul>
 		</div>
-
-		<div class="alert alert-danger" role="alert">
-			The selected index is still starting up (<a href="{{healthUrl}}">health status page</a>). Try again later, or select a different index.
-		</div>
+	</div>
+	<div class="container py-4 border-top">
+		<p><a href="./" class="btn btn-outline-primary">&larr; Back to search</a></p>
+		<p>Repositories are re-indexed nightly based on the <a href="https://gerrit.wikimedia.org/g/labs/codesearch/+/HEAD/write_config.py">write_config.py</a> file. For more information, refer to <a href="https://www.mediawiki.org/wiki/Codesearch/Admin">mediawiki.org/wiki/Codesearch/Admin</a>.</p>
+		<table class="table">
+		<thead><tr><th>Repository</th><th>Origin URL</th></tr></thead>
+		<tbody>
+		{{#reposList}}
+			<tr><td>{{label}}</td><td><code>{{url}}</code></td></tr>
+		{{/reposList}}
+		</tbody>
+		</table>
 	</div>
 	<div class="container">
 		<footer class="py-5 my-4 border-top text-secondary">

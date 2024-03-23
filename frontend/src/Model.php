@@ -19,6 +19,11 @@
 namespace Wikimedia\Codesearch;
 
 class Model {
+	private const ACTIONS = [
+		'search',
+		'repos',
+	];
+	private string $action = '';
 	private string $backend = '';
 	private string $query = '';
 	private bool $caseInsensitive = false;
@@ -37,6 +42,7 @@ class Model {
 	}
 
 	public function setGetParams( array $get ): self {
+		$this->setAction( $get['action'] ?? 'search' );
 		$this->setSearchQuery( $get['q'] ?? '' );
 		$this->setCaseInsensitive( ( $get['i'] ?? '' ) === 'fosho' );
 		$this->setFilePath( $get['files'] ?? '' );
@@ -48,6 +54,11 @@ class Model {
 
 	public function setBackend( string $backend ): self {
 		$this->backend = $backend;
+		return $this;
+	}
+
+	public function setAction( string $action ): self {
+		$this->action = $action;
 		return $this;
 	}
 
@@ -122,8 +133,19 @@ class Model {
 			return $response;
 		}
 
+		if ( !in_array( $this->action, self::ACTIONS ) ) {
+			$response->statusCode = 404;
+			$error = 'Unknown action.';
+			$response->view = new View( 'error', [
+				'doctitle' => 'Not found',
+				'error' => $error,
+				'backends' => $backends,
+			] );
+			return $response;
+		}
+
 		try {
-			$repoData = $this->search->getCachedConfig( $this->backend );
+			$reposData = $this->search->getCachedConfig( $this->backend );
 		} catch ( ApiUnavailable $e ) {
 			$response->statusCode = 501;
 			$response->view = new View( 'health', [
@@ -134,8 +156,20 @@ class Model {
 			return $response;
 		}
 
+		if ( $this->action === 'repos' ) {
+			$reposList = [];
+			foreach ( $reposData as $label => $repo ) {
+				$reposList[] = [ 'label' => $label, 'url' => $repo['url'] ];
+			}
+			$response->view = new View( 'repos', [
+				'backends' => $backends,
+				'reposList' => $reposList,
+			] );
+			return $response;
+		}
+
 		$selectedRepos = explode( ',', $this->repos );
-		$selectedRepos = array_intersect( $selectedRepos, array_keys( $repoData ) );
+		$selectedRepos = array_intersect( $selectedRepos, array_keys( $reposData ) );
 		$repos = implode( ',', $selectedRepos );
 
 		$fields = [
@@ -152,8 +186,9 @@ class Model {
 			: null;
 
 		$jsData = [
-			'reposData' => $repoData,
+			'reposData' => $reposData,
 			'apiQueryUrl' => $apiQueryUrl,
+			'repoIndexUrl' => './?action=repos',
 			'fields' => $fields,
 			'debug' => [
 				'apcuStats' => $this->search->getApcuStats(),

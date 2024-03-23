@@ -219,7 +219,7 @@ async function sendQuery( jsData ) {
 		};
 		const onRepoInput = () => {
 			reposDropdownNode.replaceChildren(
-				view.buildRepoSelector( reposInputNode.value, repoSelectState )
+				view.buildRepoSelector( reposInputNode.value, repoSelectState, jsData.repoIndexUrl )
 			);
 			repoSelectState.open();
 		};

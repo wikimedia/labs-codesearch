@@ -266,7 +266,7 @@ function buildRepoOption( repoId, checked, i ) {
 	] );
 }
 
-function buildRepoSelector( inputText, repoSelectState ) {
+function buildRepoSelector( inputText, repoSelectState, repoIndexUrl ) {
 	const suggestions = fuzzyFilter( inputText, repoSelectState.options, SUGGEST_LIMIT );
 
 	let i = 1;
@@ -280,6 +280,13 @@ function buildRepoSelector( inputText, repoSelectState ) {
 			optionElements.append( buildRepoOption( obj.target, false, i++ ) );
 		}
 	}
+
+	optionElements.append(
+		dom( 'div', { className: 'dropdown-item' }, [
+			dom( 'a', { href: repoIndexUrl }, 'Complete repository list' )
+		] )
+	);
+
 	return optionElements;
 }
 
