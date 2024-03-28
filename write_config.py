@@ -434,10 +434,13 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('cloud/toolforge/'))
         # custom horizon panels, but not upstream code
         conf['repos'].update(gerrit_prefix_list('openstack/horizon/wmf-'))
-        # VPS and Toolforge user repos, including first-party infra such as:
+        # user repos for Toolforge, gadgets, and VPS projects.
+        # including first-party tools such as:
         # - labs/tools/maintain-kubeusers
         # - labs/tools/registry-admission-webhook
         conf['repos'].update(gerrit_prefix_list('labs/tools/'))
+        conf['repos'].update(gerrit_prefix_list('mediawiki/gadgets/'))
+        conf['repos'].update(gerrit_prefix_list('wikipedia/gadgets/'))
         conf['repos'].update(gerrit_prefix_list('labs/codesearch'))
         # T358983
         conf['repos'].update(gerrit_prefix_list('labs/toollabs'))
