@@ -171,6 +171,20 @@ def bitbucket_repo(bb_name: str) -> dict:
     }
 
 
+def gogs_repo(repo_name: str, host: str) -> dict:
+    return {
+        'url': f'https://{host}/{repo_name}',
+        # The default in Hound uses /blob/, which does something else in Gogs.
+        # The file browser in Gogs uses /src/ instead.
+        # https://phabricator.wikimedia.org/T304879
+        'url-pattern': {
+            'base-url': '{url}/src/{rev}/{path}{anchor}',
+            'anchor': '#L{line}'
+        },
+        'ms-between-poll': POLL,
+    }
+
+
 def generic_repo(repo_name: str, host: str) -> dict:
     return {
         'url': f'https://{host}/{repo_name}',
@@ -426,7 +440,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('schemas/event/'))
 
     if shouthow:
-        conf['repos']['ShoutHow'] = generic_repo('ashley/ShoutHow', host='git.legoktm.com')
+        conf['repos']['ShoutHow'] = gogs_repo('ashley/ShoutHow', host='git.legoktm.com')
 
     if wmcs:
         # toolforge infra

@@ -52,6 +52,11 @@ def test_repo_info_github():
         'https://github.com/wmde/WikibaseDataModel'
 
 
+def test_repo_info_gogs():
+    assert write_config.gogs_repo('ashley/ShoutHow', host='git.legoktm.com')['url'] == \
+        'https://git.legoktm.com/ashley/ShoutHow'
+
+
 def test_repo_info_generic():
     assert write_config.generic_repo('ashley/ShoutHow', host='git.legoktm.com')['url'] == \
         'https://git.legoktm.com/ashley/ShoutHow'
