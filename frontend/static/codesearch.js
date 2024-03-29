@@ -40,7 +40,22 @@ function formatApiQueryUrl( apiQueryUrl, repos = '*', mode = OFFSET_INTIAL ) {
 async function fetchResults( apiQueryUrl ) {
 	// Optimization: This fetch starts preloaded in templates/index.mustache.
 	const apiResp = await fetch( apiQueryUrl, { mode: 'cors' } );
-	return await apiResp.json();
+	try {
+		// Streams may only be consumed once. In order for the catch to be able
+		// to read it as text(), we must clone() here before calling json().
+		// https://stackoverflow.com/q/74346746/319266
+		// https://developer.mozilla.org/en-US/docs/Web/API/Response/clone
+		return await apiResp.clone().json();
+	} catch ( err ) {
+		// eslint-disable-next-line no-console
+		console.error( err );
+
+		// If the response is not JSON, assume this is a plain text error
+		// from our app.py proxy, rather than a Hound API response.
+		return {
+			Error: ( await apiResp.text() ).slice(0, 1024)
+		};
+	}
 }
 
 function renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) {
@@ -48,6 +63,11 @@ function renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) {
 		return view.buildError( new Error( 'Failed to fetch repository metadata' ) );
 	}
 	if ( apiData.Error ) {
+		// This is either:
+		// - a Hound API response, where it responds with `{"Error":…}`.
+		// - a simulated error from fetchResults(), in which case it's usually
+		//   a plain text response from our app.py proxy,
+		//   which fetchResults() converts to the same format.
 		return view.buildError( apiData.Error );
 	}
 

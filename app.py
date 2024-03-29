@@ -61,6 +61,13 @@ LINK_OPENSEARCH = re.compile('<link rel="search" .*?/>', flags=re.DOTALL)
 HOUND_STARTUP = 'Hound is not ready.\n'
 
 
+@app.after_request
+def after_request(resp):
+    # https://flask.palletsprojects.com/en/1.1.x/api/#flask.Flask.after_request
+    resp.headers['access-control-allow-origin'] = '*'
+    return resp
+
+
 @app.route('/favicon.ico')
 def favicon():
     # http://flask.pocoo.org/docs/0.12/patterns/favicon/
@@ -228,7 +235,6 @@ def config_json(backend):
         f'/srv/hound/hound-{backend}',
         'config.json'
     )
-    resp.headers['access-control-allow-origin'] = '*'
     return resp
 
 
