@@ -55,7 +55,7 @@ class Codesearch {
 	public const URL_HEALTH = 'https://codesearch-backend.wmcloud.org/_health';
 	private const URL_HOUND_BASE = 'https://codesearch-backend.wmcloud.org/';
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
-	private const REPOS_CACHE_TTL = 3600;
+	private const TTL_HOUR = 3600;
 
 	private array $apcuStats = [
 		'hits' => 0,
@@ -75,7 +75,9 @@ class Codesearch {
 		$val = $hasApcu ? apcu_fetch( $key ) : false;
 		if ( $val !== false ) {
 			$this->apcuStats['hits']++;
+			self::debug( sprintf( 'APCu cache hit for %s', $key ) );
 		} else {
+			self::debug( sprintf( 'APCu cache miss for %s', $key ) );
 			$val = $callback();
 			if ( $hasApcu ) {
 				apcu_store( $key, $val, $ttl );
@@ -83,6 +85,14 @@ class Codesearch {
 			}
 		}
 		return $val;
+	}
+
+	public static function debug( $msg ) {
+		// For local development, send debug directly to 'composer serve' output
+		// to ease debugging of slow requests.
+		if ( PHP_SAPI === 'cli-server' ) {
+			error_log( $msg );
+		}
 	}
 
 	private function getHoundApi( string $backend ): string {
@@ -107,7 +117,7 @@ class Codesearch {
 	public function getCachedConfig( string $backend ): array {
 		return $this->getWithSetCallback(
 			"codesearch-config-v1:$backend",
-			self::REPOS_CACHE_TTL,
+			self::TTL_HOUR,
 			function () use ( $backend ) {
 				$url = $this->getHoundApi( $backend ) . '/v1/repos';
 				$val = json_decode( $this->getHttp( $url ), true );
@@ -126,9 +136,38 @@ class Codesearch {
 		);
 	}
 
+	public function getCachedExcludes( string $backend ): array {
+		return $this->getWithSetCallback(
+			"codesearch-excludes-v1:$backend",
+			self::TTL_HOUR,
+			function () use ( $backend ) {
+				$urls = [];
+				$reposData = $this->getCachedConfig( $backend );
+				foreach ( $reposData as $repo => $_ ) {
+					$urls[$repo] = $this->getHoundApi( $backend ) . '/v1/excludes?' . http_build_query( [ 'repo' => $repo ] );
+				}
+				$results = $this->getHttpMulti( $urls );
+
+				$val = [];
+				foreach ( $results as $repo => $result ) {
+					$files = json_decode( $result, true );
+					if ( !is_array( $files ) ) {
+						trigger_error( "Hound /v1/excludes for $repo returned $result" );
+						throw new ApiUnavailable( "Hound /v1/excludes for $repo returned invalid data" );
+					}
+					$val[] = [
+						'repo' => $repo,
+						'excludesCount' => count( $files ),
+						'files' => $files,
+					];
+				}
+				return $val;
+			}
+		);
+	}
+
 	protected function getHttp( string $url ): string {
 		$curlOptions = [
-			// timeout in seconds
 			CURLOPT_TIMEOUT => 3,
 			CURLOPT_MAXREDIRS => 2,
 			CURLOPT_FOLLOWLOCATION => true,
@@ -140,6 +179,7 @@ class Codesearch {
 		if ( !curl_setopt_array( $curlHandle, $curlOptions ) ) {
 			throw new RuntimeException( 'Could not set curl options' );
 		}
+		self::debug( sprintf( 'getHttp %s', $url ) );
 		$curlRes = curl_exec( $curlHandle );
 		if ( curl_errno( $curlHandle ) == CURLE_OPERATION_TIMEOUTED ) {
 			throw new ApiUnavailable( 'Internal curl request timed out' );
@@ -151,4 +191,98 @@ class Codesearch {
 		return $curlRes;
 	}
 
+	protected function getHttpMulti( array $urls, $throttled = false ): array {
+		// Avoid HTTP 429 from WMCS dynamicproxy (ratelimit of 100/s)
+		if ( !$throttled ) {
+			self::debug( sprintf( 'getHttpMulti chunking %d requests', count( $urls ) ) );
+
+			$results = [];
+			$t = null;
+			foreach ( array_chunk( $urls, 99, true ) as $chunk ) {
+				// usleep in microseconds, hrtime in nanoseconds
+				$remainingUs = !$t ? 0 : ceil( 1e6 - ( ( hrtime( true ) - $t ) / 1000 ) );
+				if ( $remainingUs > 0 ) {
+					self::debug( sprintf( 'getHttpMulti sleeps %dms between chunks', $remainingUs / 1000 ) );
+					usleep( $remainingUs );
+				}
+				$t = hrtime( true );
+
+				$results += $this->getHttpMulti( $chunk, true );
+			}
+			return $results;
+		}
+
+		$cmh = curl_multi_init();
+		curl_multi_setopt( $cmh, CURLMOPT_MAXCONNECTS, 50 );
+		curl_multi_setopt( $cmh, CURLMOPT_PIPELINING, CURLPIPE_MULTIPLEX );
+
+		$infos = [];
+		$curlOptions = [
+			CURLOPT_TIMEOUT => 3,
+			CURLOPT_MAXREDIRS => 2,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_USERAGENT => self::USER_AGENT,
+			CURLOPT_HTTPHEADER => [],
+			CURLOPT_RETURNTRANSFER => true,
+			// Inspired by MultiHttpClient from MediaWiki 1.42
+			CURLOPT_PIPEWAIT => 1,
+			CURLOPT_HEADERFUNCTION => static function ( $ch, $header ) use ( &$infos ) {
+				$len = strlen( $header );
+				// HTTP/2 responds with only a number, no textual reason as well
+				if ( preg_match( "/^HTTP\/(?:1\.[01]|2) (\d+)/", $header, $m ) ) {
+					$infos[ (int)$ch ]['status'] = (int)$m[1];
+				}
+				return $len;
+			}
+		];
+
+		self::debug( sprintf( 'getHttpMulti with %d requests', count( $urls ) ) );
+		foreach ( $urls as $urlKey => $url ) {
+			$curlHandle = curl_init( $url );
+			if ( !curl_setopt_array( $curlHandle, $curlOptions ) ) {
+				throw new RuntimeException( 'Could not set curl options' );
+			}
+			$infos[(int)$curlHandle] = [
+				'urlKey' => $urlKey,
+				'handle' => $curlHandle,
+				'result' => null,
+				'status' => null,
+			];
+			curl_multi_add_handle( $cmh, $curlHandle );
+		}
+
+		// Execute multiple handles at once
+		$active = null;
+		do {
+			$status = curl_multi_exec( $cmh, $active );
+			if ( $active ) {
+				curl_multi_select( $cmh );
+			}
+			// phpcs:ignore MediaWiki.ControlStructures.AssignmentInControlStructures
+			while ( ( $info = curl_multi_info_read( $cmh ) ) !== false ) {
+				/** @var $info false|array{msg:int,result:int,handle:object} */
+				$infos[ (int)$info['handle'] ]['result'] = $info['result'];
+			}
+		} while ( $active > 0 && $status == CURLM_OK );
+
+		'@phan-var array{urlKey:string,handle:object,result:?int,status:?int}[] $infos';
+
+		$results = [];
+		foreach ( $infos as $_ => $info ) {
+			$urlKey = $info['urlKey'];
+			if ( $info['result'] !== null && $info['result'] !== 0 ) {
+				throw new ApiUnavailable( "Request {$urls[$urlKey]} failed " . curl_strerror( $info['result'] ) );
+			}
+			if ( $info['status'] >= 400 ) {
+				throw new ApiUnavailable( "Request {$urls[$urlKey]} failed HTTP " . $info['status'] );
+			}
+			$result = curl_multi_getcontent( $info['handle'] );
+			curl_multi_remove_handle( $cmh, $info['handle'] );
+			curl_close( $info['handle'] );
+			$results[$urlKey] = $result;
+		}
+
+		curl_multi_close( $cmh );
+		return $results;
+	}
 }

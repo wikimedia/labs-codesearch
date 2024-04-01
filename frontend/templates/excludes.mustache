@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Index excludes - MediaWiki Codesearch ({{backendLabel}})</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="/static/lib/bootstrap-5.1.3/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/styles.css{{staticversion}}">
+	<link rel="shortcut icon" href="/favicon.ico">
+</head>
+<body>
+	<div class="container">
+		<div class="cs-heading mt-2">
+			<h2>MediaWiki Codesearch</h2>
+			<ul class="nav nav-pills mb-2">
+			{{#backends}}
+				<li class="nav-item"><a href="{{href}}?action=excludes" class="nav-link{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>{{label}}</a></li>
+			{{/backends}}
+			</ul>
+		</div>
+	</div>
+	<div class="container py-4 border-top">
+		<p><a href="./" class="btn btn-outline-primary">&larr; Back to search</a> <a href="./?action=repos" class="btn btn-outline-secondary">Repository index</a> <a href="./?action=excludes" class="btn btn-outline-secondary active">Excluded files</a></p>
+		<p>Files excluded by Hound from the repository index.</p>
+		<table class="table table-hover">
+		<thead><tr><th>Filename</th><th style="width: 50%;">Reason</th></tr></thead>
+		<tbody>
+		{{#repoExcludes}}
+			{{#excludesCount}}
+			<tr class="table-active"><td colspan="2">Repository: <strong>{{repo}}</strong></td></tr>
+			{{/excludesCount}}
+			{{^excludesCount}}
+			<tr><td>Repository: <strong>{{repo}}</strong></td><td><em>No files excluded by Hound.</em></td></tr>
+			{{/excludesCount}}
+			{{#files}}
+			<tr><td><code>{{Filename}}</code></td><td>{{Reason}}</td></tr>
+			{{/files}}
+		{{/repoExcludes}}
+		</tbody>
+		</table>
+	</div>
+	<div class="container">
+		<footer class="py-5 my-4 border-top text-secondary">
+			<p>
+				<a href="https://gerrit.wikimedia.org/g/labs/codesearch">Source code</a> &bull; <a href="https://phabricator.wikimedia.org/tag/vps-project-codesearch/">Issue tracker</a>
+				<br />
+				<small><a href="https://www.mediawiki.org/wiki/Codesearch">MediaWiki Codesearch</a>
+				is powered by <a href="https://github.com/hound-search/hound">Hound</a>. License: GPL-3.0-or-later.</small>
+			</p>
+		</footer>
+	</div>
+</body>
+</html>

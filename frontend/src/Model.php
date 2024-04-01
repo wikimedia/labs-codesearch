@@ -22,6 +22,7 @@ class Model {
 	private const ACTIONS = [
 		'search',
 		'repos',
+		'excludes',
 	];
 	private string $action = '';
 	private string $backend = '';
@@ -164,6 +165,15 @@ class Model {
 			$response->view = new View( 'repos', [
 				'backends' => $backends,
 				'reposList' => $reposList,
+			] );
+			return $response;
+		}
+
+		if ( $this->action === 'excludes' ) {
+			$repoExcludes = $this->search->getCachedExcludes( $this->backend );
+			$response->view = new View( 'excludes', [
+				'backends' => $backends,
+				'repoExcludes' => $repoExcludes,
 			] );
 			return $response;
 		}
