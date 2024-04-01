@@ -70,6 +70,21 @@ class Codesearch {
 		return $this->apcuStats + [ 'enabled' => function_exists( 'apcu_fetch' ) ];
 	}
 
+	protected function getWithSetCallback( string $key, int $ttl, $callback ) {
+		$hasApcu = function_exists( 'apcu_fetch' );
+		$val = $hasApcu ? apcu_fetch( $key ) : false;
+		if ( $val !== false ) {
+			$this->apcuStats['hits']++;
+		} else {
+			$val = $callback();
+			if ( $hasApcu ) {
+				apcu_store( $key, $val, $ttl );
+				$this->apcuStats['misses']++;
+			}
+		}
+		return $val;
+	}
+
 	private function getHoundApi( string $backend ): string {
 		return self::URL_HOUND_BASE . "$backend/api";
 	}
@@ -90,31 +105,25 @@ class Codesearch {
 	}
 
 	public function getCachedConfig( string $backend ): array {
-		$hasApcu = function_exists( 'apcu_fetch' );
-		$key = "codesearch-config-v1:$backend";
-		$val = $hasApcu ? apcu_fetch( $key ) : false;
-		if ( $val ) {
-			$this->apcuStats['hits']++;
-		} else {
-			$url = $this->getHoundApi( $backend ) . '/v1/repos';
-			$val = json_decode( $this->getHttp( $url ), true );
-			if ( !$val ) {
-				throw new ApiUnavailable( 'Hound /v1/repos returned empty or invalid data' );
+		return $this->getWithSetCallback(
+			"codesearch-config-v1:$backend",
+			self::REPOS_CACHE_TTL,
+			function () use ( $backend ) {
+				$url = $this->getHoundApi( $backend ) . '/v1/repos';
+				$val = json_decode( $this->getHttp( $url ), true );
+				if ( !$val ) {
+					throw new ApiUnavailable( 'Hound /v1/repos returned empty or invalid data' );
+				}
+				// Strip out data not needed by client
+				foreach ( $val as $repoId => &$repoConf ) {
+					$repoConf = [
+						'url' => $repoConf['url'],
+						'url-pattern' => $repoConf['url-pattern'],
+					];
+				}
+				return $val;
 			}
-			// Strip out data not needed by client
-			foreach ( $val as $repoId => &$repoConf ) {
-				$repoConf = [
-					'url' => $repoConf['url'],
-					'url-pattern' => $repoConf['url-pattern'],
-				];
-			}
-			if ( $hasApcu ) {
-				apcu_store( $key, $val, self::REPOS_CACHE_TTL );
-				$this->apcuStats['misses']++;
-			}
-		}
-
-		return $val;
+		);
 	}
 
 	protected function getHttp( string $url ): string {
