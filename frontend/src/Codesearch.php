@@ -70,12 +70,8 @@ class Codesearch {
 		return $this->apcuStats + [ 'enabled' => function_exists( 'apcu_fetch' ) ];
 	}
 
-	private function getRepoConfigUrl( string $backend ): string {
-		return self::URL_HOUND_BASE . "$backend/api/v1/repos";
-	}
-
-	private function getApiBaseUrl( string $backend ): string {
-		return self::URL_HOUND_BASE . "$backend/api/v1/search";
+	private function getHoundApi( string $backend ): string {
+		return self::URL_HOUND_BASE . "$backend/api";
 	}
 
 	public function formatApiQueryUrl( string $backend, array $fields ): string {
@@ -90,7 +86,7 @@ class Codesearch {
 			// "Load more" is handled in codesearch.js.
 			'rng' => ':20',
 		];
-		return $this->getApiBaseUrl( $backend ) . '?' . http_build_query( $params );
+		return $this->getHoundApi( $backend ) . '/v1/search?' . http_build_query( $params );
 	}
 
 	public function getCachedConfig( string $backend ): array {
@@ -100,10 +96,10 @@ class Codesearch {
 		if ( $val ) {
 			$this->apcuStats['hits']++;
 		} else {
-			$url = $this->getRepoConfigUrl( $backend );
-			$val = json_decode( $this->fetchUrl( $url ), true );
+			$url = $this->getHoundApi( $backend ) . '/v1/repos';
+			$val = json_decode( $this->getHttp( $url ), true );
 			if ( !$val ) {
-				throw new ApiUnavailable( 'Hound returned empty or invalid config data' );
+				throw new ApiUnavailable( 'Hound /v1/repos returned empty or invalid data' );
 			}
 			// Strip out data not needed by client
 			foreach ( $val as $repoId => &$repoConf ) {
@@ -121,7 +117,7 @@ class Codesearch {
 		return $val;
 	}
 
-	protected function fetchUrl( string $url ): string {
+	protected function getHttp( string $url ): string {
 		$curlOptions = [
 			// timeout in seconds
 			CURLOPT_TIMEOUT => 3,
