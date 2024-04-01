@@ -446,8 +446,12 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # toolforge infra
         conf['repos'].update(gerrit_prefix_list('operations/software/tools-'))
         conf['repos'].update(gerrit_prefix_list('cloud/toolforge/'))
+        conf['repos']['operations/docker-images/toollabs-images'] = repo_info(
+            'operations/docker-images/toollabs-images'
+        )
         # custom horizon panels, but not upstream code
         conf['repos'].update(gerrit_prefix_list('openstack/horizon/wmf-'))
+
         # user repos for Toolforge, gadgets, and VPS projects.
         # including first-party tools such as:
         # - labs/tools/maintain-kubeusers
