@@ -34,6 +34,13 @@ class Response {
 		}
 
 		if ( $this->view ) {
+			foreach ( $this->view->getExtraHeaders() as $header ) {
+				header( $header );
+			}
+
+			// Optimization
+			flush();
+
 			print $this->view->render();
 		}
 	}

@@ -65,6 +65,17 @@ class View {
 		];
 	}
 
+	public function getExtraHeaders(): array {
+		$staticversion = $this->getStaticUrlQuery();
+		$preloads = implode( ',', [
+			"</static/lib/bootstrap-5.1.3/bootstrap.min.css>;rel=preload;as=style",
+			"</static/styles.css$staticversion>;rel=preload;as=style",
+		] );
+		return [
+			"Link: $preloads"
+		];
+	}
+
 	public function render(): string {
 		$templateDir = dirname( __DIR__ ) . '/templates';
 		$templateContent = file_get_contents( "$templateDir/{$this->template}.mustache" );
