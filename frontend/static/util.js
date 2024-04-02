@@ -47,92 +47,6 @@ function dom( tagName, props, children ) {
 	return element;
 }
 
-function isEmpty( obj ) {
-	// eslint-disable-next-line no-unreachable-loop
-	for ( const key in obj ) {
-		return false;
-	}
-	return true;
-}
-
-/**
- * Escape string for safe inclusion in a regular expression.
- *
- * The following characters are escaped:
- *
- *     \ { } ( ) | . ? * + - ^ $ [ ]
- *
- * @param {string} str String to escape
- * @return {string} Escaped string
- */
-function escapeRegExp( str ) {
-	// eslint-disable-next-line no-useless-escape
-	return str.replace( /([\\{}()|.?*+\-^$\[\]])/g, '\\$1' );
-}
-
-/**
- * Flatten and combine each Hound match into a single de-duplicated list of lines.
- *
- * @param {Array} matches
- * @return {Array}
- */
-function flattenMatchesToLines( matches ) {
-	let lines = new Map();
-	// Optimisation: Gather all information in a single pass
-	// without intermediary arrays, merges, fn calls, etc.
-	for ( const match of matches ) {
-		const matchedLineno = match.LineNumber;
-
-		// Set the matched line unconditionally
-		lines.set( matchedLineno, {
-			lineno: matchedLineno,
-			text: match.Line,
-			isMatch: true,
-			isMatchBoundary: false
-		} );
-
-		// Improve upon the default Hound UI by merging match blocks together.
-		// This way we avoid displaying the same line multiple times, and avoids
-		// needless separator lines when one match's last context line neatly
-		// into the next match's first context line.
-
-		// Record new before/after context lines only if not already seen,
-		// including and especially if the existing entry for this line is a
-		// matching line (which we must not overwrite with a context line).
-		const totalBefore = match.Before.length;
-		for ( let i = 0; i < match.Before.length; i++ ) {
-			const lineno = matchedLineno - totalBefore + i;
-			if ( !lines.has( lineno ) ) {
-				lines.set( lineno, {
-					lineno,
-					text: match.Before[ i ],
-					isMatch: false,
-					isMatchBoundary: false
-				} );
-			}
-		}
-		for ( let i = 0; i < match.After.length; i++ ) {
-			const lineno = matchedLineno + 1 + i;
-			if ( !lines.has( lineno ) ) {
-				lines.set( lineno, {
-					lineno,
-					text: match.After[ i ],
-					isMatch: false,
-					isMatchBoundary: false
-				} );
-			}
-		}
-	}
-
-	lines = Array.from( lines.values() );
-	lines.sort( ( a, b ) => a.lineno - b.lineno );
-	lines.reduce( ( prev, line ) => {
-		line.isMatchBoundary = prev.lineno + 1 !== line.lineno;
-		return line;
-	} );
-	return lines;
-}
-
 function fuzzyFilter( inputText, options, limit ) {
 	if ( inputText === '' ) {
 		// Improve discovery of the feature by displaying results right away
@@ -153,15 +67,8 @@ function fuzzyFilter( inputText, options, limit ) {
 export {
 	select,
 	dom,
-	isEmpty,
-	escapeRegExp,
-	flattenMatchesToLines,
 	fuzzyFilter,
 };
-
-export const now = typeof performance !== 'undefined' && performance.now ?
-	performance.now.bind( performance ) :
-	Date.now;
 
 // Polyfills
 

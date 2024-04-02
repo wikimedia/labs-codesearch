@@ -8,19 +8,20 @@
 		}
 	},
 	"require-dev": {
-		"mustache/mustache": "2.14.1",
+		"mustache/mustache": "2.14.2",
 		"mediawiki/mediawiki-codesniffer": "39.0.0",
 		"mediawiki/mediawiki-phan-config": "^0.14.0",
 		"php-parallel-lint/php-console-highlighter": "1.0.0",
 		"php-parallel-lint/php-parallel-lint": "1.3.2"
 	},
 	"config": {
-		"optimize-autoloader": true,
-		"process-timeout": 0
+		"optimize-autoloader": true
 	},
 	"scripts": {
 		"serve": [
-			"php -S localhost:4000 src/dev-router.php"
+			"Composer\\Config::disableProcessTimeout",
+			"@putenv PHP_CLI_SERVER_WORKERS=8",
+			"@php -S localhost:4000 -d opcache.enable=1 -d opcache.enable_cli=1 -d max_execution_time=100 src/dev-router.php"
 		],
 		"test": [
 			"parallel-lint . --exclude vendor",

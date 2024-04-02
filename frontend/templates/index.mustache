@@ -4,12 +4,13 @@
 	<meta charset="utf-8">
 	<title>{{#doctitle}}{{doctitle}} - {{/doctitle}}MediaWiki Codesearch ({{backendLabel}})</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	{{#apiQueryUrl}}<link rel="preload" as="fetch" crossorigin href="{{apiQueryUrl}}">{{/apiQueryUrl}}
+	{{#isSubmit}}<meta name="robots" content="noindex,nofollow">{{/isSubmit}}
 	<script>
-if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
-	document.documentElement.className = "cs-client-js";
-	window.CS_CLIENT = 1;
-}
+	// Cut the mustard
+	if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
+		document.documentElement.className = "cs-client-js";
+		window.CS_CLIENT = 1;
+	}
 	</script>
 	<script type="importmap">
 	{
@@ -45,8 +46,8 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 				<input class="form-query form-control form-control-lg" type="text" autofocus="true" placeholder="Search query..." name="q" value="{{fields.query}}">
 			</div>
 			<div class="mb-2 order-last col-md-4 order-md-2 col-lg-3 col-xl-2">
-				<button id="cs-form-submitIdle" {{#isSubmit}}hidden{{/isSubmit}} class="btn btn-primary btn-lg" type="submit">Search!</button>
-				<button id="cs-form-submitLoading" {{^isSubmit}}hidden{{/isSubmit}} class="btn btn-primary btn-lg" type="submit">
+				<button id="cs-form-submitIdle" class="btn btn-primary btn-lg" type="submit">Search!</button>
+				<button id="cs-form-submitLoading" hidden class="btn btn-primary btn-lg" type="submit">
 					<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 					Searching...
 				</button>
@@ -81,11 +82,9 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 		{{#warnings}}
 		<div class="alert alert-warning" role="alert">{{.}}</div>
 		{{/warnings}}
-		</div>
 	</div>
-	<div class="container" {{^isSubmit}}hidden{{/isSubmit}}>
-		<div class="alert alert-warning cs-display-nojs" role="alert">This page requires JavaScript.</div>
-		<div class="row cs-display-onlyjs cs-output-placeholder" id="cs-output-placeholder" {{^isSubmit}}hidden{{/isSubmit}}>
+	<div class="container">
+		<div class="row cs-output-placeholder" id="cs-output-placeholder" hidden>
 			<div class="col-lg-7 col-xl-8 order-2 order-lg-1 mt-3 cs-results placeholder-wave">
 				<section>
 					<h2><span class="placeholder bg-secondary col-4"></span></h2>
@@ -112,7 +111,60 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 				</div>
 			</div>
 		</div>
-		<div id="cs-output" class="cs-output"></div>
+		{{#isSubmit}}
+		<div id="cs-output" class="cs-output">
+			{{#searchResp.Error}}
+			<div class="alert alert-warning" role="alert">{{.}}</div>
+			{{/searchResp.Error}}
+			{{^searchResp.hasResults}}
+			<div class="alert alert-primary" role="alert">No results found.</div>
+			{{/searchResp.hasResults}}
+			{{#searchResp.hasResults}}
+			<!-- buildFormatNav -->
+			<div class="row mb-3 mb-lg-0">
+				<div class="form-text col-auto">Result format:</div>
+				<div class="btn-group col-auto" role="group" aria-label="Result format">
+					<input type="radio" class="btn-check" id="cs-result-Default" name="format" value="Default" autocomplete="off" checked>
+					<label class="btn btn-outline-secondary" for="cs-result-Default">Default</label>
+					<input type="radio" class="btn-check" id="cs-result-Phabricator" name="format" value="Phabricator" autocomplete="off">
+					<label class="btn btn-outline-secondary" for="cs-result-Phabricator">Phabricator</label>
+				</div>
+				<div class="form-text col-auto flex-grow-1 text-end cs-perf" data-time-backend="{{searchResp.Stats.Duration}}" data-files="{{searchResp.Stats.FilesOpened}}" data-time-render="{{searchResp.renderDuration}}"></div>
+			</div>
+			<!-- buildResultsDefault -->
+			<div class="row cs-results">
+				<div class="col-lg-7 col-xl-8 order-2 order-lg-1 mt-3">
+					{{#searchResp.results}}
+					<section>
+						<h2 id="{{repoId}}">{{repoId}}</h2>
+						{{#matches}}{{> partial_resultcard}}{{/matches}}
+						{{#hasMore}}
+						<button class="btn btn-secondary cs-loadmore cs-display-onlyjs" type="button" data-moresrc="{{moreSrc}}">Load all {{FilesWithMatch}} matches in {{repoId}}</button>
+						{{/hasMore}}
+					</section>
+					{{/searchResp.results}}
+				</div>
+				<div class="col-lg-5 col-xl-4 order-1 order-lg-2 cs-reposlist">
+					<p class="h5">Matched repositories</p>
+					<div class="list-group">
+						{{#searchResp.results}}
+						<a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="#{{repoId}}">{{repoId}} <span class="badge bg-secondary rounded-pill">{{FilesWithMatch}}</span></a>
+						{{/searchResp.results}}
+					</div>
+				</div>
+			</div>
+			<!-- buildResultsPhabricator -->
+			<textarea class="col-12 mt-3 font-monospace cs-phabresult" readonly="true" onclick="select()">
+{{#searchResp.resultsAZ}}
+[ ] {{repoId}} ({{FilesWithMatch}} files)
+{{#matches}}
+** [[{{href}}|{{filename}}]]
+{{/matches}}
+{{/searchResp.resultsAZ}}
+			</textarea>
+			{{/searchResp.hasResults}}
+		</div>
+		{{/isSubmit}}
 	</div>
 	<div class="container">
 		<footer class="py-5 my-4 border-top text-secondary">
@@ -125,9 +177,7 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 		</footer>
 	</div>
 	<script>
-	if ( window.CS_CLIENT ) {
-		CS_JSDATA = {{{jsDataRawHtml}}};
-	}
+	window.CS_JSDATA = {{{jsDataRawHtml}}};
 	</script>
 </body>
 </html>

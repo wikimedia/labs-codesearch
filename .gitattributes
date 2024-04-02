@@ -1,2 +1,3 @@
 # Avoid results from git-grep
 *.css.map binary
+/frontend/static/lib/** binary

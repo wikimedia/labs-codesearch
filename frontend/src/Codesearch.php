@@ -56,6 +56,9 @@ class Codesearch {
 	private const URL_HOUND_BASE = 'https://codesearch-backend.wmcloud.org/';
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
 	private const TTL_HOUR = 3600;
+	private const SEARCH_TIMEOUT = 100;
+	public const SEARCH_OFFSET_INTIAL = false;
+	public const SEARCH_OFFSET_MORE = true;
 
 	private array $apcuStats = [
 		'hits' => 0,
@@ -91,7 +94,7 @@ class Codesearch {
 		// For local development, send debug directly to 'composer serve' output
 		// to ease debugging of slow requests.
 		if ( PHP_SAPI === 'cli-server' ) {
-			error_log( $msg );
+			error_log( "[codesearch-frontend] [DEBUG] $msg" );
 		}
 	}
 
@@ -99,7 +102,7 @@ class Codesearch {
 		return self::URL_HOUND_BASE . "$backend/api";
 	}
 
-	public function formatApiQueryUrl( string $backend, array $fields ): string {
+	public function fetchSearchResults( string $backend, array $fields, $mode = self::SEARCH_OFFSET_INTIAL ): array {
 		$params = [
 			'q' => $fields['query'],
 			'i' => $fields['caseInsensitive'] ? 'fosho' : null,
@@ -107,11 +110,20 @@ class Codesearch {
 			'excludeFiles' => $fields['excludeFiles'],
 			'repos' => $fields['repos'] ?: '*',
 			'stats' => 'fosho',
-			// Enable rng ("offset:limit") to limit results to "page 1".
-			// "Load more" is handled in codesearch.js.
-			'rng' => ':20',
+			'rng' => ( $mode === self::SEARCH_OFFSET_MORE
+				// Get the remaining results.
+				? '20:'
+				// Set rng ("offset:limit") to limit results to "page 1".
+				// See also <button class="cs-loadmore"> and codesearch.js.
+				: ':20'
+			),
 		];
-		return $this->getHoundApi( $backend ) . '/v1/search?' . http_build_query( $params );
+		$url = $this->getHoundApi( $backend ) . '/v1/search?' . http_build_query( $params );
+		$val = json_decode( $this->getHttp( $url, self::SEARCH_TIMEOUT ), true );
+		if ( !is_array( $val ) ) {
+			throw new ApiUnavailable( 'Hound /v1/search returned invalid data' );
+		}
+		return $val;
 	}
 
 	public function getCachedConfig( string $backend ): array {
@@ -152,7 +164,7 @@ class Codesearch {
 				foreach ( $results as $repo => $result ) {
 					$files = json_decode( $result, true );
 					if ( !is_array( $files ) ) {
-						trigger_error( "Hound /v1/excludes for $repo returned $result" );
+						trigger_error( "Hound /v1/excludes for $repo returned " . substr( $result, 0, 1024 ) );
 						throw new ApiUnavailable( "Hound /v1/excludes for $repo returned invalid data" );
 					}
 					$val[] = [
@@ -166,9 +178,9 @@ class Codesearch {
 		);
 	}
 
-	protected function getHttp( string $url ): string {
+	protected function getHttp( string $url, $timeout = 3 ): string {
 		$curlOptions = [
-			CURLOPT_TIMEOUT => 3,
+			CURLOPT_TIMEOUT => $timeout,
 			CURLOPT_MAXREDIRS => 2,
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_USERAGENT => self::USER_AGENT,
@@ -179,13 +191,13 @@ class Codesearch {
 		if ( !curl_setopt_array( $curlHandle, $curlOptions ) ) {
 			throw new RuntimeException( 'Could not set curl options' );
 		}
-		self::debug( sprintf( 'getHttp %s', $url ) );
+		self::debug( sprintf( 'getHttp timeout=%d %s', $timeout, $url ) );
 		$curlRes = curl_exec( $curlHandle );
 		if ( curl_errno( $curlHandle ) == CURLE_OPERATION_TIMEOUTED ) {
-			throw new ApiUnavailable( 'Internal curl request timed out' );
+			throw new ApiUnavailable( "Hound request timed out after $timeout seconds" );
 		}
 		if ( $curlRes === false ) {
-			throw new ApiUnavailable( 'Internal curl request failed: ' . curl_error( $curlHandle ) );
+			throw new ApiUnavailable( 'Hound request failed: ' . curl_error( $curlHandle ) );
 		}
 		curl_close( $curlHandle );
 		return $curlRes;
@@ -224,16 +236,15 @@ class Codesearch {
 			CURLOPT_USERAGENT => self::USER_AGENT,
 			CURLOPT_HTTPHEADER => [],
 			CURLOPT_RETURNTRANSFER => true,
-			// Inspired by MultiHttpClient from MediaWiki 1.42
-			CURLOPT_PIPEWAIT => 1,
 			CURLOPT_HEADERFUNCTION => static function ( $ch, $header ) use ( &$infos ) {
 				$len = strlen( $header );
-				// HTTP/2 responds with only a number, no textual reason as well
 				if ( preg_match( "/^HTTP\/(?:1\.[01]|2) (\d+)/", $header, $m ) ) {
 					$infos[ (int)$ch ]['status'] = (int)$m[1];
 				}
 				return $len;
-			}
+			},
+			// Inspired by MultiHttpClient from MediaWiki 1.42
+			CURLOPT_PIPEWAIT => 1,
 		];
 
 		self::debug( sprintf( 'getHttpMulti with %d requests', count( $urls ) ) );

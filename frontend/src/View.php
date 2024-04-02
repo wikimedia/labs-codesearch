@@ -51,7 +51,6 @@ class View {
 		$key = 'codesearch-staticversion-v1';
 		$version = apcu_fetch( $key );
 		if ( !$version ) {
-			// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 			$version = @file_get_contents( __DIR__ . '/../staticversion.txt' ) ?: 'dev';
 			// Safe to keep maximally in apcu because staticversion.txt is written
 			// at container build time. Changes naturally result in server restarts.
@@ -67,19 +66,23 @@ class View {
 	}
 
 	public function render(): string {
+		$templateDir = dirname( __DIR__ ) . '/templates';
+		$templateContent = file_get_contents( "$templateDir/{$this->template}.mustache" );
+		$partials = [
+			'partial_resultcard' => file_get_contents( "$templateDir/partial_resultcard.mustache" ),
+		];
+
 		if ( class_exists( Mustache::class ) ) {
 			// Prefer native php-mustache (PECL) when available (e.g. Dockerfile build)
 			$mustache = new Mustache();
+			return $mustache->render( $templateContent, $this->data + $this->getSharedData(), $partials );
 		} else {
 			// Fallback to composer bobthecow/mustache.php for local dev server
 			$mustache = new Mustache_Engine( [
-				'entity_flags' => ENT_QUOTES
+				'entity_flags' => ENT_QUOTES,
+				'partials' => $partials,
 			] );
+			return $mustache->render( $templateContent, $this->data + $this->getSharedData() );
 		}
-
-		$templateFile = dirname( __DIR__ ) . '/templates/' . $this->template . '.mustache';
-		$templateContent = file_get_contents( $templateFile );
-
-		return $mustache->render( $templateContent, $this->data + $this->getSharedData() );
 	}
 }

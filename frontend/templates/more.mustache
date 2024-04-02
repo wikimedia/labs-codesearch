@@ -1,0 +1,11 @@
+{{#searchResp.Error}}
+<div class="alert alert-warning" role="alert">{{.}}</div>
+{{/searchResp.Error}}
+{{^searchResp.hasResults}}
+<div class="alert alert-warning" role="alert">No additional matches found.</div>
+{{/searchResp.hasResults}}
+{{#searchResp.hasResults}}
+{{#searchResp.results}}
+{{#matches}}{{> partial_resultcard}}{{/matches}}
+{{/searchResp.results}}
+{{/searchResp.hasResults}}
