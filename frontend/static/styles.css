@@ -28,14 +28,7 @@
 }
 
 .cs-perf::before {
-	content: attr(data-time-backend) "ms backend / " attr(data-time-render) "ms render / " attr(data-files) " files";
-}
-
-/* Navigation between result formats */
-
-.cs-output:has(input[name=format][value=Default]:checked) .cs-phabresult,
-.cs-output:has(input[name=format][value=Phabricator]:checked) .cs-results {
-	display: none;
+	content: attr(data-time-backend) "ms server / " attr(data-time-render) "ms render / " attr(data-files) " files";
 }
 
 /* Results */

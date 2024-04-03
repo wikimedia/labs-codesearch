@@ -56,9 +56,6 @@ class Codesearch {
 	private const URL_HOUND_BASE = 'https://codesearch-backend.wmcloud.org/';
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
 	private const TTL_HOUR = 3600;
-	private const SEARCH_TIMEOUT = 100;
-	public const SEARCH_OFFSET_INTIAL = false;
-	public const SEARCH_OFFSET_MORE = true;
 
 	private array $apcuStats = [
 		'hits' => 0,
@@ -94,7 +91,7 @@ class Codesearch {
 		// For local development, send debug directly to 'composer serve' output
 		// to ease debugging of slow requests.
 		if ( PHP_SAPI === 'cli-server' ) {
-			error_log( "[codesearch-frontend] [DEBUG] $msg" );
+			error_log( $msg );
 		}
 	}
 
@@ -102,7 +99,7 @@ class Codesearch {
 		return self::URL_HOUND_BASE . "$backend/api";
 	}
 
-	public function fetchSearchResults( string $backend, array $fields, $mode = self::SEARCH_OFFSET_INTIAL ): array {
+	public function formatApiQueryUrl( string $backend, array $fields ): string {
 		$params = [
 			'q' => $fields['query'],
 			'i' => $fields['caseInsensitive'] ? 'fosho' : null,
@@ -110,20 +107,11 @@ class Codesearch {
 			'excludeFiles' => $fields['excludeFiles'],
 			'repos' => $fields['repos'] ?: '*',
 			'stats' => 'fosho',
-			'rng' => ( $mode === self::SEARCH_OFFSET_MORE
-				// Get the remaining results.
-				? '20:'
-				// Set rng ("offset:limit") to limit results to "page 1".
-				// See also <button class="cs-loadmore"> and codesearch.js.
-				: ':20'
-			),
+			// Enable rng ("offset:limit") to limit results to "page 1".
+			// "Load more" is handled in codesearch.js.
+			'rng' => ':20',
 		];
-		$url = $this->getHoundApi( $backend ) . '/v1/search?' . http_build_query( $params );
-		$val = json_decode( $this->getHttp( $url, self::SEARCH_TIMEOUT ), true );
-		if ( !is_array( $val ) ) {
-			throw new ApiUnavailable( 'Hound /v1/search returned invalid data' );
-		}
-		return $val;
+		return $this->getHoundApi( $backend ) . '/v1/search?' . http_build_query( $params );
 	}
 
 	public function getCachedConfig( string $backend ): array {
@@ -238,6 +226,7 @@ class Codesearch {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_HEADERFUNCTION => static function ( $ch, $header ) use ( &$infos ) {
 				$len = strlen( $header );
+				// HTTP/2 responds with only a number, no textual reason as well
 				if ( preg_match( "/^HTTP\/(?:1\.[01]|2) (\d+)/", $header, $m ) ) {
 					$infos[ (int)$ch ]['status'] = (int)$m[1];
 				}
