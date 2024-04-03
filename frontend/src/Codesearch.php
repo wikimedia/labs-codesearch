@@ -88,10 +88,15 @@ class Codesearch {
 	}
 
 	public static function debug( $msg ) {
-		// For local development, send debug directly to 'composer serve' output
+		// phpcs:ignore MediaWiki.Usage.SuperGlobalsUsage
+		if ( isset( $_GET['debug'] ) ) {
+			header( "X-Log: $msg", false );
+		}
+
+		// For local development always output debug logs to 'composer serve',
 		// to ease debugging of slow requests.
 		if ( PHP_SAPI === 'cli-server' ) {
-			error_log( $msg );
+			error_log( "[codesearch-frontend] [DEBUG] $msg" );
 		}
 	}
 
