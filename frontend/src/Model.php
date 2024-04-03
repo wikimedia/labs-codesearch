@@ -152,7 +152,7 @@ class Model {
 			$response->view = new View( 'health', [
 				'doctitle' => 'Index unavailable',
 				'backends' => $backends,
-				'healthUrl' => Codesearch::URL_HEALTH,
+				'healthUrl' => Codesearch::HEALTH_URL_PUBLIC,
 			] );
 			return $response;
 		}

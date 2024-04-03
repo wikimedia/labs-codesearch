@@ -52,8 +52,9 @@ class Codesearch {
 		'shouthow' => true,
 		'skins' => true,
 	];
-	public const URL_HEALTH = 'https://codesearch-backend.wmcloud.org/_health';
-	private const URL_HOUND_BASE = 'https://codesearch-backend.wmcloud.org/';
+	public const HEALTH_URL_PUBLIC = 'https://codesearch-backend.wmcloud.org/_health';
+	public const HOUND_BASE_DEFAULT = 'https://codesearch-backend.wmcloud.org/';
+
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
 	private const TTL_HOUR = 3600;
 
@@ -101,7 +102,8 @@ class Codesearch {
 	}
 
 	private function getHoundApi( string $backend ): string {
-		return self::URL_HOUND_BASE . "$backend/api";
+		$houndBase = rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_DEFAULT, '/' );
+		return "$houndBase/$backend/api";
 	}
 
 	public function formatApiQueryUrl( string $backend, array $fields ): string {
@@ -198,8 +200,8 @@ class Codesearch {
 
 	protected function getHttpMulti( array $urls, $throttled = false ): array {
 		// Avoid HTTP 429 from WMCS dynamicproxy (ratelimit of 100/s)
-		if ( !$throttled ) {
-			self::debug( sprintf( 'getHttpMulti chunking %d requests', count( $urls ) ) );
+		if ( !$throttled && !getenv( 'CODESEARCH_HOUND_BASE' ) ) {
+			self::debug( sprintf( 'getHttpMulti throttling %d requests', count( $urls ) ) );
 
 			$results = [];
 			$t = null;

@@ -16,3 +16,6 @@ docker build . -t codesearch-frontend \
 ```
 
 Open <http://localhost:3003>
+
+Set CODESEARCH_HOUND_BASE to access codesearch-backend directly
+through a local address, without intermediary CDN throttling.
