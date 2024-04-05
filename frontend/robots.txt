@@ -1,0 +1,7 @@
+# The only things worth indexing are the landing page forms.
+# There are only a handful of those, so a low rate more than suffices.
+# Also explicitly exclude backend search queries.
+User-agent: *
+Crawl-delay: 30
+Disallow: /*/?q=
+Disallow: /*/?action=
