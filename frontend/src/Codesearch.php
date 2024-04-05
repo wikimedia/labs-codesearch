@@ -199,20 +199,26 @@ class Codesearch {
 	}
 
 	protected function getHttpMulti( array $urls, $throttled = false ): array {
-		// Avoid HTTP 429 from WMCS dynamicproxy (ratelimit of 100/s)
-		if ( !$throttled && !getenv( 'CODESEARCH_HOUND_BASE' ) ) {
-			self::debug( sprintf( 'getHttpMulti throttling %d requests', count( $urls ) ) );
+		if ( !$throttled ) {
+			self::debug( sprintf( 'getHttpMulti chunking %d requests', count( $urls ) ) );
 
 			$results = [];
 			$t = null;
 			foreach ( array_chunk( $urls, 99, true ) as $chunk ) {
-				// usleep in microseconds, hrtime in nanoseconds
-				$remainingUs = !$t ? 0 : ceil( 1e6 - ( ( hrtime( true ) - $t ) / 1000 ) );
-				if ( $remainingUs > 0 ) {
-					self::debug( sprintf( 'getHttpMulti sleeps %dms between chunks', $remainingUs / 1000 ) );
-					usleep( $remainingUs );
+
+				// Avoid HTTP 429 from WMCS dynamicproxy (ratelimit of 100/s)
+				// Note that only the sleep is conditional, the chunking is not.
+				// We don't want to send 1000+ requests at once, as they will not
+				// complete within the timeout.
+				if ( !getenv( 'CODESEARCH_HOUND_BASE' ) ) {
+					// usleep in microseconds, hrtime in nanoseconds
+					$remainingUs = !$t ? 0 : ceil( 1e6 - ( ( hrtime( true ) - $t ) / 1000 ) );
+					if ( $remainingUs > 0 ) {
+						self::debug( sprintf( 'getHttpMulti sleeping %dms between chunks', $remainingUs / 1000 ) );
+						usleep( $remainingUs );
+					}
+					$t = hrtime( true );
 				}
-				$t = hrtime( true );
 
 				$results += $this->getHttpMulti( $chunk, true );
 			}
