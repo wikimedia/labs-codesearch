@@ -163,6 +163,7 @@ class Model {
 				$reposList[] = [ 'label' => $label, 'url' => $repo['url'] ];
 			}
 			$response->view = new View( 'repos', [
+				'backendLabel' => $label,
 				'backends' => $backends,
 				'reposList' => $reposList,
 			] );
@@ -172,6 +173,7 @@ class Model {
 		if ( $this->action === 'excludes' ) {
 			$repoExcludes = $this->search->getCachedExcludes( $this->backend );
 			$response->view = new View( 'excludes', [
+				'backendLabel' => $label,
 				'backends' => $backends,
 				'repoExcludes' => $repoExcludes,
 			] );
