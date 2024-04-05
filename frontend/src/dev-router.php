@@ -39,7 +39,7 @@ $rewrites = [
 	// Document root, optional query
 	'/^\/?(\?.*)?$/' => __DIR__ . '/../index.php',
 	// Top-level virtual path, optional query
-	'/^\/?[0-9a-z]+\/?(\?.*)?$/' => __DIR__ . '/../index.php',
+	'/^\/?[_0-9a-z]+\/?(\?.*)?$/' => __DIR__ . '/../index.php',
 ];
 foreach ( $rewrites as $pattern => $dest ) {
 	if ( preg_match( $pattern, $uri ) ) {

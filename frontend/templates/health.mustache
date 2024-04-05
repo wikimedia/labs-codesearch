@@ -12,16 +12,16 @@
 	<div class="container">
 		<div class="cs-heading mt-2">
 			<h2>MediaWiki Codesearch</h2>
-			<ul class="nav nav-pills mb-2">
-			{{#backends}}
-				<li class="nav-item"><a href="{{href}}" class="nav-link{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>{{label}}</a></li>
-			{{/backends}}
-			</ul>
 		</div>
-
-		<div class="alert alert-danger" role="alert">
-			The selected index is still starting up (<a href="{{healthUrl}}">health status page</a>). Try again later, or select a different index.
-		</div>
+	</div>
+	<div class="container py-4 border-top">
+		<p><a href="/" class="btn btn-outline-primary">&larr; Back to search</a></p>
+		<p>Health checks:</p>
+		<ul>
+		{{#healthData}}
+		<li><a href="{{href}}">{{backend}}</a>: {{#statusIsUp}}{{status}}{{/statusIsUp}}{{^statusIsUp}}<code>{{status}}</code>{{/statusIsUp}}
+		{{/healthData}}
+		</ul>
 	</div>
 	<div class="container">
 		<footer class="py-5 my-4 border-top text-secondary">

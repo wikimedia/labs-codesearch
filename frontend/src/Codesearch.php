@@ -52,7 +52,6 @@ class Codesearch {
 		'shouthow' => true,
 		'skins' => true,
 	];
-	public const HEALTH_URL_PUBLIC = 'https://codesearch-backend.wmcloud.org/_health';
 	public const HOUND_BASE_PUBLIC = 'https://codesearch-backend.wmcloud.org';
 
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
@@ -104,6 +103,17 @@ class Codesearch {
 	private function getHoundApi( string $backend, $houndBase = null ): string {
 		$houndBase ??= rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_PUBLIC, '/' );
 		return "$houndBase/$backend/api";
+	}
+
+	public function getHealth(): array {
+		$houndBase ??= rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_PUBLIC, '/' );
+		$result = $this->getHttp( "$houndBase/_health.json" );
+		$health = json_decode( $result, true );
+		if ( !is_array( $health ) ) {
+			trigger_error( "Hound /_health.json returned " . substr( $result, 0, 1024 ) );
+			throw new ApiUnavailable( "Hound /_health.json returned invalid data" );
+		}
+		return $health;
 	}
 
 	public function formatPublicSearchApi( string $backend, array $fields ): string {

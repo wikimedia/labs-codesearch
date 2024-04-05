@@ -122,6 +122,23 @@ class Model {
 			];
 		}
 
+		if ( $this->backend === '_health' ) {
+			$healthData = [];
+			foreach ( $this->search->getHealth() as $backend => $status ) {
+				$healthData[] = [
+					'backend' => $backend,
+					'href' => "/$backend/",
+					'status' => $status,
+					'statusIsUp' => $status === 'up'
+				];
+			}
+			$response->view = new View( 'health', [
+				'doctitle' => 'Health check',
+				'healthData' => $healthData,
+			] );
+			return $response;
+		}
+
 		$label = $this->search->getBackendLabel( $this->backend );
 		if ( $label === null ) {
 			$response->statusCode = 404;
@@ -149,10 +166,11 @@ class Model {
 			$reposData = $this->search->getCachedConfig( $this->backend );
 		} catch ( ApiUnavailable $e ) {
 			$response->statusCode = 501;
-			$response->view = new View( 'health', [
+			$response->view = new View( 'error', [
 				'doctitle' => 'Index unavailable',
 				'backends' => $backends,
-				'healthUrl' => Codesearch::HEALTH_URL_PUBLIC,
+				'error' => 'Index unavailable.',
+				'healthUrl' => '/_health/',
 			] );
 			return $response;
 		}
