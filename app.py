@@ -68,15 +68,6 @@ def after_request(resp):
     return resp
 
 
-@app.route('/favicon.ico')
-def favicon():
-    # http://flask.pocoo.org/docs/0.12/patterns/favicon/
-    return send_from_directory(
-        os.path.join(app.root_path, 'frontend'),
-        'favicon.ico',
-        mimetype='image/vnd.microsoft.icon')
-
-
 def index_url(target, current):
     text = DESCRIPTIONS[target]
     if target == current:
@@ -202,29 +193,14 @@ is available under the terms of the GPL v3 or any later version (<a href=
 </p>
 """
 
-    opensearch_link = """
-<link rel="search" href="%s"
-      type="application/opensearchdescription+xml"
-      title="MediaWiki code search" />
-""" % url_for('opensearch', backend=backend)
-
     def mangle(text):
         text = text.replace('<body>', '<body>' + header)
         text = text.replace('</body>', footer + '</body>')
         text = text.replace('<title>Hound</title>', title)
         text = text.replace('</head>', style + '</head>')
-        text = LINK_OPENSEARCH.sub(opensearch_link, text)
+        text = LINK_OPENSEARCH.sub('', text)
         return text
     return proxy(backend, mangle=mangle)
-
-
-@app.route('/<backend>/open_search.xml')
-def opensearch(backend):
-    if backend not in app.config['PORTS']:
-        return 'invalid backend'
-    temp = render_template('open_search.xml', backend=backend,
-                           description=DESCRIPTIONS[backend])
-    return Response(temp, content_type='text/xml')
 
 
 @app.route('/<backend>/config.json')
