@@ -134,6 +134,7 @@ class Model {
 			}
 			$response->view = new View( 'health', [
 				'doctitle' => 'Health check',
+				'healthPublicJson' => Codesearch::HOUND_BASE_PUBLIC . '/_health.json',
 				'healthData' => $healthData,
 			] );
 			return $response;

@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from flask import Flask, Response, request, redirect, url_for, \
-    send_from_directory, render_template, jsonify
+    send_from_directory, jsonify
 
 from collections import OrderedDict
 import json
@@ -127,7 +127,7 @@ def _health() -> OrderedDict:
 
 @app.route('/_health')
 def health():
-    return render_template('health.html', status=_health())
+    return redirect('https://codesearch.wmcloud.org/_health/')
 
 
 @app.route('/_health.json')
