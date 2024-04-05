@@ -53,7 +53,7 @@ class Codesearch {
 		'skins' => true,
 	];
 	public const HEALTH_URL_PUBLIC = 'https://codesearch-backend.wmcloud.org/_health';
-	public const HOUND_BASE_DEFAULT = 'https://codesearch-backend.wmcloud.org/';
+	public const HOUND_BASE_PUBLIC = 'https://codesearch-backend.wmcloud.org';
 
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
 	private const TTL_HOUR = 3600;
@@ -101,12 +101,12 @@ class Codesearch {
 		}
 	}
 
-	private function getHoundApi( string $backend ): string {
-		$houndBase = rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_DEFAULT, '/' );
+	private function getHoundApi( string $backend, $houndBase = null ): string {
+		$houndBase ??= rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_PUBLIC, '/' );
 		return "$houndBase/$backend/api";
 	}
 
-	public function formatApiQueryUrl( string $backend, array $fields ): string {
+	public function formatPublicSearchApi( string $backend, array $fields ): string {
 		$params = [
 			'q' => $fields['query'],
 			'i' => $fields['caseInsensitive'] ? 'fosho' : null,
@@ -118,7 +118,7 @@ class Codesearch {
 			// "Load more" is handled in codesearch.js.
 			'rng' => ':20',
 		];
-		return $this->getHoundApi( $backend ) . '/v1/search?' . http_build_query( $params );
+		return $this->getHoundApi( $backend, self::HOUND_BASE_PUBLIC ) . '/v1/search?' . http_build_query( $params );
 	}
 
 	public function getCachedConfig( string $backend ): array {

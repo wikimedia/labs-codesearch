@@ -22,6 +22,7 @@ import * as view from './view.js';
 const OFFSET_INTIAL = false;
 const OFFSET_MORE = true;
 
+// See also Codesearch.php#formatPublicSearchApi
 function formatApiQueryUrl( apiQueryUrl, repos = '*', mode = OFFSET_INTIAL ) {
 	const apiUrl = new URL( apiQueryUrl );
 

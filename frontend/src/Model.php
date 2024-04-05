@@ -194,7 +194,7 @@ class Model {
 
 		$isSubmit = ( $this->query !== '' );
 		$apiQueryUrl = $isSubmit
-			? $this->search->formatApiQueryUrl( $this->backend, $fields )
+			? $this->search->formatPublicSearchApi( $this->backend, $fields )
 			: null;
 
 		$jsData = [
