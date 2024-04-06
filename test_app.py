@@ -38,18 +38,12 @@ def test_homepage(client):
     assert rv.headers['Location'] == 'http://localhost/search/'
 
 
-def test_index_url(client):
-    client.get('/')
-    assert '<b>Everything</b>' == app.index_url('search', 'search')
-    assert '<a href="/extensions/">Extensions</a>' == app.index_url('extensions', 'search')
-
-
 def test_index(client, requests_mock):
     requests_mock.get('http://localhost:6080/', text='<body>')
     rv = client.get('/search/')
-    assert '<ul><li class="index"><b>Everything</b></li>' \
-           '<li class="index"><a href="/extensions/">Extensions</a></li>' \
-           '<li class="index"><a href="/skins/">Skins</a></li></ul>\n</div>' in rv.data.decode()
+    assert '<ul><li class="index"><a href="/search/">search</a></li>' \
+           '<li class="index"><a href="/extensions/">extensions</a></li>' \
+           '<li class="index"><a href="/skins/">skins</a></li></ul>\n</div>' in rv.data.decode()
 
 
 def test_api_v1_repos(client, requests_mock):
@@ -105,7 +99,7 @@ codesearch_backend{backend="skins"} 0
 
 
 @pytest.mark.parametrize('input,expected', ((
-    ('<title>Hound</title>', '<title>MediaWiki code search</title>'),
+    ('<title>Hound</title>', '<title>Hound: search - MediaWiki Codesearch</title>'),
     (app.HOUND_STARTUP, 'Hound is still starting up')
 )))
 def test_backend(client, requests_mock, input, expected):
