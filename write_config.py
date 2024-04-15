@@ -299,6 +299,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/deployment-charts'] = repo_info(
             'operations/deployment-charts'
         )
+        conf['repos']['operations/docker-images/production-images'] = repo_info(
+            'operations/docker-images/production-images'
+        )
         conf['repos']['operations/software'] = repo_info('operations/software')
         conf['repos']['operations/software/benchmw'] = repo_info(
             'operations/software/benchmw'
