@@ -27,8 +27,8 @@
 	width: 1px;
 }
 
-.cs-perf::before {
-	content: attr(data-time-backend) "ms server / " attr(data-time-render) "ms render / " attr(data-files) " files";
+.cs-stats::before {
+	content: attr(data-files) " files (" attr(data-time-query) "ms query / " attr(data-time-render) "ms render)";
 }
 
 /* Results */

@@ -75,7 +75,11 @@ function buildError( err ) {
 }
 
 function buildFormatNav( repos, apiData, state, rerenderFn ) {
-	const stats = apiData.Stats;
+	// Sum all the apiData.Results.*.FilesWithMatch fields into a single number.
+	let totalFiles = 0;
+	for ( const repoId in apiData.Results ) {
+		totalFiles += apiData.Results[ repoId ].FilesWithMatch;
+	}
 
 	return dom( 'div', { className: 'row mb-3 mb-lg-0 ' }, [
 		dom( 'div', { className: 'form-text col-auto' }, [ 'Result format:' ] ),
@@ -96,7 +100,7 @@ function buildFormatNav( repos, apiData, state, rerenderFn ) {
 				)
 			] )
 		),
-		dom( 'div', { className: 'form-text col-auto flex-grow-1 text-end cs-perf', 'data-time-backend': stats.Duration, 'data-files': stats.FilesOpened } )
+		dom( 'div', { className: 'form-text col-auto flex-grow-1 text-end cs-stats', 'data-time-query': apiData.Stats.Duration, 'data-files': totalFiles } )
 	] );
 }
 

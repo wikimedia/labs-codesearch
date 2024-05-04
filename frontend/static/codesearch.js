@@ -184,8 +184,8 @@ async function sendQuery( jsData ) {
 		loadFn
 	) );
 	queryState.time.renderDuration = Math.round( now() - queryState.time.renderStart );
-	// cs-perf is absent on "No results found" response
-	outputNode.querySelector( '.cs-perf' )?.setAttribute( 'data-time-render', queryState.time.renderDuration );
+	// cs-stats is absent on "No results found" response
+	outputNode.querySelector( '.cs-stats' )?.setAttribute( 'data-time-render', queryState.time.renderDuration );
 }
 
 // Main init
