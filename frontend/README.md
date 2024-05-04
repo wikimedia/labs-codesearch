@@ -2,11 +2,18 @@
 
 ### Local development
 
+If it's the first time you're running the frontend, install the dependencies:
+
+```console
+composer update
+```
+
+Start the development server:
 ```
 composer serve
 ```
 
-Open <http://localhost:4000>
+Open <http://localhost:4000>.
 
 ### "Production" mode
 
