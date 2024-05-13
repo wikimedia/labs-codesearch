@@ -357,14 +357,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         )
         conf['repos']['WikimediaDebug'] = repo_info('performance/WikimediaDebug')
         conf['repos'].update(gerrit_prefix_list('mediawiki/php/'))
+
         conf['repos']['function-schemata'] = wmf_gitlab_repo(
             'repos/abstract-wiki/wikifunctions/function-schemata'
-        )
-        conf['repos']['function-orchestrator'] = wmf_gitlab_repo(
-            'repos/abstract-wiki/wikifunctions/function-orchestrator'
-        )
-        conf['repos']['function-evaluator'] = wmf_gitlab_repo(
-            'repos/abstract-wiki/wikifunctions/function-evaluator'
         )
         conf['repos']['wikilambda-cli'] = wmf_gitlab_repo(
             'repos/abstract-wiki/wikifunctions/wikilambda-cli'
@@ -380,6 +375,12 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['New Lexeme form'] = gh_repo('wmde/new-lexeme-special-page')
         conf['repos']['Wikidata Query RDF'] = repo_info('wikidata/query/rdf')
         conf['repos']['iPoid'] = wmf_gitlab_repo('repos/mediawiki/services/ipoid')
+        conf['repos']['Function Orchestrator'] = wmf_gitlab_repo(
+            'repos/abstract-wiki/wikifunctions/function-orchestrator'
+        )
+        conf['repos']['Function Evaluator'] = wmf_gitlab_repo(
+            'repos/abstract-wiki/wikifunctions/function-evaluator'
+        )
 
     if libs:
         conf['repos'].update(gerrit_prefix_list('mediawiki/libs/'))
