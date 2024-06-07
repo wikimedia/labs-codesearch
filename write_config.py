@@ -214,16 +214,24 @@ def wmf_gitlab_repo(name: str) -> dict:
 def wmf_gitlab_group_projects(group: str) -> dict:
     """Recursively list all repos within a specific group"""
     repos = {}
-    resp = requests.get(
-        f"https://gitlab.wikimedia.org/groups/{group.strip('/')}/-/children.json"
-    )
-    resp.raise_for_status()
-    for child in resp.json():
-        child_path = child["relative_path"].lstrip("/")
-        if child["type"] == "group":
-            repos.update(wmf_gitlab_group_projects(group=child_path))
-        elif child["type"] == "project":
-            repos[child_path] = wmf_gitlab_repo(name=child_path)
+    next_page, max_iterations = 1, 5
+    while next_page and next_page < max_iterations:
+        resp = requests.get(
+            f"https://gitlab.wikimedia.org/groups/{group.strip('/')}/-/children.json",
+            params={'per_page': 100, "page": next_page}
+        )
+        resp.raise_for_status()
+        if resp.headers.get('X-Next-Page'):
+            next_page = int(resp.headers['X-Next-Page'])
+        else:
+            next_page = 0
+        for child in resp.json():
+            child_path = child["relative_path"].lstrip("/")
+            if child["type"] == "group":
+                repos.update(wmf_gitlab_group_projects(group=child_path))
+            elif child["type"] == "project":
+                repos[child_path] = wmf_gitlab_repo(name=child_path)
+
     return repos
 
 
