@@ -466,10 +466,12 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('openstack/horizon/wmf-'))
 
         # user repos for Toolforge, gadgets, and VPS projects.
-        # including first-party tools such as:
-        # - labs/tools/maintain-kubeusers
-        # - labs/tools/registry-admission-webhook
+        # old one, with some active projects
         conf['repos'].update(gerrit_prefix_list('labs/tools/'))
+        # new one, with most projects
+        conf["repos"].update(wmf_gitlab_group_projects("toolforge-repos"))
+        # admin repos for cloud including toolforge
+        conf["repos"].update(wmf_gitlab_group_projects("repos/cloud"))
         conf['repos'].update(gerrit_prefix_list('mediawiki/gadgets/'))
         conf['repos'].update(gerrit_prefix_list('wikipedia/gadgets/'))
         conf['repos'].update(gerrit_prefix_list('labs/codesearch'))
