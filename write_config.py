@@ -314,9 +314,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/software/benchmw'] = repo_info(
             'operations/software/benchmw'
         )
-        conf['repos']['operations/software/conftool'] = repo_info(
-            'operations/software/conftool'
-        )
+        conf['repos']['sre/conftool'] = wmf_gitlab_repo('repos/sre/conftool')
         conf['repos']['operations/software/spicerack'] = repo_info(
             'operations/software/spicerack'
         )
