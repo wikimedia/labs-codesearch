@@ -60,3 +60,8 @@ def test_repo_info_gogs():
 def test_repo_info_generic():
     assert write_config.generic_repo('ashley/ShoutHow', host='git.legoktm.com')['url'] == \
         'https://git.legoktm.com/ashley/ShoutHow'
+
+
+def test_wmf_gitlab_group_projects():
+    assert "toolforge-repos/zoomviewer" in \
+        write_config.wmf_gitlab_group_projects("toolforge-repos/")

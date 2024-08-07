@@ -213,18 +213,20 @@ def wmf_gitlab_repo(name: str) -> dict:
 
 def wmf_gitlab_group_projects(group: str) -> dict:
     """Recursively list all repos within a specific group"""
+    group = group.strip('/')
     repos = {}
-    next_page, max_iterations = 1, 5
-    while next_page and next_page < max_iterations:
+    max_pages = 10
+    next_page = 1
+    while next_page and next_page < max_pages:
         resp = requests.get(
-            f"https://gitlab.wikimedia.org/groups/{group.strip('/')}/-/children.json",
+            f"https://gitlab.wikimedia.org/groups/{group}/-/children.json",
             params={'per_page': 100, "page": next_page}
         )
         resp.raise_for_status()
         if resp.headers.get('X-Next-Page'):
             next_page = int(resp.headers['X-Next-Page'])
         else:
-            next_page = 0
+            next_page = False
         for child in resp.json():
             child_path = child["relative_path"].lstrip("/")
             if child["type"] == "group":
@@ -472,6 +474,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('labs/codesearch'))
         # T358983
         conf['repos'].update(gerrit_prefix_list('labs/toollabs'))
+        # T371992
+        conf['repos'].update(wmf_gitlab_group_projects('toolforge-repos/'))
 
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
