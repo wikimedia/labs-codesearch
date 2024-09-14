@@ -88,19 +88,28 @@ class Model {
 		return $this;
 	}
 
-	public function execute(): Response {
-		$response = new Response();
-
-		// Maintain a clean (but Hound-compatible) URL
-		// Don't include "repos" here, because it does not translate to other backends.
-		$canonicalFrontendQueryString = http_build_query( [
+	/**
+	 * Clean (but Hound-compatible) URL without 'backend' or 'repos'
+	 *
+	 * @return array
+	 */
+	private function getCanonicalFrontendQuery(): array {
+		return [
 			'q' => $this->query !== '' ? $this->query : null,
 			'i' => $this->caseInsensitive ? 'fosho' : null,
 			'files' => $this->filePath !== '' ? $this->filePath : null,
 			'excludeFiles' => $this->excludeFiles !== '' ? $this->excludeFiles : null,
-		] );
+		];
+	}
+
+	public function execute(): Response {
+		$response = new Response();
+
 		// Avoid dangling "?" by itself
-		$canonicalFrontendQueryString = $canonicalFrontendQueryString ? "?$canonicalFrontendQueryString" : '';
+		$canonicalFrontendQueryString = http_build_query( $this->getCanonicalFrontendQuery() );
+		$canonicalFrontendQueryString = $canonicalFrontendQueryString
+			? '?' . $canonicalFrontendQueryString
+			: '';
 
 		if ( $this->backend === '' ) {
 			// Redirect to default backend

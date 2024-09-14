@@ -55,7 +55,7 @@ class Codesearch {
 	public const HOUND_BASE_PUBLIC = 'https://codesearch-backend.wmcloud.org';
 
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
-	private const TTL_HOUR = 3600;
+	private const META_CACHE_TTL = 3600;
 
 	private array $apcuStats = [
 		'hits' => 0,
@@ -75,9 +75,9 @@ class Codesearch {
 		$val = $hasApcu ? apcu_fetch( $key ) : false;
 		if ( $val !== false ) {
 			$this->apcuStats['hits']++;
-			self::debug( sprintf( 'APCu cache hit for %s', $key ) );
+			$this->debug( sprintf( 'APCu cache hit for %s', $key ) );
 		} else {
-			self::debug( sprintf( 'APCu cache miss for %s', $key ) );
+			$this->debug( sprintf( 'APCu cache miss for %s', $key ) );
 			$val = $callback();
 			if ( $hasApcu ) {
 				apcu_store( $key, $val, $ttl );
@@ -87,17 +87,11 @@ class Codesearch {
 		return $val;
 	}
 
-	public static function debug( $msg ) {
-		// phpcs:ignore MediaWiki.Usage.SuperGlobalsUsage
-		if ( isset( $_GET['debug'] ) ) {
-			header( "X-Log: $msg", false );
-		}
-
-		// For local development always output debug logs to 'composer serve',
-		// to ease debugging of slow requests.
-		if ( PHP_SAPI === 'cli-server' ) {
-			error_log( "[codesearch-frontend] [DEBUG] $msg" );
-		}
+	/**
+	 * @see CodesearchDebug::debug
+	 * @param string $msg
+	 */
+	public function debug( $msg ): void {
 	}
 
 	private function getHoundApi( string $backend, $houndBase = null ): string {
@@ -106,7 +100,7 @@ class Codesearch {
 	}
 
 	public function getHealth(): array {
-		$houndBase ??= rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_PUBLIC, '/' );
+		$houndBase = rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_PUBLIC, '/' );
 		$result = $this->getHttp( "$houndBase/_health.json" );
 		$health = json_decode( $result, true );
 		if ( !is_array( $health ) ) {
@@ -118,6 +112,7 @@ class Codesearch {
 
 	public function formatPublicSearchApi( string $backend, array $fields ): string {
 		$params = [
+			// List 'q' first, matching robots.txt
 			'q' => $fields['query'],
 			'i' => $fields['caseInsensitive'] ? 'fosho' : null,
 			'files' => $fields['filePath'],
@@ -134,14 +129,14 @@ class Codesearch {
 	public function getCachedConfig( string $backend ): array {
 		return $this->getWithSetCallback(
 			"codesearch-config-v1:$backend",
-			self::TTL_HOUR,
+			self::META_CACHE_TTL,
 			function () use ( $backend ) {
 				$url = $this->getHoundApi( $backend ) . '/v1/repos';
 				$val = json_decode( $this->getHttp( $url ), true );
 				if ( !$val ) {
 					throw new ApiUnavailable( 'Hound /v1/repos returned empty or invalid data' );
 				}
-				// Strip out data not needed by client
+				// Optimization: Strip out data not needed by client
 				foreach ( $val as $repoId => &$repoConf ) {
 					$repoConf = [
 						'url' => $repoConf['url'],
@@ -156,7 +151,7 @@ class Codesearch {
 	public function getCachedExcludes( string $backend ): array {
 		return $this->getWithSetCallback(
 			"codesearch-excludes-v1:$backend",
-			self::TTL_HOUR,
+			self::META_CACHE_TTL,
 			function () use ( $backend ) {
 				$urls = [];
 				$reposData = $this->getCachedConfig( $backend );
@@ -196,7 +191,7 @@ class Codesearch {
 		if ( !curl_setopt_array( $curlHandle, $curlOptions ) ) {
 			throw new RuntimeException( 'Could not set curl options' );
 		}
-		self::debug( sprintf( 'getHttp timeout=%d %s', $timeout, $url ) );
+		$this->debug( sprintf( 'getHttp timeout=%d %s', $timeout, $url ) );
 		$curlRes = curl_exec( $curlHandle );
 		if ( curl_errno( $curlHandle ) == CURLE_OPERATION_TIMEOUTED ) {
 			throw new ApiUnavailable( "Hound request timed out after $timeout seconds" );
@@ -210,7 +205,7 @@ class Codesearch {
 
 	protected function getHttpMulti( array $urls, $throttled = false ): array {
 		if ( !$throttled ) {
-			self::debug( sprintf( 'getHttpMulti chunking %d requests', count( $urls ) ) );
+			$this->debug( sprintf( 'getHttpMulti chunking %d requests', count( $urls ) ) );
 
 			$results = [];
 			$t = null;
@@ -224,7 +219,7 @@ class Codesearch {
 					// usleep in microseconds, hrtime in nanoseconds
 					$remainingUs = !$t ? 0 : ceil( 1e6 - ( ( hrtime( true ) - $t ) / 1000 ) );
 					if ( $remainingUs > 0 ) {
-						self::debug( sprintf( 'getHttpMulti sleeping %dms between chunks', $remainingUs / 1000 ) );
+						$this->debug( sprintf( 'getHttpMulti sleeping %dms between chunks', $remainingUs / 1000 ) );
 						usleep( $remainingUs );
 					}
 					$t = hrtime( true );
@@ -259,7 +254,7 @@ class Codesearch {
 			CURLOPT_PIPEWAIT => 1,
 		];
 
-		self::debug( sprintf( 'getHttpMulti with %d requests', count( $urls ) ) );
+		$this->debug( sprintf( 'getHttpMulti with %d requests', count( $urls ) ) );
 		foreach ( $urls as $urlKey => $url ) {
 			$curlHandle = curl_init( $url );
 			if ( !curl_setopt_array( $curlHandle, $curlOptions ) ) {

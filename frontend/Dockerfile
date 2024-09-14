@@ -1,4 +1,4 @@
-FROM php:8.3-apache-bookworm
+FROM php:8.4-apache-bookworm
 
 RUN a2enmod rewrite
 
@@ -24,16 +24,19 @@ RUN pecl install mustache-0.9.3 \
 	&& docker-php-ext-enable mustache
 
 # https://pecl.php.net/package/APCu
-RUN pecl install apcu-5.1.23 \
+RUN pecl install apcu-5.1.24 \
 	&& docker-php-ext-enable apcu
 
-# PHP settings
-# - Opcache is off by default. https://hub.docker.com/_/php/
-# - https://www.php.net/manual/en/opcache.configuration.php
+# PHP: Enable Opcache and JIT (off by default).
+# https://hub.docker.com/_/php/
+# https://www.php.net/manual/en/opcache.configuration.php
 RUN echo "zend_extension=opcache" >> "$PHP_INI_DIR/php.ini"
 RUN echo "opcache.validate_timestamps=0" >> "$PHP_INI_DIR/php.ini"
-# - Default memory_limit is 128M
+RUN echo "opcache.jit_buffer_size=32M" >> "$PHP_INI_DIR/php.ini"
+# PHP: Default memory_limit: 128M
 RUN echo "memory_limit=128M" >> "$PHP_INI_DIR/php.ini"
+# PHP: Default max_execution_time: 30s
+RUN echo "max_execution_time=30" >> "$PHP_INI_DIR/php.ini"
 
 # Install composer
 # Discover versions via https://getcomposer.org/versions#stable.0

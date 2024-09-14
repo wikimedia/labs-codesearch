@@ -7,10 +7,11 @@
 	{{#isSubmit}}<meta name="robots" content="noindex,nofollow">{{/isSubmit}}
 	{{#apiQueryUrl}}<link rel="preload" as="fetch" crossorigin href="{{apiQueryUrl}}">{{/apiQueryUrl}}
 	<script>
-if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
-	document.documentElement.className = "cs-client-js";
-	window.CS_CLIENT = 1;
-}
+	// Cut the mustard
+	if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
+		document.documentElement.className = "cs-client-js";
+		window.CS_CLIENT = 1;
+	}
 	</script>
 	<script type="importmap">
 	{
@@ -35,9 +36,7 @@ if ( "querySelector" in document && "fetch" in window && [].flatMap ) {
 		<div class="cs-heading mt-2">
 			<h2>MediaWiki Codesearch</h2>
 			<ul class="nav nav-pills mb-2">
-			{{#backends}}
-				<li class="nav-item"><a href="{{href}}" class="nav-link{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>{{label}}</a></li>
-			{{/backends}}
+			{{#backends}}<li class="nav-item"><a href="{{href}}" class="nav-link{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>{{label}}</a></li>{{/backends}}
 			</ul>
 		</div>
 
