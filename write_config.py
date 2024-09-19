@@ -403,6 +403,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['IPSet'] = repo_info('IPSet')
         conf['repos']['jQuery Client'] = repo_info('jquery-client')
         conf['repos']['mwbot-rs'] = wmf_gitlab_repo('repos/mwbot-rs/mwbot')
+        conf['repos']['mw-node-qunit'] = gh_repo('wikimedia/mw-node-qunit')
         conf['repos']['oauthclient-php'] = repo_info('mediawiki/oauthclient-php')
         conf['repos']['php-session-serializer'] = repo_info('php-session-serializer')
         conf['repos']['phan-taint-check-plugin'] = \
