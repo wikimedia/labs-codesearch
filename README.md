@@ -6,8 +6,8 @@ is great, but the UI is a bit lacking, so we work around it a bit.
 ## Setup
 
 This guide is based on setting up a new instance on the Wikimedia
-Cloud VPS infrastructure. Currently we use Debian Buster medium
-sized images.
+Cloud VPS infrastructure. Currently, we use Debian Buster medium-sized
+images.
 
 After creating the instance, add and mount the cinder volume.
 
@@ -33,8 +33,13 @@ You might also need to force Hound configuration to be written by running:
 If all that works, then `curl http://localhost:3002/` should work, and you can
 point a web proxy to that port.
 
-The hound- instances will be automatically restarted by systemd after 24
+The `hound-` instances will be automatically restarted by systemd after 24
 hours, which will pick up any new config changes.
+
+### Frontend local setup
+
+To set up the Codesearch frontend locally, follow the documentation in
+[frontend/README.md](frontend/README.md).
 
 ## Constraints
 
