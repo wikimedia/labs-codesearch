@@ -36,9 +36,10 @@ RUN echo "opcache.validate_timestamps=0" >> "$PHP_INI_DIR/php.ini"
 RUN echo "memory_limit=128M" >> "$PHP_INI_DIR/php.ini"
 
 # Install composer
+# Discover versions via https://getcomposer.org/versions#stable.0
 RUN mkdir /srv/composer \
 	&& cd /srv/composer \
-	&& curl --silent --fail --output composer.phar https://getcomposer.org/download/2.3.3/composer.phar \
+	&& curl --silent --fail --output composer.phar https://getcomposer.org/download/2.8.1/composer.phar \
 	&& chmod +x /srv/composer/composer.phar \
 	&& mv /srv/composer/composer.phar /usr/bin/composer
 
