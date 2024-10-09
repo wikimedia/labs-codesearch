@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install automake git libtool -y \
 	&& git submodule update --init \
 	&& autoreconf -fiv && ./configure \
 	&& make && make install && cd / && rm -rf /tmp/libmustache \
-	&& apt-get remove automake git libtool -y && apt autoremove -y
+	&& apt-get remove automake git libtool -y && apt-get autoremove -y
 
 # TODO: If we end up using Composer for things other than autoload
 # Install php-zip, required by Composer
