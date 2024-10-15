@@ -14,21 +14,27 @@ After creating the instance, add and mount the cinder volume.
 If we're creating a fresh volume, we want to modify the filesystem
 so we get some more inodes per available storage.
 
- sudo umount /srv
- sudo mkfs.ext4 -T news /dev/sdb
- sudo systemctl daemon-reload
- sudo mount /srv
+```console
+sudo umount /srv
+sudo mkfs.ext4 -T news /dev/sdb
+sudo systemctl daemon-reload
+sudo mount /srv
+```
 
 Running `df -hi` should show an increase in available inodes. You can
 proceed with actually setting up codesearch now by enabling the puppet
 role: `role::codesearch`. Then, force a puppet run:
- sudo puppet agent -tv
+```console
+sudo puppet agent -tv
+```
 
 If you get errors related to iptables and docker, reboot the instance
 and they should fix themselves.
 
 You might also need to force Hound configuration to be written by running:
- sudo systemctl start codesearch-write-config
+```console
+sudo systemctl start codesearch-write-config
+```
 
 If all that works, then `curl http://localhost:3002/` should work, and you can
 point a web proxy to that port.
