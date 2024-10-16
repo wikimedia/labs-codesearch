@@ -227,7 +227,7 @@ class Model {
 		];
 		$jsDataRawHtml = json_encode(
 			$jsData,
-			JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+			JSON_UNESCAPED_UNICODE
 		);
 
 		$response->view = new View( 'index', [
