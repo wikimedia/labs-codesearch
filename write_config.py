@@ -328,6 +328,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             'operations/homer/public'
         )
 
+        conf['repos']['operations/dumps'] = repo_info('operations/dumps')
+
         conf['repos'].update(gerrit_prefix_list('performance/'))
         conf['repos'].update(gerrit_prefix_list('mediawiki/php/'))
 
