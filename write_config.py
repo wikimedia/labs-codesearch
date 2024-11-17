@@ -343,6 +343,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['scap'] = wmf_gitlab_repo('repos/releng/scap')
         conf['repos']['releng/release'] = wmf_gitlab_repo('repos/releng/release')
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
+        conf['repos']['dev-images'] = wmf_gitlab_repo('repos/releng/dev-images')
 
         # (T354852) Important BlueSpice repos outside the extensions/ tree
         conf['repos']['BlueSpiceMWConfig'] = repo_info('bluespice/mw-config')
