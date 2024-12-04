@@ -345,7 +345,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
         conf['repos']['dev-images'] = wmf_gitlab_repo('repos/releng/dev-images')
 
-        conf['repos']['patchdemo'] = wmf_gitlab_repo('repos/ci-tools/patchdemo')
+        conf['repos']['patchdemo'] = wmf_gitlab_repo('repos/qte/catalyst/patchdemo')
 
         # (T354852) Important BlueSpice repos outside the extensions/ tree
         conf['repos']['BlueSpiceMWConfig'] = repo_info('bluespice/mw-config')
