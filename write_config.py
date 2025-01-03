@@ -481,6 +481,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('mediawiki/gadgets/'))
         conf['repos'].update(gerrit_prefix_list('wikipedia/gadgets/'))
         conf['repos'].update(gerrit_prefix_list('labs/codesearch'))
+        conf['repos'].update(gerrit_prefix_list('labs/countervandalism/'))
         # T358983
         conf['repos'].update(gerrit_prefix_list('labs/toollabs'))
         # T371992
