@@ -76,15 +76,18 @@ def parse_gitmodules(url):
         elif 'invent.kde.org' in url:
             name = url.replace('https://invent.kde.org/', '')
             repos.append((name, generic_repo(name, host='invent.kde.org')))
-        elif 'phabricator.nichework.com' in url:
-            # FIXME: implement
-            continue
-        elif 'gitlab.wikibase.nl' in url:
-            # FIXME: Implement a general gitlab handler
-            # XXX: Security-wise, is it safe to do so?
-            continue
         else:
-            raise RuntimeError(f'Unsure how to handle URL: {url}')
+            # We sometimes discover entirely new code hosts via
+            # https://github.com/MWStake/nonwmf-extensions/blob/master/.gitmodules
+            #
+            # Avoid hard-failing nightly indexing cronjob on this (T383192)
+            #
+            # TODO: gitlab.wikibase.nl hosts WSSemanticParsedText as of Dec 2024.
+            # Should we implement a general gitlab handler?
+            # Security-wise, is it safe to do so?
+            #
+            # TODO: codeberg.org hosts CheckRegistrationEmailDomains as of Dec 2024.
+            print(f'Skip unsupported remote URL: {url}')
 
     return repos
 
