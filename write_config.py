@@ -468,6 +468,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # toolforge infra
         conf['repos'].update(gerrit_prefix_list('operations/software/tools-'))
         conf['repos'].update(gerrit_prefix_list('cloud/toolforge/'))
+        conf['repos'].update(gerrit_prefix_list('cloud/metricsinfra/'))
+        conf['repos']['cloud/wmcs-cookbooks'] = repo_info('cloud/wmcs-cookbooks')
         conf['repos']['operations/docker-images/toollabs-images'] = repo_info(
             'operations/docker-images/toollabs-images'
         )
