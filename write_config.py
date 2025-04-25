@@ -388,7 +388,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('mediawiki/services/'))
         conf['repos']['mwaddlink'] = repo_info('research/mwaddlink')
         conf['repos']['recommendation-api'] = repo_info('research/recommendation-api')
-        conf['repos']['Wikidata Query GUI'] = repo_info('wikidata/query/gui')
+        conf['repos']['Wikidata Query GUI'] = wmf_gitlab_repo('repos/wmde/wikidata-query-gui')
         conf['repos']['New Lexeme form'] = gh_repo('wmde/new-lexeme-special-page')
         conf['repos']['Wikidata Query RDF'] = repo_info('wikidata/query/rdf')
         conf['repos']['iPoid'] = wmf_gitlab_repo('repos/mediawiki/services/ipoid')
