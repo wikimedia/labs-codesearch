@@ -343,6 +343,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
         conf['repos']['mediawiki/vagrant'] = repo_info('mediawiki/vagrant')
 
+        conf['repos']['jsdoc/wmf-theme'] = repo_info('jsdoc/wmf-theme')
+
         conf['repos']['scap'] = wmf_gitlab_repo('repos/releng/scap')
         conf['repos']['releng/release'] = wmf_gitlab_repo('repos/releng/release')
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
