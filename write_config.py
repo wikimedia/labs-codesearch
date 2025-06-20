@@ -312,6 +312,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/deployment-charts'] = repo_info(
             'operations/deployment-charts'
         )
+        conf['repos']['operations/docker-images/docker-pkg'] = repo_info(
+            'operations/docker-images/docker-pkg'
+        )
         conf['repos']['operations/docker-images/production-images'] = repo_info(
             'operations/docker-images/production-images'
         )
