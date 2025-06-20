@@ -303,36 +303,55 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/dns'] = repo_info('operations/dns')
         # Special Netbox repo
         conf['repos']['netbox DNS'] = phab_repo('netbox-exported-dns')
-        conf['repos']['operations/mediawiki-config'] = repo_info(
-            'operations/mediawiki-config'
-        )
+        conf['repos']['operations/mediawiki-config'] = repo_info('operations/mediawiki-config')
 
         conf['repos']['operations/alerts'] = repo_info('operations/alerts')
         conf['repos']['operations/cookbooks'] = repo_info('operations/cookbooks')
-        conf['repos']['operations/deployment-charts'] = repo_info(
-            'operations/deployment-charts'
-        )
-        conf['repos']['operations/docker-images/docker-pkg'] = repo_info(
-            'operations/docker-images/docker-pkg'
-        )
-        conf['repos']['operations/docker-images/production-images'] = repo_info(
-            'operations/docker-images/production-images'
-        )
+        conf['repos']['operations/deployment-charts'] = repo_info('operations/deployment-charts')
+        conf['repos']['operations/docker-images/docker-pkg'] = repo_info('operations/docker-images/docker-pkg')
+        conf['repos']['operations/docker-images/docker-report'] = repo_info('operations/docker-images/docker-report')
+        conf['repos']['operations/docker-images/image-catalog'] = repo_info('operations/docker-images/image-catalog')
+        conf['repos']['operations/docker-images/production-images'] = repo_info('operations/docker-images/production-images')
+        conf['repos']['operations/homer/mock-private'] = repo_info('operations/homer/mock-private')
+        conf['repos']['operations/homer/public'] = repo_info('operations/homer/public')
         conf['repos']['operations/software'] = repo_info('operations/software')
-        conf['repos']['operations/software/benchmw'] = repo_info(
-            'operations/software/benchmw'
-        )
-        conf['repos']['sre/conftool'] = wmf_gitlab_repo('repos/sre/conftool')
-        conf['repos']['operations/software/spicerack'] = repo_info(
-            'operations/software/spicerack'
-        )
-        conf['repos']['operations/software/purged'] = repo_info(
-            'operations/software/purged'
-        )
+        conf['repos']['operations/software/benchmw'] = repo_info('operations/software/benchmw')
+        conf['repos']['operations/software/censorship-monitoring'] = repo_info('operations/software/censorship-monitoring')
+        conf['repos']['operations/software/cfssl-issuer'] = repo_info('operations/software/cfssl-issuer')
+        conf['repos']['operations/software/conftool'] = repo_info('operations/software/conftool')
+        conf['repos']['operations/software/cumin'] = repo_info('operations/software/cumin')
+        conf['repos']['operations/software/dbtree'] = repo_info('operations/software/dbtree')
+        conf['repos']['operations/software/debmonitor'] = repo_info('operations/software/debmonitor')
+        conf['repos']['operations/software/ecs'] = repo_info('operations/software/ecs')
+        conf['repos']['operations/software/external-monitoring'] = repo_info('operations/software/external-monitoring')
+        conf['repos']['operations/software/fifo-log-demux'] = repo_info('operations/software/fifo-log-demux')
+        conf['repos']['operations/software/homer'] = repo_info('operations/software/homer')
+        conf['repos']['operations/software/homer/deploy'] = repo_info('operations/software/homer/deploy')
+        conf['repos']['operations/software/httpbb'] = repo_info('operations/software/httpbb')
+        conf['repos']['operations/software/keyholder'] = repo_info('operations/software/keyholder')
+        conf['repos']['operations/software/klaxon'] = repo_info('operations/software/klaxon')
+        conf['repos']['operations/software/knead-wikidough'] = repo_info('operations/software/knead-wikidough')
+        conf['repos']['operations/software/mediabackups'] = repo_info('operations/software/mediabackups')
+        conf['repos']['operations/software/netbox-extras'] = repo_info('operations/software/netbox-extras')
+        conf['repos']['operations/software/prometheus-rdkafka-exporter'] = repo_info('operations/software/prometheus-rdkafka-exporter')
+        conf['repos']['operations/software/puppet-compiler'] = repo_info('operations/software/puppet-compiler')
+        conf['repos']['operations/software/puppetdb-microproxy'] = repo_info('operations/software/puppetdb-microproxy')
+        conf['repos']['operations/software/purged'] = repo_info('operations/software/purged')
+        conf['repos']['operations/software/python-poolcounter'] = repo_info('operations/software/python-poolcounter')
+        conf['repos']['operations/software/pywmflib'] = repo_info('operations/software/pywmflib')
+        conf['repos']['operations/software/service-checker'] = repo_info('operations/software/service-checker')
+        conf['repos']['operations/software/spicerack'] = repo_info('operations/software/spicerack')
+        conf['repos']['operations/software/statograph'] = repo_info('operations/software/statograph')
+        conf['repos']['operations/software/swift-ring'] = repo_info('operations/software/swift-ring')
+        conf['repos']['operations/software/swift-utils'] = repo_info('operations/software/swift-utils')
+        conf['repos']['operations/software/tendril'] = repo_info('operations/software/tendril')
+        conf['repos']['operations/software/tools-webservice'] = repo_info('operations/software/tools-webservice')
+        conf['repos']['operations/software/transferpy'] = repo_info('operations/software/transferpy')
+        conf['repos']['operations/software/wmfbackups'] = repo_info('operations/software/wmfbackups')
+        conf['repos']['operations/software/wmfdb'] = repo_info('operations/software/wmfdb')
+        conf['repos']['operations/software/wmfmariadbpy'] = repo_info('operations/software/wmfmariadbpy')
 
-        conf['repos']['operations/homer/public'] = repo_info(
-            'operations/homer/public'
-        )
+        conf['repos']['sre/conftool'] = wmf_gitlab_repo('repos/sre/conftool')
 
         conf['repos']['operations/dumps'] = repo_info('operations/dumps')
 
