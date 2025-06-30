@@ -528,6 +528,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('labs/toollabs'))
         # T371992
         conf['repos'].update(wmf_gitlab_group_projects('toolforge-repos/'))
+        # paws, change once we move to gitlab
+        conf['repos'].update(gh_repo('toolforge/paws'))
 
     if apps:
         conf['repos']['Wikipedia Android app'] = gh_repo('wikimedia/apps-android-wikipedia')
