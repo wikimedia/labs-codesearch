@@ -422,6 +422,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Function Evaluator'] = wmf_gitlab_repo(
             'repos/abstract-wiki/wikifunctions/function-evaluator'
         )
+        conf['repos']['portals'] = repo_info('wikimedia/portals')
 
     if libs:
         conf['repos'].update(gerrit_prefix_list('mediawiki/libs/'))
