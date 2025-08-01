@@ -369,6 +369,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
 
         conf['repos']['scap'] = wmf_gitlab_repo('repos/releng/scap')
         conf['repos']['releng/release'] = wmf_gitlab_repo('repos/releng/release')
+        conf['repos']['releng/jenkins-deploy'] = wmf_gitlab_repo('repos/releng/jenkins-deploy')
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
         conf['repos']['dev-images'] = wmf_gitlab_repo('repos/releng/dev-images')
 
