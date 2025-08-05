@@ -347,11 +347,18 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/software/wmfdb'] = repo_info('operations/software/wmfdb')
         conf['repos']['operations/software/wmfmariadbpy'] = repo_info('operations/software/wmfmariadbpy')
 
+        conf['repos']['sre/acme-chief'] = wmf_gitlab_repo('repos/sre/acme-chief')
         conf['repos']['sre/conftool'] = wmf_gitlab_repo('repos/sre/conftool')
         conf['repos']['sre/fifo-log-demux'] = wmf_gitlab_repo('repos/sre/fifo-log-demux')
         conf['repos']['sre/knead-wikidough'] = wmf_gitlab_repo('repos/sre/knead-wikidough')
+        conf['repos']['sre/liberica'] = wmf_gitlab_repo('repos/sre/liberica')
+        conf['repos']['sre/libvmod-netmapper'] = wmf_gitlab_repo('repos/sre/libvmod-netmapper')
+        conf['repos']['sre/libvmod-querysort'] = wmf_gitlab_repo('repos/sre/libvmod-querysort')
+        conf['repos']['sre/libvmod-wmfuniq'] = wmf_gitlab_repo('repos/sre/libvmod-wmfuniq')
         conf['repos']['sre/prometheus-rdkafka-exporter'] = wmf_gitlab_repo('repos/sre/prometheus-rdkafka-exporter')
         conf['repos']['sre/purged'] = wmf_gitlab_repo('repos/sre/purged')
+        conf['repos']['sre/pybal'] = wmf_gitlab_repo('repos/sre/pybal')
+        conf['repos']['sre/varnishkafka'] = wmf_gitlab_repo('repos/sre/varnishkafka')
 
         conf['repos']['operations/dumps'] = repo_info('operations/dumps')
 
