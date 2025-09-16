@@ -386,6 +386,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['BlueSpiceMWConfig'] = repo_info('bluespice/mw-config')
         conf['repos']['BlueSpiceMWConfigOverrides'] = repo_info('bluespice/mw-config/overrides')
 
+        # T404517
+        conf['repos'].update(wmf_gitlab_group_projects('repos/m3api'))
+
     if armchairgm:
         conf['repos']['ArmchairGM'] = gh_repo('mary-kate/ArmchairGM')
 
