@@ -42,6 +42,7 @@ class Codesearch {
 		'wmcs' => 'Wikimedia Cloud Services',
 		'armchairgm' => 'ArmchairGM',
 		'shouthow' => 'ShoutHow',
+		'apps' => 'Mobile Apps',
 	];
 	public const BACKENDS_HIDDEN = [
 		'armchairgm' => true,

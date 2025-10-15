@@ -244,7 +244,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               operations=False, armchairgm=False, twn=False, milkshake=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
               services=False, libs=False, analytics=False, puppet=False,
-              shouthow=False, schemas=False, wmcs=False, devtools=False):
+              shouthow=False, schemas=False, wmcs=False, devtools=False,
+              apps=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -528,6 +529,11 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # T371992
         conf['repos'].update(wmf_gitlab_group_projects('toolforge-repos/'))
 
+    if apps:
+        conf['repos']['Wikipedia Android app'] = gh_repo('wikimedia/apps-android-wikipedia')
+        conf['repos']['Wikipedia iOS app'] = gh_repo('wikimedia/wikipedia-ios')
+        conf['repos']['Wikimedia Commons Android app'] = gh_repo('commons-app/apps-android-commons')
+
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -587,6 +593,7 @@ def main():
               wmcs=True,
               schemas=True,
               devtools=True,
+              apps=True,
               # A dead codebase used by just one person
               armchairgm=False,
               # All of these should already be included via core/exts/skins
@@ -617,6 +624,7 @@ def main():
     make_conf('puppet', args, puppet=True)
     make_conf('shouthow', args, shouthow=True)
     make_conf('devtools', args, devtools=True)
+    make_conf('apps', args, apps=True)
 
 
 if __name__ == '__main__':
