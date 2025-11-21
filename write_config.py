@@ -137,18 +137,6 @@ def wikimedia_deployed_repos() -> List[str]:
     return [name for name in _settings_yaml()['bundles']['wmf_core']]
 
 
-def phab_repo(name: str) -> dict:
-    return {
-        'url': f'https://phabricator.wikimedia.org/source/{name}',
-        'url-pattern': {
-            'base-url': 'https://phabricator.wikimedia.org/source/'
-                        '%s/browse/master/{path};{rev}{anchor}' % name,
-            'anchor': '${line}'
-        },
-        'ms-between-poll': POLL,
-    }
-
-
 def repo_info(gerrit_name: str) -> dict:
     return {
         'url': f'https://gerrit-replica.wikimedia.org/r/{gerrit_name}.git',
@@ -303,7 +291,16 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if operations:
         conf['repos']['operations/dns'] = repo_info('operations/dns')
         # Special Netbox repo
-        conf['repos']['netbox DNS'] = phab_repo('netbox-exported-dns')
+        conf['repos']['netbox DNS'] = {
+            'url': 'https://netbox-exports.wikimedia.org/dns',
+            'url-pattern': {
+                'base-url': 'https://phabricator.wikimedia.org/source/'
+                            'netbox-exported-dns/browse/master/{path};{rev}{anchor}',
+                'anchor': '${line}'
+            },
+            'ms-between-poll': POLL,
+        }
+
         conf['repos']['operations/mediawiki-config'] = repo_info('operations/mediawiki-config')
 
         conf['repos']['operations/alerts'] = repo_info('operations/alerts')
