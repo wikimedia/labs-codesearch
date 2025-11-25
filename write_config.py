@@ -339,6 +339,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/software/swift-ring'] = repo_info('operations/software/swift-ring')
         conf['repos']['operations/software/swift-utils'] = repo_info('operations/software/swift-utils')
         conf['repos']['operations/software/tendril'] = repo_info('operations/software/tendril')
+        conf['repos']['operations/software/thumbor-plugins'] = repo_info('operations/software/thumbor-plugins')
         conf['repos']['operations/software/tools-webservice'] = repo_info('operations/software/tools-webservice')
         conf['repos']['operations/software/transferpy'] = repo_info('operations/software/transferpy')
         conf['repos']['operations/software/wmfbackups'] = repo_info('operations/software/wmfbackups')
