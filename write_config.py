@@ -294,8 +294,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['netbox DNS'] = {
             'url': 'https://netbox-exports.wikimedia.org/dns',
             'url-pattern': {
-                'base-url': 'https://phabricator.wikimedia.org/source/'
-                            'netbox-exported-dns/browse/master/{path};{rev}{anchor}',
+                'base-url': 'https://netbox.wikimedia.org/',
                 'anchor': '${line}'
             },
             'ms-between-poll': POLL,
@@ -528,7 +527,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # T371992
         conf['repos'].update(wmf_gitlab_group_projects('toolforge-repos/'))
         # paws, change once we move to gitlab
-        conf['repos'].update(gh_repo('toolforge/paws'))
+        conf['repos']['PAWS'] = gh_repo('toolforge/paws')
 
     if apps:
         conf['repos']['Wikipedia Android app'] = gh_repo('wikimedia/apps-android-wikipedia')
