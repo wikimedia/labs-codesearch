@@ -368,8 +368,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('integration/'))
         conf['repos'].update(gerrit_prefix_list('mediawiki/tools/'))
 
+        conf['repos']['fresh'] = repo_info('fresh')
         conf['repos']['mediawiki/vagrant'] = repo_info('mediawiki/vagrant')
-
         conf['repos']['jsdoc/wmf-theme'] = repo_info('jsdoc/wmf-theme')
 
         conf['repos']['scap'] = wmf_gitlab_repo('repos/releng/scap')
@@ -377,7 +377,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['releng/jenkins-deploy'] = wmf_gitlab_repo('repos/releng/jenkins-deploy')
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
         conf['repos']['dev-images'] = wmf_gitlab_repo('repos/releng/dev-images')
-
         conf['repos']['patchdemo'] = wmf_gitlab_repo('repos/qte/catalyst/patchdemo')
 
         # (T354852) Important BlueSpice repos outside the extensions/ tree
