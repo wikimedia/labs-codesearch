@@ -513,8 +513,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         # user repos for Toolforge, gadgets, and VPS projects.
         # old one, with some active projects
         conf['repos'].update(gerrit_prefix_list('labs/tools/'))
-        # new one, with most projects
-        conf["repos"].update(wmf_gitlab_group_projects("toolforge-repos"))
+        # new one, with most projects (T371992)
+        conf['repos'].update(wmf_gitlab_group_projects('toolforge-repos'))
         # admin repos for cloud including toolforge
         conf["repos"].update(wmf_gitlab_group_projects("repos/cloud"))
         conf['repos'].update(gerrit_prefix_list('mediawiki/gadgets/'))
@@ -523,8 +523,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('labs/countervandalism/'))
         # T358983
         conf['repos'].update(gerrit_prefix_list('labs/toollabs'))
-        # T371992
-        conf['repos'].update(wmf_gitlab_group_projects('toolforge-repos/'))
         # paws, change once we move to gitlab
         conf['repos']['PAWS'] = gh_repo('toolforge/paws')
 
