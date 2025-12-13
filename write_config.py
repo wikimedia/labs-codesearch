@@ -507,6 +507,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['operations/docker-images/toollabs-images'] = repo_info(
             'operations/docker-images/toollabs-images'
         )
+        # T412604
+        conf['repos']['Striker'] = repo_info('labs/striker')
         # custom horizon panels, but not upstream code
         conf['repos'].update(gerrit_prefix_list('openstack/horizon/wmf-'))
 
