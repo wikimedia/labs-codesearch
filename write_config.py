@@ -219,6 +219,8 @@ def wmf_gitlab_group_projects(group: str) -> dict:
         else:
             next_page = False
         for child in resp.json():
+            if child.get("archived", False):
+                continue
             child_path = child["relative_path"].lstrip("/")
             if child["type"] == "group":
                 repos.update(wmf_gitlab_group_projects(group=child_path))
