@@ -200,7 +200,6 @@ class Codesearch {
 		if ( $curlRes === false ) {
 			throw new ApiUnavailable( 'Hound request failed: ' . curl_error( $curlHandle ) );
 		}
-		curl_close( $curlHandle );
 		return $curlRes;
 	}
 
@@ -297,7 +296,6 @@ class Codesearch {
 			}
 			$result = curl_multi_getcontent( $info['handle'] );
 			curl_multi_remove_handle( $cmh, $info['handle'] );
-			curl_close( $info['handle'] );
 			$results[$urlKey] = $result;
 		}
 
