@@ -455,8 +455,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['mw-node-qunit'] = gh_repo('wikimedia/mw-node-qunit')
         conf['repos']['oauthclient-php'] = repo_info('mediawiki/oauthclient-php')
         conf['repos']['php-session-serializer'] = repo_info('php-session-serializer')
-        conf['repos']['phan-taint-check-plugin'] = \
-            repo_info('mediawiki/tools/phan/SecurityCheckPlugin')
         conf['repos']['RelPath'] = repo_info('RelPath')
         conf['repos']['RunningStat'] = repo_info('RunningStat')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
