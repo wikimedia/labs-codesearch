@@ -208,6 +208,8 @@ def wmf_gitlab_group_projects(group: str) -> dict:
     repos = {}
     max_pages = 10
     next_page = 1
+    # Ignore problematic repos (T413322)
+    ignore = {'abstract-wiki-prototype'}
     while next_page and next_page < max_pages:
         resp = requests.get(
             f"https://gitlab.wikimedia.org/groups/{group}/-/children.json",
@@ -220,6 +222,8 @@ def wmf_gitlab_group_projects(group: str) -> dict:
             next_page = False
         for child in resp.json():
             if child.get("archived", False):
+                continue
+            if child["name"] in ignore:
                 continue
             child_path = child["relative_path"].lstrip("/")
             if child["type"] == "group":
