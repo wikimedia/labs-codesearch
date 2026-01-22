@@ -1,3 +1,6 @@
+@import url( ./lib/codex-design-tokens-2.5.1/theme-wikimedia-ui-root.css );
+@import url( ./lib/codex-design-tokens-2.5.1/theme-wikimedia-ui-mode-dark.css ) only screen and ( prefers-color-scheme: dark );
+
 /* Heading */
 
 .cs-client-js .cs-display-nojs,
@@ -16,7 +19,7 @@
 	overflow-y: auto;
 }
 .cs-field-reposelector > .form-control:focus::placeholder {
-	color: #6c757d;
+	color: var( --color-placeholder );
 }
 .cs-field-reposelector::after {
 	/* simulate margin-bottom on the absolutely positioned dropdown-menu */
@@ -68,7 +71,7 @@
 }
 
 .cs-line-boundary {
-	border-top: 1px solid rgba(0,0,0,.125);
+	border-top: 1px solid var( --border-color-muted );
 }
 
 .cs-line-no {
@@ -77,7 +80,7 @@
 	text-align: right;
 	padding: 0 0.5rem 0 0;
 	/* match bootstrap .card border */
-	border-right: 1px solid rgba(0,0,0,.125);
+	border-right: 1px solid var( --border-color-muted );
 	user-select: none;
 }
 
@@ -90,13 +93,13 @@
 	display: inline-block;
 	font-style: normal;
 	font-weight: bold;
-	color: #333;
+	color: var( --color-base-fixed );
 	background-color: rgba(255,255,140,0.5);
 }
 
 .cs-phabresult {
 	min-height: 20rem;
-	white-space: pre;;
+	white-space: pre;
 }
 
 .cs-reposlist {
@@ -117,4 +120,24 @@
 
 footer {
 	text-align: center;
+}
+
+/* Dark Mode */
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color: var( --background-color-base );
+		color: var( --color-base );
+	}
+
+	.card, .alert, .list-group-item, .dropdown-menu, .dropdown-item,
+	input, textarea, select, table, th, td {
+		background-color: var( --background-color-neutral ) !important;
+		color: var( --color-base ) !important;
+		border-color: var( --border-color-muted ) !important;
+	}
+
+	* {
+		scrollbar-color: var( --border-color-muted ) var( --background-color-base );
+	}
 }
