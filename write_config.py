@@ -452,8 +452,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['css-sanitizer'] = repo_info('css-sanitizer')
         conf['repos']['DeadlinkChecker'] = gh_repo('wikimedia/DeadlinkChecker')
         conf['repos']['HtmlFormatter'] = repo_info('HtmlFormatter')
-        conf['repos']['IPSet'] = repo_info('IPSet')
-        conf['repos']['jQuery Client'] = repo_info('jquery-client')
+        conf['repos']['jquery-client'] = repo_info('jquery-client')
         conf['repos']['mwbot-rs'] = wmf_gitlab_repo('repos/mwbot-rs/mwbot')
         conf['repos']['oauthclient-php'] = repo_info('mediawiki/oauthclient-php')
         conf['repos']['php-session-serializer'] = repo_info('php-session-serializer')
@@ -485,7 +484,6 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if ooui:
         conf['repos']['oojs/core'] = repo_info('oojs/core')
         conf['repos']['oojs/ui'] = repo_info('oojs/ui')
-        conf['repos']['oojs/router'] = repo_info('oojs/router')
 
     if milkshake:
         ms_repos = ['jquery.uls', 'jquery.ime', 'jquery.webfonts', 'jquery.i18n',
