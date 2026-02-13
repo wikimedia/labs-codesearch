@@ -377,6 +377,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['fresh'] = repo_info('fresh')
         conf['repos']['mediawiki/vagrant'] = repo_info('mediawiki/vagrant')
         conf['repos']['jsdoc/wmf-theme'] = repo_info('jsdoc/wmf-theme')
+        conf['repos']['testing-access-wrapper'] = repo_info('testing-access-wrapper')
 
         conf['repos']['scap'] = wmf_gitlab_repo('repos/releng/scap')
         conf['repos']['releng/release'] = wmf_gitlab_repo('repos/releng/release')
@@ -384,6 +385,8 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Blubber'] = wmf_gitlab_repo('repos/releng/blubber')
         conf['repos']['dev-images'] = wmf_gitlab_repo('repos/releng/dev-images')
         conf['repos']['patchdemo'] = wmf_gitlab_repo('repos/qte/catalyst/patchdemo')
+
+        conf['repos']['mw-node-qunit'] = gh_repo('wikimedia/mw-node-qunit')
 
         # (T354852) Important BlueSpice repos outside the extensions/ tree
         conf['repos']['BlueSpiceMWConfig'] = repo_info('bluespice/mw-config')
@@ -452,14 +455,12 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['IPSet'] = repo_info('IPSet')
         conf['repos']['jQuery Client'] = repo_info('jquery-client')
         conf['repos']['mwbot-rs'] = wmf_gitlab_repo('repos/mwbot-rs/mwbot')
-        conf['repos']['mw-node-qunit'] = gh_repo('wikimedia/mw-node-qunit')
         conf['repos']['oauthclient-php'] = repo_info('mediawiki/oauthclient-php')
         conf['repos']['php-session-serializer'] = repo_info('php-session-serializer')
         conf['repos']['RelPath'] = repo_info('RelPath')
         conf['repos']['RunningStat'] = repo_info('RunningStat')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
         conf['repos']['Purtle'] = repo_info('purtle')
-        conf['repos']['testing-access-wrapper'] = repo_info('testing-access-wrapper')
         conf['repos']['TextCat'] = repo_info('wikimedia/textcat')
         conf['repos']['wvui'] = repo_info('wvui')
         conf['repos'].update(gerrit_prefix_list('design/'))
