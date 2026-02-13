@@ -266,13 +266,14 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             conf['repos']['Extension:%s' % ext] = repo_info(
                 'mediawiki/extensions/%s' % ext
             )
-        conf['repos']['VisualEditor core'] = repo_info(
-            'VisualEditor/VisualEditor'
-        )
         for repo_name, info in parse_gitmodules(
                 "https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules"
         ):
             conf['repos'][repo_name] = info
+
+    if exts or wikimedia:
+        # Include submodules of WMF-deployed extension repos (T365958)
+        conf['repos']['VisualEditor core'] = repo_info('VisualEditor/VisualEditor')
 
     if skins:
         for skin in data['query']['extdistrepos']['skins']:
@@ -408,7 +409,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if wikimedia:
         for repo_name in wikimedia_deployed_repos():
             conf['repos'][repo_name] = repo_info(repo_name)
-        # Also mw-config (T214341)
+        # Include wmf-config (T214341)
         conf['repos']['operations/mediawiki-config'] = repo_info(
             'operations/mediawiki-config'
         )
