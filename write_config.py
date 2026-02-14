@@ -274,6 +274,14 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if exts or wikimedia:
         # Include submodules of WMF-deployed extension repos (T365958)
         conf['repos']['VisualEditor core'] = repo_info('VisualEditor/VisualEditor')
+        # Include Wikibase submodules (T339803)
+        # Use plain repo name (unless lacking "wikibase" or off-Gerrit, then the npm/Packagist name).
+        conf['repos']['wikibase-data-values-value-view'] = repo_info('data-values/value-view')
+        conf['repos']['wikibase-serialization'] = gh_repo('wmde/WikibaseSerializationJavaScript')
+        conf['repos']['wikibase-data-values'] = gh_repo('wmde/DataValuesJavaScript')
+        conf['repos']['wikibase-data-model'] = gh_repo('wmde/WikibaseDataModelJavaScript')
+        conf['repos']['wikibase/termbox'] = repo_info('wikibase/termbox')
+        conf['repos']['wikibase/javascript-api'] = repo_info('wikibase/javascript-api')
 
     if skins:
         for skin in data['query']['extdistrepos']['skins']:
@@ -466,21 +474,14 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos'].update(gerrit_prefix_list('design/'))
         conf['repos']['wikipeg'] = repo_info('wikipeg')
 
-        # Wikibase libraries
+        # Wikibase libraries used via mediawiki/vendor or embedded in Wikibase repo
+        #
+        # (libs used via submodules are indexed under "exts" and "wikimedia" instead)
         conf['repos']['WikibaseDataModel'] = gh_repo('wmde/WikibaseDataModel')
-        conf['repos']['WikibaseDataModelSerialization'] = \
-            gh_repo('wmde/WikibaseDataModelSerialization')
+        conf['repos']['WikibaseDataModelSerialization'] = gh_repo('wmde/WikibaseDataModelSerialization')
         conf['repos']['WikibaseDataModelServices'] = gh_repo('wmde/WikibaseDataModelServices')
-        conf['repos']['WikibaseInternalSerialization'] = \
-            gh_repo('wmde/WikibaseInternalSerialization')
-        conf['repos']['wikibase-termbox'] = repo_info('wikibase/termbox')
+        conf['repos']['WikibaseInternalSerialization'] = gh_repo('wmde/WikibaseInternalSerialization')
         conf['repos']['wikibase-vuejs-components'] = repo_info('wikibase/vuejs-components')
-        conf['repos']['WikibaseDataValuesValueView'] = repo_info('data-values/value-view')
-        conf['repos']['WikibaseJavascriptAPI'] = repo_info('wikibase/javascript-api')
-        conf['repos']['WikibaseDataValuesJavaScript'] = gh_repo('wmde/DataValuesJavaScript')
-        conf['repos']['WikibaseSerializationJavaScript'] = \
-            gh_repo('wmde/WikibaseSerializationJavaScript')
-        conf['repos']['WikibaseDataModelJavaScript'] = gh_repo('wmde/WikibaseDataModelJavaScript')
 
     if ooui:
         conf['repos']['oojs/core'] = repo_info('oojs/core')
