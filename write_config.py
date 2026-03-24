@@ -564,7 +564,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             print(f'{dirname}: restarting...')
             subprocess.check_call(['systemctl', 'restart', dirname])
         else:
-            print(f'{dirname}: skipping restart')
+            print(f'{dirname}: config unchanged, skipping restart')
 
 
 def extract_urls(conf) -> set:
