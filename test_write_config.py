@@ -63,5 +63,7 @@ def test_repo_info_generic():
 
 
 def test_wmf_gitlab_group_projects():
+    # Check one of the last repos (alphabetically),
+    # to ensure that paging is working correctly and completely.
     assert "toolforge-repos/zoomviewer" in \
         write_config.wmf_gitlab_group_projects("toolforge-repos/")

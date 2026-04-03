@@ -206,11 +206,11 @@ def wmf_gitlab_group_projects(group: str) -> dict:
     """Recursively list all repos within a specific group"""
     group = group.strip('/')
     repos = {}
-    max_pages = 10
+    max_pages = 100
     next_page = 1
     # Ignore problematic repos (T413322)
     ignore = {'abstract-wiki-prototype'}
-    while next_page and next_page < max_pages:
+    while next_page and next_page <= max_pages:
         resp = requests.get(
             f"https://gitlab.wikimedia.org/groups/{group}/-/children.json",
             params={'per_page': 100, "page": next_page}
