@@ -239,7 +239,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
               bundled=False, vendor=False, wikimedia=False, pywikibot=False,
               services=False, libs=False, analytics=False, puppet=False,
               shouthow=False, schemas=False, wmcs=False, devtools=False,
-              apps=False):
+              apps=False, wdp=False):
     conf = {
         'max-concurrent-indexers': 2,
         'dbpath': 'data',
@@ -539,6 +539,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['Wikipedia iOS app'] = gh_repo('wikimedia/wikipedia-ios')
         conf['repos']['Wikimedia Commons Android app'] = gh_repo('commons-app/apps-android-commons')
 
+    if wdp:
+        conf['repos'].update(wmf_gitlab_group_projects("repos/wikidata-platform/"))
+
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -599,6 +602,7 @@ def main():
               schemas=True,
               devtools=True,
               apps=True,
+              wdp=True,
               # A dead codebase used by just one person
               armchairgm=False,
               # All of these should already be included via core/exts/skins
@@ -621,8 +625,8 @@ def main():
     make_conf('armchairgm', args, armchairgm=True)
     make_conf('milkshake', args, milkshake=True)
     make_conf('bundled', args, core=True, bundled=True, vendor=True)
-    make_conf('deployed', args, core=True, wikimedia=True, vendor=True, services=True, schemas=True)
-    make_conf('services', args, services=True)
+    make_conf('deployed', args, core=True, wikimedia=True, vendor=True, services=True, schemas=True, wdp=True)
+    make_conf('services', args, services=True, wdp=True)
     make_conf('libraries', args, ooui=True, milkshake=True, libs=True)
     make_conf('analytics', args, analytics=True, schemas=True)
     make_conf('wmcs', args, wmcs=True)
