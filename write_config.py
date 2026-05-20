@@ -625,7 +625,7 @@ def main():
     make_conf('armchairgm', args, armchairgm=True)
     make_conf('milkshake', args, milkshake=True)
     make_conf('bundled', args, core=True, bundled=True, vendor=True)
-    make_conf('deployed', args, core=True, wikimedia=True, vendor=True, services=True, schemas=True, wdp=True)
+    make_conf('deployed', args, core=True, wikimedia=True, vendor=True, services=True, schemas=True, wdp=True, apps=True)
     make_conf('services', args, services=True, wdp=True)
     make_conf('libraries', args, ooui=True, milkshake=True, libs=True)
     make_conf('analytics', args, analytics=True, schemas=True)
