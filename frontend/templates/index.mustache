@@ -42,7 +42,10 @@
 
 		<form method="get" action="./" id="cs-form" class="row mb-3">
 			<div class="mb-2 col-12 col-md-8 col-lg-9 col-xl-10 order-first">
-				<input class="form-query form-control form-control-lg" type="text" autofocus="true" placeholder="Search query (regexp without slashes)" name="q" value="{{fields.query}}">
+				<div class="form-floating">
+					<input type="text" class="form-query form-control form-control-lg" id="cs-field-query" autofocus="true" placeholder="" name="q" value="{{fields.query}}">
+					<label class="form-label" for="cs-field-query">Search query (regexp without slashes)</label>
+				</div>
 			</div>
 			<div class="mb-2 order-last col-md-4 order-md-2 col-lg-3 col-xl-2">
 				<button id="cs-form-submitIdle" {{#isSubmit}}hidden{{/isSubmit}} class="btn btn-primary btn-lg" type="submit">Search!</button>
