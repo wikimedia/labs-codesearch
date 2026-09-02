@@ -89,6 +89,9 @@ function renderResponse( repos, apiData, queryState, rerenderFn, loadFn ) {
 			case 'Phabricator':
 				formatted.append( view.buildResultsPhabricator( repos, apiData.Results, queryState ) );
 				break;
+			case 'Phabricator (full)':
+				formatted.append( view.buildResultsPhabricatorFull( repos, apiData.Results, queryState ) );
+				break;
 			default:
 				throw new Error( 'Unknown result format' );
 		}

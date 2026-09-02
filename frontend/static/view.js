@@ -84,7 +84,7 @@ function buildFormatNav( repos, apiData, state, rerenderFn ) {
 	return dom( 'div', { className: 'row mb-3 mb-lg-0 ' }, [
 		dom( 'div', { className: 'form-text col-auto' }, [ 'Result format:' ] ),
 		dom( 'div', { className: 'btn-group col-auto', role: 'group', 'aria-label': 'Result format' },
-			[ 'Default', 'Phabricator' ].flatMap( ( format ) => [
+			[ 'Default', 'Phabricator', 'Phabricator (full)' ].flatMap( ( format ) => [
 				dom( 'input', { type: 'radio', className: 'btn-check', id: `cs-result-${format}`,
 					name: 'format',
 					value: format,
@@ -126,6 +126,38 @@ function buildResultsPhabricator( repos, resultsOriginal ) {
 					const repoConf = repos[ repoId ];
 					const url = formatUrl( repoConf, result.Revision, match.Filename, undefined );
 					return `** [[${url}|${match.Filename}]] (${match.Matches.length} matches)\n`;
+				} )
+			];
+		} )
+	);
+}
+
+function buildResultsPhabricatorFull( repos, resultsOriginal ) {
+	return dom( 'textarea',
+		{
+			className: 'col-12 mt-3 font-monospace cs-phabresult',
+			readonly: true,
+			onclick: ( e ) => {
+				if ( e.currentTarget.focus ) {
+					e.currentTarget.select();
+				}
+			}
+		},
+		Object.entries( resultsOriginal ).flatMap( ( [ repoId, result ] ) => {
+			const hasMore = result.FilesWithMatch > result.Matches.length;
+			const countText = hasMore ?
+				`${result.Matches.length} of ${result.FilesWithMatch} files` :
+				`${result.FilesWithMatch} files`;
+			return [
+				`[ ] ${repoId} (${countText})\n`,
+				...result.Matches.flatMap( ( match ) => {
+					const repoConf = repos[ repoId ];
+					const fileNameShort = match.Filename.split( '/' ).pop();
+					return match.Matches.map( ( match2 ) => {
+						const url = formatUrl( repoConf, result.Revision, match.Filename, match2.LineNumber );
+						const line = match2.Line.trim();
+						return `** [[${url}|${fileNameShort}#${match2.LineNumber}]] \`${line}\`\n`;
+					} )
 				} )
 			];
 		} )
@@ -304,6 +336,7 @@ export {
 	buildError,
 	buildFormatNav,
 	buildResultsPhabricator,
+	buildResultsPhabricatorFull,
 	buildResultDefaultCard,
 	buildResultsDefault,
 	buildRepoSelector,
