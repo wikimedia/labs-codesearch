@@ -611,8 +611,8 @@ def main():
               armchairgm=False,
               # All of these should already be included via core/exts/skins
               bundled=False,
-              # Avoiding upstream libraries; to reconsider, see T227704
-              vendor=False,
+              # T227704: Include vendor (upstream libraries, and duplicate of MW libs at pinned versions)
+              vendor=True,
               # All of these should already be included via core/exts/skins
               wikimedia=False,
               # Heavily duplicates MediaWiki core + extensions
