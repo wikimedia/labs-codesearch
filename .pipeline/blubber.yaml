@@ -1,8 +1,8 @@
 version: v4
-base: docker-registry.wikimedia.org/bullseye:latest
+base: docker-registry.wikimedia.org/trixie:latest
 variants:
   build:
-    base: docker-registry.wikimedia.org/golang1.15:1.15-1-20260621
+    base: docker-registry.wikimedia.org/golang1.24:1.24-20261004
     apt:
       packages:
         - gcc
@@ -10,7 +10,7 @@ variants:
   prep:
     includes: [build]
     builder:
-      command: [go, build, ./cmds/houndd]
+      command: [go, build, -buildvcs=false, ./cmds/houndd]
       requirements: [./hound]
   hound:
     apt:
