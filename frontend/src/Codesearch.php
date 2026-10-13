@@ -95,13 +95,24 @@ class Codesearch {
 	public function debug( $msg ): void {
 	}
 
+	/**
+	 * Public URL of the Hound backend, as linked to from the frontend.
+	 *
+	 * Can be set with CODESEARCH_HOUND_BASE_PUBLIC, e.g. in production.
+	 *
+	 * @return string
+	 */
+	public static function getHoundBasePublic(): string {
+		return rtrim( getenv( 'CODESEARCH_HOUND_BASE_PUBLIC' ) ?: self::HOUND_BASE_PUBLIC, '/' );
+	}
+
 	private function getHoundApi( string $backend, $houndBase = null ): string {
-		$houndBase ??= rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_PUBLIC, '/' );
+		$houndBase ??= rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::getHoundBasePublic(), '/' );
 		return "$houndBase/$backend/api";
 	}
 
 	public function getHealth(): array {
-		$houndBase = rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::HOUND_BASE_PUBLIC, '/' );
+		$houndBase = rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::getHoundBasePublic(), '/' );
 		$result = $this->getHttp( "$houndBase/_health.json" );
 		$health = json_decode( $result, true );
 		if ( !is_array( $health ) ) {
@@ -124,7 +135,7 @@ class Codesearch {
 			// "Load more" is handled in codesearch.js.
 			'rng' => ':20',
 		];
-		return $this->getHoundApi( $backend, self::HOUND_BASE_PUBLIC ) . '/v1/search?' . http_build_query( $params );
+		return $this->getHoundApi( $backend, self::getHoundBasePublic() ) . '/v1/search?' . http_build_query( $params );
 	}
 
 	public function getCachedConfig( string $backend ): array {
