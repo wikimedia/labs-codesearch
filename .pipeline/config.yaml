@@ -4,6 +4,8 @@ pipelines:
     stages:
       - name: hound
         build: hound
+      - name: frontend
+        build: frontend
   publish:
     blubberfile: blubber.yaml
     stages:
@@ -12,3 +14,8 @@ pipelines:
         publish:
           image:
             tags: [hound]
+      - name: frontend
+        build: frontend
+        publish:
+          image:
+            tags: [frontend]
