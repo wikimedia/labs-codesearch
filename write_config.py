@@ -26,11 +26,19 @@ import os
 import requests
 import subprocess
 from typing import List
+from urllib.parse import urlparse
 import yaml
 
 # 90 minutes
 POLL = 90 * 60 * 1000
 DATA = '/srv/hound'
+# Code hosts run by Wikimedia, the only ones used with --wmf-only
+WMF_HOSTS = {
+    'gerrit.wikimedia.org',
+    'gerrit-replica.wikimedia.org',
+    'gitlab.wikimedia.org',
+    'netbox-exports.wikimedia.org',
+}
 
 
 @functools.lru_cache()
@@ -266,10 +274,11 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             conf['repos']['Extension:%s' % ext] = repo_info(
                 'mediawiki/extensions/%s' % ext
             )
-        for repo_name, info in parse_gitmodules(
-                "https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules"
-        ):
-            conf['repos'][repo_name] = info
+        if not args.wmf_only:
+            for repo_name, info in parse_gitmodules(
+                    "https://raw.githubusercontent.com/MWStake/nonwmf-extensions/master/.gitmodules"
+            ):
+                conf['repos'][repo_name] = info
 
     if exts or wikimedia:
         # Include submodules of WMF-deployed extension repos (T365958)
@@ -289,10 +298,11 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
                 'mediawiki/skins/%s' % skin
             )
 
-        for repo_name, info in parse_gitmodules(
-                "https://raw.githubusercontent.com/MWStake/nonwmf-skins/master/.gitmodules"
-        ):
-            conf['repos'][repo_name] = info
+        if not args.wmf_only:
+            for repo_name, info in parse_gitmodules(
+                    "https://raw.githubusercontent.com/MWStake/nonwmf-skins/master/.gitmodules"
+            ):
+                conf['repos'][repo_name] = info
 
     if puppet:
         conf['repos']['operations/puppet'] = repo_info('operations/puppet')
@@ -546,6 +556,9 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
     if wdp:
         conf['repos'].update(wmf_gitlab_group_projects("repos/wikidata-platform/"))
 
+    if args.wmf_only:
+        conf['repos'] = filter_wmf_hosts(conf['repos'])
+
     dirname = f'hound-{name}'
     directory = os.path.join(DATA, dirname)
     if not os.path.isdir(directory):
@@ -574,6 +587,12 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
             print(f'{dirname}: config unchanged, skipping restart')
 
 
+def filter_wmf_hosts(repos: dict) -> dict:
+    """only keep repos hosted by Wikimedia"""
+    return {name: repo for name, repo in repos.items()
+            if urlparse(repo['url']).hostname in WMF_HOSTS}
+
+
 def extract_urls(conf) -> set:
     """extract a set of unique URLs from the config"""
     return {repo['url'] for repo in conf['repos'].values()}
@@ -582,6 +601,9 @@ def extract_urls(conf) -> set:
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description='Generate hound configuration')
     parser.add_argument('--restart', help='Restart hound instances if necessary',
+                        action='store_true')
+    parser.add_argument('--wmf-only', help='Only index repos hosted by Wikimedia, '
+                        'e.g. where there is no access to external code hosts',
                         action='store_true')
     return parser.parse_args(args=argv)
 

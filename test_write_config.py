@@ -29,6 +29,19 @@ def test_gerrit_prefix_list():
 def test_parse_args():
     assert write_config.parse_args([]).restart is False
     assert write_config.parse_args(['--restart']).restart is True
+    assert write_config.parse_args([]).wmf_only is False
+    assert write_config.parse_args(['--wmf-only']).wmf_only is True
+
+
+def test_filter_wmf_hosts():
+    repos = {
+        'MediaWiki core': write_config.repo_info('mediawiki/core'),
+        'repos/releng/scap': write_config.wmf_gitlab_repo('repos/releng/scap'),
+        'Wikipedia iOS app': write_config.gh_repo('wikimedia/wikipedia-ios'),
+        'some/bitbucket': write_config.bitbucket_repo('some/bitbucket'),
+    }
+    assert sorted(write_config.filter_wmf_hosts(repos)) == \
+        ['MediaWiki core', 'repos/releng/scap']
 
 
 def test_repo_info_gitlab():
