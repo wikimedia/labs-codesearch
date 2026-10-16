@@ -287,7 +287,7 @@ class Codesearch {
 			if ( $active ) {
 				curl_multi_select( $cmh );
 			}
-			// phpcs:ignore MediaWiki.ControlStructures.AssignmentInControlStructures
+			// phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 			while ( ( $info = curl_multi_info_read( $cmh ) ) !== false ) {
 				/** @var $info false|array{msg:int,result:int,handle:object} */
 				$infos[ (int)$info['handle'] ]['result'] = $info['result'];

@@ -174,7 +174,7 @@ class Model {
 
 		try {
 			$reposData = $this->search->getCachedConfig( $this->backend );
-		} catch ( ApiUnavailable $e ) {
+		} catch ( ApiUnavailable ) {
 			$response->statusCode = 501;
 			$response->view = new View( 'error', [
 				'doctitle' => 'Index unavailable',

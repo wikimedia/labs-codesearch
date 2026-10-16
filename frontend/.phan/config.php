@@ -1,6 +1,7 @@
 <?php
 $cfg = require __DIR__ . '/../vendor/mediawiki/mediawiki-phan-config/src/config.php';
-$cfg['minimum_target_php_version'] = '8.1';
+
+$cfg['minimum_target_php_version'] = '8.4';
 $cfg['autoload_internal_extension_signatures'] = [
 	'mustache' => '.phan/internal_stubs/mustache.phan_php',
 ];
@@ -9,5 +10,7 @@ $cfg['directory_list'] = [
 	'src/',
 ];
 $cfg['exclude_analysis_directory_list'][] = 'vendor/';
+
+$cfg['suppress_issue_types'][] = 'PhanThrowTypeAbsent';
 
 return $cfg;
