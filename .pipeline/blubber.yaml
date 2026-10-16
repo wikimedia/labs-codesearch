@@ -32,6 +32,10 @@ variants:
         - php8.4-xml
         - unzip
     builder:
+      requirements:
+        - from: local
+          source: ./frontend
+          destination: .
       # Installs mustache.php, since the PECL extension used by
       # frontend/Dockerfile is not packaged in Debian, and writes
       # staticversion.txt like the Dockerfile does.
@@ -41,10 +45,14 @@ variants:
         - >-
           composer install --no-interaction --no-progress --no-dev --optimize-autoloader &&
           find static -type f -print0 | xargs -0 sha1sum | sort | sha1sum | head -c 7 > staticversion.txt
-      requirements:
-        - from: local
-          source: ./frontend
-          destination: .
+  frontend-test-php84:
+    includes: [frontend-prep]
+    builder:
+      command:
+        - sh
+        - -c
+        - >-
+         composer install && composer test
   frontend:
     apt:
       packages:
