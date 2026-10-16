@@ -53,7 +53,9 @@ class Codesearch {
 		'shouthow' => true,
 		'skins' => true,
 	];
-	public const HOUND_BASE_PUBLIC = 'https://codesearch-backend.wmcloud.org';
+
+	/** May be overriden via environment, always use via Codesearch::getHoundBasePublic. */
+	private const HOUND_BASE_PUBLIC_DEFAULT = 'https://codesearch-backend.wmcloud.org';
 
 	private const USER_AGENT = 'codesearch-frontend <https://gerrit.wikimedia.org/g/labs/codesearch>';
 	private const META_CACHE_TTL = 3600;
@@ -96,23 +98,40 @@ class Codesearch {
 	}
 
 	/**
-	 * Public URL of the Hound backend, as linked to from the frontend.
+	 * Public URL to the Hound backend, as used from client-side JavaScript.
 	 *
-	 * Can be set with CODESEARCH_HOUND_BASE_PUBLIC, e.g. in production.
+	 * Set via the CODESEARCH_HOUND_BASE_PUBLIC environment variable.
 	 *
 	 * @return string
 	 */
 	public static function getHoundBasePublic(): string {
-		return rtrim( getenv( 'CODESEARCH_HOUND_BASE_PUBLIC' ) ?: self::HOUND_BASE_PUBLIC, '/' );
+		return rtrim( getenv( 'CODESEARCH_HOUND_BASE_PUBLIC' ) ?: self::HOUND_BASE_PUBLIC_DEFAULT, '/' );
 	}
 
-	private function getHoundApi( string $backend, $houndBase = null ): string {
-		$houndBase ??= rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::getHoundBasePublic(), '/' );
+	/**
+	 * Internal URL to the Hound backend, for API requests from PHP to Hound.
+	 *
+	 * Set via the CODESEARCH_HOUND_BASE environment variable.
+	 *
+	 * T361899: This exists so that internal requests stay on the same host instead of going
+	 * through the public webproxy which is slower, folds requests to a single internal IP,
+	 * and fails (at least in Cloud VPS) due to per-ip rate limits.
+	 *
+	 * This defaults to the public address to keep the frontend decoupled from Hound,
+	 * and ease standalone local development of the frontend.
+	 *
+	 * @return string
+	 */
+	public static function getHoundBaseInternal(): string {
+		return rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::getHoundBasePublic(), '/' );
+	}
+
+	private function getHoundApi( string $houndBase, string $backend ): string {
 		return "$houndBase/$backend/api";
 	}
 
 	public function getHealth(): array {
-		$houndBase = rtrim( getenv( 'CODESEARCH_HOUND_BASE' ) ?: self::getHoundBasePublic(), '/' );
+		$houndBase = self::getHoundBaseInternal();
 		$result = $this->getHttp( "$houndBase/_health.json" );
 		$health = json_decode( $result, true );
 		if ( !is_array( $health ) ) {
@@ -135,7 +154,7 @@ class Codesearch {
 			// "Load more" is handled in codesearch.js.
 			'rng' => ':20',
 		];
-		return $this->getHoundApi( $backend, self::getHoundBasePublic() ) . '/v1/search?' . http_build_query( $params );
+		return $this->getHoundApi( self::getHoundBasePublic(), $backend ) . '/v1/search?' . http_build_query( $params );
 	}
 
 	public function getCachedConfig( string $backend ): array {
@@ -143,7 +162,7 @@ class Codesearch {
 			"codesearch-config-v1:$backend",
 			self::META_CACHE_TTL,
 			function () use ( $backend ) {
-				$url = $this->getHoundApi( $backend ) . '/v1/repos';
+				$url = $this->getHoundApi( self::getHoundBaseInternal(), $backend ) . '/v1/repos';
 				$val = json_decode( $this->getHttp( $url ), true );
 				if ( !$val ) {
 					throw new ApiUnavailable( 'Hound /v1/repos returned empty or invalid data' );
@@ -168,7 +187,7 @@ class Codesearch {
 				$urls = [];
 				$reposData = $this->getCachedConfig( $backend );
 				foreach ( $reposData as $repo => $_ ) {
-					$urls[$repo] = $this->getHoundApi( $backend ) . '/v1/excludes?' . http_build_query( [ 'repo' => $repo ] );
+					$urls[$repo] = $this->getHoundApi( self::getHoundBaseInternal(), $backend ) . '/v1/excludes?' . http_build_query( [ 'repo' => $repo ] );
 				}
 				$results = $this->getHttpMulti( $urls );
 
