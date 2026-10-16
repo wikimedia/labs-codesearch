@@ -53,6 +53,34 @@ variants:
         - -c
         - >-
          composer install && composer test
+  frontend-test-php85:
+    # Currently uses Debian 12 Bookworm instead of Debian 13 Trixie
+    # with php8.5-* from the `bookworm-wikimedia component/php85` apt source
+    # per https://gerrit.wikimedia.org/g/operations/docker-images/production-images/+/da97913fbe1/images/php/8.5/cli/Dockerfile.template
+    # and Composer from https://packages.debian.org/bookworm/composer
+    #
+    # NOTE: Because this uses Debian 12, it installs Composer 2.5, which was
+    # meant for use with php8.2, and so spews a bunch of harmless but noisy
+    # deprecation warnings here when used with php8.5.
+    base: docker-registry.wikimedia.org/php8.5-cli:latest
+    apt:
+      packages:
+        - composer
+        - php8.5-apcu
+        - php8.5-cli
+        - php8.5-curl
+        - php8.5-xml
+        - unzip
+    builder:
+      requirements:
+        - from: local
+          source: ./frontend
+          destination: .
+      command:
+        - sh
+        - -c
+        - >-
+         composer install && composer test
   frontend:
     apt:
       packages:

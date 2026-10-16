@@ -5,6 +5,7 @@ pipelines:
       - name: hound
         build: hound
       - name: frontend-test-php84
+      - name: frontend-test-php85
       - name: frontend
         build: frontend
   publish:
