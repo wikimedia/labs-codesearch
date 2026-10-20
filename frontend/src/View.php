@@ -62,6 +62,8 @@ class View {
 	private function getSharedData(): array {
 		return [
 			'staticversion' => $this->getStaticUrlQuery(),
+			// Optional notice at the top of every page, used as HTML.
+			'banner' => getenv( 'CODESEARCH_BANNER' ) ?: null,
 		];
 	}
 
