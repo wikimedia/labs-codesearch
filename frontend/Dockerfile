@@ -37,6 +37,8 @@ RUN echo "opcache.jit_buffer_size=32M" >> "$PHP_INI_DIR/php.ini"
 RUN echo "memory_limit=128M" >> "$PHP_INI_DIR/php.ini"
 # PHP: Default max_execution_time: 30s
 RUN echo "max_execution_time=30" >> "$PHP_INI_DIR/php.ini"
+# Security hardening
+RUN echo "session.upload_progress.enabled=0" >> "$PHP_INI_DIR/php.ini"
 
 # Install composer
 # Discover versions via https://getcomposer.org/versions#stable.0
