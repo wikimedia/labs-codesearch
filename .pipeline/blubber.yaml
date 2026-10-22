@@ -1,5 +1,5 @@
 version: v4
-base: docker-registry.wikimedia.org/trixie:latest
+base: docker-registry.wikimedia.org/bookworm:latest
 variants:
   build:
     base: docker-registry.wikimedia.org/golang1.24:1.24-20261004
@@ -23,13 +23,18 @@ variants:
         destination: /srv/app/houndd
     entrypoint: ["./houndd", "-conf", "/data/config.json"]
   frontend-prep:
+    base: docker-registry.wikimedia.org/bookworm:latest
     apt:
+      sources:
+        - url: http://apt.wikimedia.org/wikimedia
+          distribution: bookworm-wikimedia
+          components: [component/php83]
       packages:
         - composer
-        - php8.4-apcu
-        - php8.4-cli
-        - php8.4-curl
-        - php8.4-xml
+        - php8.3-apcu
+        - php8.3-cli
+        - php8.3-curl
+        - php8.3-xml
         - unzip
     builder:
       requirements:
@@ -45,7 +50,7 @@ variants:
         - >-
           composer install --no-interaction --no-progress --no-dev --optimize-autoloader &&
           find static -type f -print0 | xargs -0 sha1sum | sort | sha1sum | head -c 7 > staticversion.txt
-  frontend-test-php84:
+  frontend-test-php83:
     includes: [frontend-prep]
     builder:
       command:
@@ -53,42 +58,18 @@ variants:
         - -c
         - >-
          composer install && composer test
-  frontend-test-php85:
-    # Currently uses Debian 12 Bookworm instead of Debian 13 Trixie
-    # with php8.5-* from the `bookworm-wikimedia component/php85` apt source
-    # per https://gerrit.wikimedia.org/g/operations/docker-images/production-images/+/da97913fbe1/images/php/8.5/cli/Dockerfile.template
-    # and Composer from https://packages.debian.org/bookworm/composer
-    #
-    # NOTE: Because this uses Debian 12, it installs Composer 2.5, which was
-    # meant for use with php8.2, and so spews a bunch of harmless but noisy
-    # deprecation warnings here when used with php8.5.
-    base: docker-registry.wikimedia.org/php8.5-cli:latest
-    apt:
-      packages:
-        - composer
-        - php8.5-apcu
-        - php8.5-cli
-        - php8.5-curl
-        - php8.5-xml
-        - unzip
-    builder:
-      requirements:
-        - from: local
-          source: ./frontend
-          destination: .
-      command:
-        - sh
-        - -c
-        - >-
-         composer install && composer test
   frontend:
     apt:
+      sources:
+        - url: http://apt.wikimedia.org/wikimedia
+          distribution: bookworm-wikimedia
+          components: [component/php83]
       packages:
         - apache2
-        - libapache2-mod-php8.4
-        - php8.4-apcu
-        - php8.4-curl
-        - php8.4-opcache
+        - libapache2-mod-php8.3
+        - php8.3-apcu
+        - php8.3-curl
+        - php8.3-opcache
     copies:
       - from: frontend-prep
         source: /srv/app
