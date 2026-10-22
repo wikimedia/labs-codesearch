@@ -1,7 +1,7 @@
 <?php
 $cfg = require __DIR__ . '/../vendor/mediawiki/mediawiki-phan-config/src/config.php';
 
-$cfg['minimum_target_php_version'] = '8.4';
+$cfg['minimum_target_php_version'] = '8.3';
 $cfg['autoload_internal_extension_signatures'] = [
 	'mustache' => '.phan/internal_stubs/mustache.phan_php',
 ];
