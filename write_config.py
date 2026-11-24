@@ -479,6 +479,7 @@ def make_conf(name, args, core=False, exts=False, skins=False, ooui=False,
         conf['repos']['php-session-serializer'] = repo_info('php-session-serializer')
         conf['repos']['RelPath'] = repo_info('RelPath')
         conf['repos']['RunningStat'] = repo_info('RunningStat')
+        conf['repos']['unicodejs'] = repo_info('unicodejs')
         conf['repos']['utfnormal'] = repo_info('utfnormal')
         conf['repos']['WrappedString'] = repo_info('WrappedString')
         conf['repos']['Purtle'] = repo_info('purtle')
